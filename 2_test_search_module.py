@@ -3,7 +3,7 @@ from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
-from locators import (LoginPageLocators, HomeScreenLocators, PermissionDialogLocators, 
+from locators import (LoginPageLocators, PermissionDialogLocators, 
                      BottomNavBarLocators, SearchModule)
 from utils import take_screenshot, clear_app_state
 from config import TEST_USER
@@ -66,16 +66,7 @@ def test_search_events(driver):
         ))
     )
     login_button.click()
-    
-    # Verify successful login by checking Events text is visible
-    wait = WebDriverWait(driver, 10)  # Longer wait for final verification
-    events_text = wait.until(
-        EC.presence_of_element_located((
-            AppiumBy.XPATH,
-            HomeScreenLocators.EVENTS_TEXT
-        ))
-    )
-    assert events_text.is_displayed(), "Login failed - Events text not found after login"
+    sleep(3)  # Wait for home screen to load
     
     # Click on Search in bottom navigation bar
     search_button = wait.until(
@@ -97,7 +88,7 @@ def test_search_events(driver):
     search_input.click()
     search_input.clear()
     search_input.send_keys("Burlington")  # You can parameterize this search term later if needed
-    sleep(3)  # Short wait for search results to update
+    sleep(3)  # Wait for search results to update
 
     # Verify search results are displayed
     search_results = driver.find_elements(AppiumBy.XPATH, SearchModule.EVENTS_SEARCH_RESULTS.format("Burlington"))

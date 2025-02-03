@@ -24,7 +24,7 @@ class PermissionDialogLocators:
 
 class HomeScreenLocators:
     """Locators for Home Screen UI Elements"""
-    EVENTS_TEXT = '//android.widget.TextView[@text="Events"]'
+    EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events")]'
     EVENTS_SEE_ALL = '//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
     VIDEOS_SEE_ALL = ('//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[5]'
                       '/android.widget.TextView[1]')
@@ -57,6 +57,7 @@ class BottomNavBarLocators:
 
 class SearchModule:
     """Locators for Search Module"""
-    SEARCH_INPUT_BAR = '//*[@content-desc="Search"]'
+    SEARCH_ICON = '//android.widget.EditText[@text="Search"]'
+    SEARCH_INPUT_BAR = '//android.widget.EditText[@text="Search"]'
     EVENTS_SEARCH_RESULTS = ('//android.widget.ScrollView/android.view.ViewGroup[1]'
                             '/android.view.ViewGroup[2]/android.view.ViewGroup[contains(@content-desc, "{}")]')
