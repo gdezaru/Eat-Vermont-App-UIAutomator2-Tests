@@ -57,7 +57,7 @@ class BottomNavBarLocators:
 
 class SearchModule:
     """Locators for Search Module"""
-    SEARCH_ICON = '//android.widget.EditText[@text="Search"]'
-    SEARCH_INPUT_BAR = '//android.widget.EditText[@text="Search"]'
+    SEARCH_ICON = '//*[@content-desc="Search"]'
+    SEARCH_INPUT_BAR = '//android.widget.TextView[@text="Search"]'
     EVENTS_SEARCH_RESULTS = ('//android.widget.ScrollView/android.view.ViewGroup[1]'
                             '/android.view.ViewGroup[2]/android.view.ViewGroup[contains(@content-desc, "{}")]')
