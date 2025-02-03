@@ -11,11 +11,15 @@ venv/
 env/
 ENV/
 
-# IDE
+# PyCharm
 .idea/
 .vscode/
-*.swp
-*.swo
+*.iml
+*.iws
+.idea_modules/
 
 # Appium
 *.log
+
+# Screenshots
+screenshots/
