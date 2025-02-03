@@ -19,10 +19,14 @@ import subprocess
 def run_adb_command(command):
     """Run an ADB command and return its output"""
     try:
-        # Force ADB to use local server by setting ANDROID_ADB_SERVER_HOST
-        os.environ['ANDROID_ADB_SERVER_HOST'] = '127.0.0.1'
-        os.environ['ANDROID_ADB_SERVER_PORT'] = '5037'
-        result = subprocess.run(f"adb {command}", shell=True, capture_output=True, text=True)
+        # Use explicit path to ADB and force local server
+        adb_path = os.path.expanduser("~/AppData/Local/Android/Sdk/platform-tools/adb.exe")
+        if not os.path.exists(adb_path):
+            print(f"ADB not found at {adb_path}")
+            # Try alternative path
+            adb_path = "adb"  # Use adb from PATH
+            
+        result = subprocess.run(f"{adb_path} {command}", shell=True, capture_output=True, text=True)
         if result.stderr:
             print(f"ADB command warning/error: {result.stderr}")
         return result.stdout.strip()
@@ -35,8 +39,6 @@ def driver():
     driver = None
     system_port = random.randint(8200, 8299)
     device_id = 'b0ba3ece'
-    device_ip = '192.168.1.211'
-    device_port = '5037'
     
     # First, kill any existing ADB server
     print("\nRestarting ADB server...")
@@ -45,27 +47,19 @@ def driver():
     run_adb_command("start-server")
     sleep(2)
 
-    # Try USB connection first
+    # Check USB connected devices
     print("\nChecking USB connected devices...")
     devices = run_adb_command("devices")
     print(f"Connected devices: {devices}")
 
     if device_id not in str(devices):
-        # If USB connection fails, try TCP/IP
-        print(f"\nDevice {device_id} not found via USB, trying TCP/IP connection...")
-        run_adb_command(f"connect {device_ip}:{device_port}")
-        sleep(3)
-        
-        devices = run_adb_command("devices")
-        print(f"Devices after TCP/IP attempt: {devices}")
-        
-        if not devices or (f"{device_ip}:{device_port}" not in str(devices) and device_id not in str(devices)):
-            raise Exception(
-                "No devices found. Please ensure either:\n"
-                f"1. Device {device_id} is connected via USB with USB debugging enabled, or\n"
-                f"2. Device is available at {device_ip}:{device_port} with ADB TCP/IP enabled\n"
-                "Current connected devices: " + str(devices)
-            )
+        raise Exception(
+            "Device not found. Please ensure:\n"
+            f"1. Device {device_id} is connected via USB\n"
+            "2. USB debugging is enabled on the device\n"
+            "3. You have approved the USB debugging prompt on your device\n"
+            "Current connected devices: " + str(devices)
+        )
     
     capabilities = {
         'platformName': 'Android',
