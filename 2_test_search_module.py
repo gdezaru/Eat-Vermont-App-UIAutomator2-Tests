@@ -85,7 +85,7 @@ def test_search_events(driver):
         ))
     )
     search_button.click()
-    sleep(1)  # Short wait for search screen to load
+    sleep(3)  # Longer wait for search screen to load
     
     # Enter text in search input
     search_input = wait.until(
@@ -98,3 +98,10 @@ def test_search_events(driver):
     search_input.clear()
     search_input.send_keys("Burlington")  # You can parameterize this search term later if needed
     sleep(3)  # Short wait for search results to update
+
+    # Verify search results are displayed
+    search_results = driver.find_elements(AppiumBy.XPATH, SearchModule.EVENTS_SEARCH_RESULTS.format("Burlington"))
+    assert len(search_results) > 0, "Nothing found!"
+
+    # Take a screenshot of the search results
+    take_screenshot(driver, "2_1_search_events")
