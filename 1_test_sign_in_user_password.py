@@ -6,7 +6,7 @@ from time import sleep
 from locators import LoginPageLocators, HomeScreenLocators, PermissionDialogLocators
 from utils import take_screenshot, clear_app_state
 
-def test_sign_in_user_password(driver):
+def sign_in_user_password(driver):
     """Test sign in with valid user and password"""
     # Clear app state before starting the test
     clear_app_state(driver)
