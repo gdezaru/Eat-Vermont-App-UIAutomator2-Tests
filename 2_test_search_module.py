@@ -3,7 +3,8 @@ from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
-from locators import LoginPageLocators, HomeScreenLocators, PermissionDialogLocators, BottomNavBarLocators
+from locators import (LoginPageLocators, HomeScreenLocators, PermissionDialogLocators, 
+                     BottomNavBarLocators, SearchModule)
 from utils import take_screenshot, clear_app_state
 from config import TEST_USER
 
@@ -85,3 +86,15 @@ def test_search_events(driver):
     )
     search_button.click()
     sleep(1)  # Short wait for search screen to load
+    
+    # Enter text in search input
+    search_input = wait.until(
+        EC.element_to_be_clickable((
+            AppiumBy.XPATH,
+            SearchModule.SEARCH_INPUT_BAR
+        ))
+    )
+    search_input.click()
+    search_input.clear()
+    search_input.send_keys("Burlington")  # You can parameterize this search term later if needed
+    sleep(3)  # Short wait for search results to update
