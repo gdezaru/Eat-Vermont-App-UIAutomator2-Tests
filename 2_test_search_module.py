@@ -76,9 +76,19 @@ def test_search_events(driver):
         ))
     )
     search_button.click()
-    sleep(3)  # Longer wait for search screen to load
+    sleep(2)  # Wait for search screen to load
+
+    # Click on the search icon/field first
+    search_icon = wait.until(
+        EC.element_to_be_clickable((
+            AppiumBy.XPATH,
+            SearchModule.SEARCH_ICON
+        ))
+    )
+    search_icon.click()
+    sleep(1)  # Short wait for search input to be active
     
-    # Enter text in search input
+    # Now enter text in search input
     search_input = wait.until(
         EC.element_to_be_clickable((
             AppiumBy.XPATH,
@@ -86,9 +96,8 @@ def test_search_events(driver):
         ))
     )
     search_input.click()
-    search_input.clear()
     search_input.send_keys("Burlington")  # You can parameterize this search term later if needed
-    sleep(3)  # Wait for search results to update
+    sleep(2)  # Wait for search results to update
 
     # Verify search results are displayed
     search_results = driver.find_elements(AppiumBy.XPATH, SearchModule.EVENTS_SEARCH_RESULTS.format("Burlington"))
