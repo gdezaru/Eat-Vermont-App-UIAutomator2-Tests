@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 from locators import LoginPageLocators, HomeScreenLocators, PermissionDialogLocators
 from utils import take_screenshot, clear_app_state
+from config import TEST_USER
 
 def sign_in_user_password(driver):
     """Test sign in with valid user and password"""
@@ -16,10 +17,6 @@ def sign_in_user_password(driver):
     if allow_buttons:
         allow_buttons[0].click()
         sleep(1)
-    
-    # Test data
-    TEST_EMAIL = "evtestmail@jxpomup.com"
-    TEST_PASSWORD = "evtest"
     
     wait = WebDriverWait(driver, 5)
     
@@ -41,7 +38,7 @@ def sign_in_user_password(driver):
     )
     email_field.click()
     email_field.clear()
-    email_field.send_keys(TEST_EMAIL)
+    email_field.send_keys(TEST_USER['email'])
     
     # Enter password
     password_field = wait.until(
@@ -52,7 +49,7 @@ def sign_in_user_password(driver):
     )
     password_field.click()
     password_field.clear()
-    password_field.send_keys(TEST_PASSWORD)
+    password_field.send_keys(TEST_USER['password'])
     
     # Hide keyboard if present
     try:
