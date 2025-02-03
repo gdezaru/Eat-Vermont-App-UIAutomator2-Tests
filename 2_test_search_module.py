@@ -97,6 +97,9 @@ def test_search_events(driver):
     )
     search_input.click()
     search_input.send_keys("Burlington")  # You can parameterize this search term later if needed
+    
+    # Press Enter on keyboard to submit search
+    driver.press_keycode(66)  # 66 is the keycode for Enter/Return on Android
     sleep(2)  # Wait for search results to update
 
     # Verify search results are displayed
