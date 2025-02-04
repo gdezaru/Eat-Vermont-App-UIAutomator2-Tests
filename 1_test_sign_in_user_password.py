@@ -7,7 +7,7 @@ from locators import LoginPageLocators, HomeScreenLocators, PermissionDialogLoca
 from utils import take_screenshot, clear_app_state
 from config import TEST_USER
 
-def sign_in_user_password(driver):
+def test_sign_in_user_password(driver):
     """Test sign in with valid user and password"""
     # Clear app state before starting the test
     clear_app_state(driver)
