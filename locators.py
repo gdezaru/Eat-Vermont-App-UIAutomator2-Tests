@@ -64,3 +64,9 @@ class SearchModule:
     def search_result(text):
         """Get XPath for a search result containing specific text"""
         return f'//android.view.ViewGroup[contains(@content-desc, "{text}")]'
+
+
+class EventsScreen:
+    """Locators for Events Screen UI Elements"""
+    DAY_OF_WEEK = ('//android.view.ViewGroup[@clickable="true" and .//android.widget.TextView[@text="{}"]]'  # The clickable container
+                   '//android.widget.TextView[@text="{}"]')  # The day text itself

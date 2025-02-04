@@ -26,3 +26,16 @@ def clear_app_state(device):
     device.app_clear(app_id)  # Clear app data
     device.app_start(app_id)  # Start the app fresh
     print("App state cleared and restarted")
+
+def get_next_day(current_day):
+    """
+    Returns the next day of the week given the current day.
+    Args:
+        current_day (str): Current day in three-letter format (e.g., 'MON', 'TUE')
+    Returns:
+        str: Next day in three-letter format
+    """
+    days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+    current_index = days.index(current_day)
+    next_index = (current_index + 1) % 7  # Use modulo to wrap around to Sunday
+    return days[next_index]
