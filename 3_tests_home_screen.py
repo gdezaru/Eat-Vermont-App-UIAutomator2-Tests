@@ -149,6 +149,3 @@ def test_home_screen_events(d):
     
     # Take screenshot of the successful day's events
     d.screenshot(f"3_1_2_home_screen_events_{next_day.lower()}.png")
-
-
-def
