@@ -2,6 +2,7 @@ import pytest
 from time import sleep
 from config import TEST_USER
 
+
 def test_sign_in_user_password(d):
     """Test sign in with valid user and password"""
     # Handle notification permission if it appears
