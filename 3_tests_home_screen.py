@@ -147,5 +147,59 @@ def test_home_screen_events(d):
         if days_tried == max_days_to_try:
             assert False, "Could not find any clickable day after trying all days of the week"
     
+    # Verify that either there's an event or "No Events" message is shown
+    first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
+    no_events_message = d.xpath(EventsScreen.EVENTS_SCREEN_NO_EVENTS)
+    
+    assert first_event.exists or no_events_message.exists, "Neither events nor 'No Events' message found"
+    if first_event.exists:
+        print(f"\nFound at least one event for {next_day}")
+    else:
+        print(f"\nNo events found for {next_day}")
+    
     # Take screenshot of the successful day's events
     d.screenshot(f"3_1_2_home_screen_events_{next_day.lower()}.png")
+    
+    # If no event was found initially, scroll to try to find one
+    if not first_event.exists and not no_events_message.exists:
+        print("\nNo event visible initially, scrolling to find events...")
+        max_scroll_attempts = 3
+        found_event = False
+        
+        for scroll_attempt in range(max_scroll_attempts):
+            # Scroll down
+            d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)  # Scroll from bottom to top
+            sleep(2)  # Wait for scroll to complete
+            
+            # Check if we can now see an event
+            first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
+            if first_event.exists:
+                print(f"\nFound an event after {scroll_attempt + 1} scroll(s)")
+                found_event = True
+                # Take a screenshot after finding the event
+                d.screenshot(f"3_1_2_home_screen_events_{next_day.lower()}_after_scroll.png")
+                break
+        
+        if not found_event:
+            print(f"\nNo events found even after {max_scroll_attempts} scrolls")
+            assert no_events_message.exists, "No events found and 'No Events' message is not displayed"
+    
+    # Click on the first event tile if it exists
+    if first_event.exists:
+        print("\nClicking on the first event tile...")
+        # Get the event title before clicking
+        event_title = first_event.get_text()
+        print(f"Event title: {event_title}")
+        
+        # Click the event title and wait for details to load
+        first_event.click()
+        sleep(2)  # Wait for event details to load
+        
+        # Verify we're in the event details view by checking for the event title
+        event_title_in_details = d.xpath(EventsScreen.EVENT_TITLE.format(event_title))
+        assert event_title_in_details.exists, f"Failed to open event details for '{event_title}'"
+        
+        print("\nSuccessfully opened event details")
+        # Take screenshot of the event details
+        d.screenshot(f"3_1_4_home_screen_event_details_{next_day.lower()}.png")
+        print("\nEvent details page loaded and screenshot taken")

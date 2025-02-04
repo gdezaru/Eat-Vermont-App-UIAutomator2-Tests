@@ -70,3 +70,6 @@ class EventsScreen:
     """Locators for Events Screen UI Elements"""
     DAY_OF_WEEK = ('//android.view.ViewGroup[@clickable="true" and .//android.widget.TextView[@text="{}"]]'  # The clickable container
                    '//android.widget.TextView[@text="{}"]')  # The day text itself
+    EVENTS_SCREEN_TILE_1 = '//android.widget.TextView[@text and @index="2"]'  # First event title text (index 2 from screenshot)
+    EVENTS_SCREEN_NO_EVENTS = '//android.widget.TextView[@text="No Events"]'  # Text shown when no events are available
+    EVENT_TITLE = '//android.widget.TextView[contains(@text, "{}")]'  # Event title in the details view
