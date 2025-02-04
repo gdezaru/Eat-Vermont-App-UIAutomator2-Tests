@@ -15,6 +15,7 @@ from time import sleep
 import os
 import random
 import subprocess
+import uiautomator2 as u2
 
 def run_adb_command(command):
     """Run an ADB command and return its output"""
@@ -130,3 +131,46 @@ def driver():
             driver.quit()
             run_adb_command(f"-s {device_id} shell pm clear io.appium.uiautomator2.server")
             run_adb_command(f"-s {device_id} shell pm clear io.appium.uiautomator2.server.test")
+
+@pytest.fixture
+def d():
+    # Connect to the device
+    device = u2.connect()
+    
+    # Clean up the app state before starting
+    print("\nCleaning up app state...")
+    device.app_stop("com.eatvermont")
+    run_adb_command("shell pm clear com.eatvermont")
+    sleep(1)  # Wait for cleanup
+    
+    # Grant necessary permissions before starting
+    print("\nGranting necessary permissions...")
+    permissions = [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.READ_EXTERNAL_STORAGE"
+    ]
+    for permission in permissions:
+        run_adb_command(f"shell pm grant com.eatvermont {permission}")
+    
+    print("\nStarting app...")
+    device.app_start("com.eatvermont")
+    sleep(3)  # Wait for app to load
+    
+    # Handle any remaining permission dialogs
+    if device(text="Allow").exists:
+        device(text="Allow").click()
+        sleep(1)
+    
+    # Verify app is running
+    current_app = device.app_current()
+    print(f"Current app: {current_app}")
+    assert current_app['package'] == "com.eatvermont", "App is not running!"
+    
+    yield device
+    
+    # Cleanup after test
+    print("\nCleaning up after test...")
+    device.app_stop("com.eatvermont")

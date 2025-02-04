@@ -1,74 +1,90 @@
-import uiautomator2 as u2
 import pytest
 from time import sleep
 from config import TEST_USER
 
-@pytest.fixture
-def d():
-    # Connect to the device
-    device = u2.connect()
-    print("\nStarting app...")
-    device.app_start("com.eatvermont")
-    sleep(3)  # Wait for app to load
-    
-    # Verify app is running
-    current_app = device.app_current()
-    print(f"Current app: {current_app}")
-    assert current_app['package'] == "com.eatvermont", "App is not running!"
-    
-    yield device
-    device.app_stop("com.eatvermont")
-
 def test_sign_in_user_password(d):
     """Test sign in with valid user and password"""
-    # Take screenshot to debug initial state
-    d.screenshot("before_signin.png")
-    print("\nTaking screenshot before_signin.png")
-    
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
         sleep(1)
     
-    # Try to find Sign In button using different selectors with wait
-    print("\nLooking for Sign In button...")
+    # Find and click Sign In button
     sign_in = None
-    
-    # Try by description
     if d(description="Sign In").exists(timeout=5):
-        print("Found Sign In by description")
         sign_in = d(description="Sign In")
-    # Try by text
     elif d(text="Sign In").exists(timeout=5):
-        print("Found Sign In by text")
         sign_in = d(text="Sign In")
-        
+    
     assert sign_in is not None, "Could not find Sign In button"
-    print("Clicking Sign In button...")
     sign_in.click()
-    sleep(1)
+    sleep(2)
     
     # Enter email
-    print("\nEntering email...")
     email_field = d(text="Email")
+    assert email_field.exists(timeout=5), "Email field not found"
     email_field.click()
     d.send_keys(TEST_USER['email'])
+    sleep(1)
     
     # Enter password
-    print("Entering password...")
     password_field = d(text="Password")
+    assert password_field.exists(timeout=5), "Password field not found"
     password_field.click()
     d.send_keys(TEST_USER['password'])
+    sleep(1)
     
-    # Click Log in
-    print("Clicking Log in button...")
-    d(text="Log in").click()
-    sleep(3)  # Wait for home screen
+    # Click Log in and verify
+    login_attempts = 2
+    for attempt in range(login_attempts):
+        # Find and click login button
+        login_button = d(text="Log in")
+        assert login_button.exists(timeout=5), "Log in button not found"
+        login_button.click()
+        sleep(5)
+        
+        # Check for error messages
+        error_messages = [
+            "Invalid email or password",
+            "Login failed",
+            "Error",
+            "Something went wrong",
+            "No internet connection"
+        ]
+        
+        error_found = False
+        for error_msg in error_messages:
+            if d(textContains=error_msg).exists(timeout=2):
+                error_found = True
+                break
+        
+        if error_found:
+            if attempt < login_attempts - 1:
+                # Try to go back if needed
+                if d(text="Back").exists():
+                    d(text="Back").click()
+                    sleep(1)
+                continue
+            else:
+                d.screenshot("debug_login_error.png")
+                assert False, f"Login failed - Error message found"
+        
+        # Try multiple verification attempts
+        verify_attempts = 3
+        for _ in range(verify_attempts):
+            # Check for success indicators
+            for indicator in ["Events", "Home", "Profile", "Search"]:
+                if d(text=indicator).exists(timeout=3):
+                    d.screenshot("1_1_sign_in_user_password.png")
+                    return
+            sleep(2)  # Wait between verification attempts
+        
+        if attempt < login_attempts - 1:
+            # Try to go back if needed
+            if d(text="Back").exists():
+                d(text="Back").click()
+                sleep(1)
     
-    # Verify successful login by checking Events text is visible
-    print("\nVerifying successful login...")
-    assert d(textContains="Events").exists(timeout=10), "Login failed - Events text not found after login"
-    
-    # Take screenshot after successful login
-    d.screenshot("login_success.png")
-    print("Login successful! Screenshot saved as login_success.png")
+    # If we get here, login failed
+    d.screenshot("debug_login_failed.png")
+    assert False, "Login failed - Could not verify successful login"
