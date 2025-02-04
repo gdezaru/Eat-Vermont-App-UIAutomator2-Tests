@@ -1,20 +1,15 @@
-# Eat Vermont App Automated Tests
+# Eat Vermont App UIAutomator2 Tests
 
-This project contains automated tests for the Eat Vermont mobile application using Python, Appium, and pytest.
+This project contains automated tests for the Eat Vermont mobile application using Python and uiautomator2.
 
 ## Setup
 
 1. Install required packages:
 ```bash
-pip install Appium-Python-Client pytest selenium
+pip install -r requirements.txt
 ```
 
-2. Start Appium server:
-```bash
-appium
-```
-
-3. Connect your Android device with USB debugging enabled
+2. Connect your Android device with USB debugging enabled
 
 ## Running Tests
 
@@ -30,12 +25,14 @@ pytest test_login.py
 
 ## Project Structure
 
-- `conftest.py`: Contains test fixtures and Appium configuration
-- `test_login.py`: Test cases for login functionality
-- More test files will be added for other features
+- `conftest.py`: Contains test fixtures and device configuration
+- `locators.py`: Contains XPath locators for UI elements
+- `utils.py`: Utility functions for screenshots and app state management
+- `1_test_sign_in_user_password.py`: Test cases for login functionality
+- `2_test_search_module.py`: Test cases for search functionality
 
 ## Notes
 
-- Make sure Appium server is running before executing tests
 - Device should be connected and USB debugging enabled
 - App should be installed on the device
+- No Appium server needed - using uiautomator2 for direct device communication
