@@ -1,3 +1,4 @@
-Appium-Python-Client>=4.5.0
+uiautomator2>=2.16.0
 pytest>=8.3.4
-selenium>=4.28.1
+adbutils>=1.2.2
+pillow>=10.2.0  # For screenshot support

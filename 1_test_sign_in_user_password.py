@@ -1,80 +1,74 @@
+import uiautomator2 as u2
 import pytest
-from appium.webdriver.common.appiumby import AppiumBy
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
-from locators import LoginPageLocators, HomeScreenLocators, PermissionDialogLocators
-from utils import take_screenshot, clear_app_state
 from config import TEST_USER
 
-def test_sign_in_user_password(driver):
-    """Test sign in with valid user and password"""
-    # Clear app state before starting the test
-    clear_app_state(driver)
+@pytest.fixture
+def d():
+    # Connect to the device
+    device = u2.connect()
+    print("\nStarting app...")
+    device.app_start("com.eatvermont")
+    sleep(3)  # Wait for app to load
     
-    # Handle notification permission dialog if it appears
-    allow_buttons = driver.find_elements(AppiumBy.XPATH, PermissionDialogLocators.ALLOW_BUTTON)
-    if allow_buttons:
-        allow_buttons[0].click()
+    # Verify app is running
+    current_app = device.app_current()
+    print(f"Current app: {current_app}")
+    assert current_app['package'] == "com.eatvermont", "App is not running!"
+    
+    yield device
+    device.app_stop("com.eatvermont")
+
+def test_sign_in_user_password(d):
+    """Test sign in with valid user and password"""
+    # Take screenshot to debug initial state
+    d.screenshot("before_signin.png")
+    print("\nTaking screenshot before_signin.png")
+    
+    # Handle notification permission if it appears
+    if d(text="Allow").exists:
+        d(text="Allow").click()
         sleep(1)
     
-    wait = WebDriverWait(driver, 5)
+    # Try to find Sign In button using different selectors with wait
+    print("\nLooking for Sign In button...")
+    sign_in = None
     
-    # Click Sign In button
-    sign_in_button = wait.until(
-        EC.element_to_be_clickable((
-            AppiumBy.XPATH, 
-            LoginPageLocators.SIGN_IN_BUTTON
-        ))
-    )
-    sign_in_button.click()
+    # Try by description
+    if d(description="Sign In").exists(timeout=5):
+        print("Found Sign In by description")
+        sign_in = d(description="Sign In")
+    # Try by text
+    elif d(text="Sign In").exists(timeout=5):
+        print("Found Sign In by text")
+        sign_in = d(text="Sign In")
+        
+    assert sign_in is not None, "Could not find Sign In button"
+    print("Clicking Sign In button...")
+    sign_in.click()
+    sleep(1)
     
     # Enter email
-    email_field = wait.until(
-        EC.element_to_be_clickable((
-            AppiumBy.XPATH,
-            LoginPageLocators.EMAIL_FIELD
-        ))
-    )
+    print("\nEntering email...")
+    email_field = d(text="Email")
     email_field.click()
-    email_field.clear()
-    email_field.send_keys(TEST_USER['email'])
+    d.send_keys(TEST_USER['email'])
     
     # Enter password
-    password_field = wait.until(
-        EC.element_to_be_clickable((
-            AppiumBy.XPATH,
-            LoginPageLocators.PASSWORD_FIELD
-        ))
-    )
+    print("Entering password...")
+    password_field = d(text="Password")
     password_field.click()
-    password_field.clear()
-    password_field.send_keys(TEST_USER['password'])
+    d.send_keys(TEST_USER['password'])
     
-    # Hide keyboard if present
-    try:
-        driver.hide_keyboard()
-    except:
-        pass
-    
-    # Click Log in button using the correct locator
-    login_button = wait.until(
-        EC.element_to_be_clickable((
-            AppiumBy.XPATH,
-            LoginPageLocators.LOG_IN_BUTTON
-        ))
-    )
-    login_button.click()
+    # Click Log in
+    print("Clicking Log in button...")
+    d(text="Log in").click()
+    sleep(3)  # Wait for home screen
     
     # Verify successful login by checking Events text is visible
-    wait = WebDriverWait(driver, 10)  # Longer wait for final verification
-    events_text = wait.until(
-        EC.presence_of_element_located((
-            AppiumBy.XPATH,
-            HomeScreenLocators.EVENTS_TEXT
-        ))
-    )
-    assert events_text.is_displayed(), "Login failed - Events text not found after login"
+    print("\nVerifying successful login...")
+    assert d(textContains="Events").exists(timeout=10), "Login failed - Events text not found after login"
     
     # Take screenshot after successful login
-    take_screenshot(driver, "1_test_sign_in_user_password")
+    d.screenshot("login_success.png")
+    print("Login successful! Screenshot saved as login_success.png")

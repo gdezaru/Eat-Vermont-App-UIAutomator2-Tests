@@ -1,13 +1,13 @@
 """
-Locators for the EatVermont app UI elements
+Locators for the EatVermont app UI elements using XPath selectors
 """
 
 
-class LoginPageLocators:
+class LoginPage:
     """Locators for login flow"""
     # Buttons
     SIGN_IN_BUTTON = '//android.widget.TextView[@text="Sign In"]'
-    LOG_IN_BUTTON = '//android.widget.TextView[@text="Log in"]'  # Updated to match exact text
+    LOG_IN_BUTTON = '//android.widget.TextView[@text="Log in"]'
 
     # Input fields
     EMAIL_FIELD = '//android.widget.EditText[@text="Email"]'
@@ -17,12 +17,12 @@ class LoginPageLocators:
     FORGOT_PASSWORD = '//android.view.ViewGroup[@content-desc="Forgot Password?"]'
 
 
-class PermissionDialogLocators:
+class Permissions:
     """Locators for permission dialogs"""
     ALLOW_BUTTON = '//android.widget.Button[@text="Allow"]'
 
 
-class HomeScreenLocators:
+class HomeScreen:
     """Locators for Home Screen UI Elements"""
     EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events")]'
     EVENTS_SEE_ALL = '//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
@@ -48,16 +48,19 @@ class HomeScreenTiles:
                                 '/android.view.ViewGroup[5]/android.view.ViewGroup[contains(@content-desc, "{}")]')
 
 
-class BottomNavBarLocators:
+class BottomNavBar:
     """Locators for Bottom Navigation Bar"""
-    SEARCH_BOTTOM_NAV_BAR = '//android.widget.TextView[@text="Search"]'
-    EVENTS_BOTTOM_NAV_BAR = '//android.widget.TextView[@content-desc="Events"]/android.widget.TextView[1]'
-    FAVORITES_BOTTOM_NAV_BAR = '//android.widget.TextView[@text="Favorites"]'
+    SEARCH = '//android.widget.TextView[@text="Search"]'
+    EVENTS = '//android.widget.TextView[@content-desc="Events"]/android.widget.TextView[1]'
+    FAVORITES = '//android.widget.TextView[@text="Favorites"]'
 
 
 class SearchModule:
     """Locators for Search Module"""
     SEARCH_ICON = '//*[@content-desc="Search"]'
-    SEARCH_INPUT_BAR = '//android.widget.EditText'
-    EVENTS_SEARCH_RESULTS = ('//android.widget.ScrollView/android.view.ViewGroup[1]'
-                            '/android.view.ViewGroup[2]/android.view.ViewGroup[contains(@content-desc, "{}")]')
+    SEARCH_INPUT = '//android.widget.EditText'
+
+    @staticmethod
+    def search_result(text):
+        """Get XPath for a search result containing specific text"""
+        return f'//android.view.ViewGroup[contains(@content-desc, "{text}")]'

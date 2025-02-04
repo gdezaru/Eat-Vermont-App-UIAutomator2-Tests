@@ -4,18 +4,25 @@ Utility functions for test automation
 from datetime import datetime
 import os
 
-def take_screenshot(driver, name):
+def ensure_screenshots_dir():
+    """Ensure screenshots directory exists"""
+    if not os.path.exists("screenshots"):
+        os.makedirs("screenshots")
+
+def take_screenshot(device, name):
     """Take a screenshot and save it with timestamp"""
+    ensure_screenshots_dir()
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     screenshot_name = f"{name}_{timestamp}.png"
     screenshot_path = os.path.join("screenshots", screenshot_name)
-    driver.get_screenshot_as_file(screenshot_path)
+    device.screenshot(screenshot_path)
     print(f"Screenshot saved: {screenshot_path}")
 
-def clear_app_state(driver):
+def clear_app_state(device):
     """Clear app data and restart the app"""
     print("Clearing app state...")
     app_id = 'com.eatvermont'
-    driver.terminate_app(app_id)  # Close the app
-    driver.activate_app(app_id)   # Start the app fresh
+    device.app_stop(app_id)  # Close the app
+    device.app_clear(app_id)  # Clear app data
+    device.app_start(app_id)  # Start the app fresh
     print("App state cleared and restarted")
