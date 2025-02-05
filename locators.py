@@ -73,3 +73,10 @@ class EventsScreen:
     EVENTS_SCREEN_TILE_1 = '//android.widget.TextView[@text and @index="2"]'  # First event title text (index 2 from screenshot)
     EVENTS_SCREEN_NO_EVENTS = '//android.widget.TextView[@text="No Events"]'  # Text shown when no events are available
     EVENT_TITLE = '//android.widget.TextView[contains(@text, "{}")]'  # Event title in the details view
+
+
+class ViewMap:
+    EVENTS_FILTER = '//*[@text="Events"]'
+    FOOD_AND_DRINKS_FILTER = '//*[@text="Food & Drinks"]'
+    FARMS_FILTER = '//*[@text="Farms"]'
+    FOOD_PANTRIES_FILTER = '//*[@text="Food Pantries"]'
