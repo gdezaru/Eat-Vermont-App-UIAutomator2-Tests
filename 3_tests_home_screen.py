@@ -749,9 +749,11 @@ def test_home_screen_events_further_than(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
-    # Single scroll to show Events within ~30 minutes
+    # Scroll to center Events Further Than ~30min on screen
     d(scrollable=True).scroll.to(text="Events Further Than ~30min")
-    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
+    target_element = d(text="Events Further Than ~30min")
+    assert target_element.exists(timeout=5), "Events Further Than ~30min text not found"
+    d.click(0.5, target_element.bounds['top'] / d.window_size()[1])  # Click at the horizontal center at element's vertical position
     sleep(1)
 
     # Check for content in Events within 30 minutes tile
