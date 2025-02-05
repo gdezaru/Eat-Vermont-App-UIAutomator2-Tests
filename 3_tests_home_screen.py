@@ -749,35 +749,33 @@ def test_home_screen_events_further_than(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
-    # Scroll to center Events Further Than ~30min on screen
-    d(scrollable=True).fling.toBeginning()
-    d(scrollable=True).scroll.to(text="Events Further Than ~30min")
-    target_element = d(text="Events Further Than ~30min")
-    assert target_element.exists(timeout=5), "Events Further Than ~30min text not found"
-    sleep(1)
+        # Single scroll to show Events within ~30 minutes
+        d(scrollable=True).scroll.to(text="Events Further Than ~30min")
+        assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Within ~30min text not found"
+        sleep(1)
 
-    # Check for content in Events within 30 minutes tile
-    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    event_found = False
-    for day in days_of_week:
-        events_tile = d.xpath(HomeScreenTiles.EVENTS_MORE_THAN_30_TILE.format(day))
-        if events_tile.exists:
-            event_found = True
-            break
+        # Check for content in Events within 30 minutes tile
+        days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        event_found = False
+        for day in days_of_week:
+            events_tile = d.xpath(HomeScreenTiles.EVENTS_WITHIN_30_TILE.format(day))
+            if events_tile.exists:
+                event_found = True
+                break
 
-    assert event_found, "Could not find any events with dates in Events within 30 minutes section"
-    sleep(1)
+        assert event_found, "Could not find any events with dates in Events within 30 minutes section"
+        sleep(1)
 
-    # Take screenshot of the Events within 30 minutes section
-    d.screenshot("3_7_1_home_screen_events_further_than.png")
-    sleep(1)
+        # Take screenshot of the Events within 30 minutes section
+        d.screenshot("3_7_1_home_screen_events_further_than.png")
+        sleep(1)
 
-    # Click See All for Events within 30 minutes
-    see_all = d(text="See All")
-    assert see_all.exists, "Could not find See All button for Events Further Than 30 minutes"
-    see_all.click()
-    sleep(2)  # Extra time for page transition
+        # Click See All for Events within 30 minutes
+        see_all = d(text="See All")
+        assert see_all.exists, "Could not find See All button for Events within 30 minutes"
+        see_all.click()
+        sleep(2)  # Extra time for page transition
 
-    # Take screenshot of the Events within 30 minutes list view
-    d.screenshot("3_7_2_home_screen_events_further_than_list.png")
-    sleep(1)
+        # Take screenshot of the Events within 30 minutes list view
+        d.screenshot("3_7_2_home_screen_events_more_than_list.png")
+        sleep(1)
