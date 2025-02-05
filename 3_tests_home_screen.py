@@ -278,18 +278,22 @@ def test_home_screen_view_map(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
-    # Click "View Map" button
-    view_map = d.xpath(HomeScreen.VIEW_MAP)
-    assert view_map.exists, "Could not find View Map button"
-    view_map.click()
-    sleep(2)  # Wait for map screen to load
-    
-    # Assert that Events filter is visible
-    events_filter = d.xpath(ViewMap.EVENTS_FILTER)
-    assert events_filter.exists, "Events filter is not visible on the map screen"
-    
-    # Take screenshot of the map screen with filters
-    d.screenshot("3_2_1_home_screen_view_map_opened.png")
+        # Single scroll to show View Map
+        d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)  # Shorter scroll up
+        sleep(1)
+
+        # Click "View Map" button
+        view_map = d.xpath(HomeScreen.VIEW_MAP)
+        assert view_map.exists, "Could not find View Map button"
+        view_map.click()
+        sleep(5)  # Increased wait time for map screen to load
+        
+        # Assert that Events filter is visible
+        events_filter = d.xpath(ViewMap.EVENTS_FILTER)
+        assert events_filter.exists, "Events filter is not visible on the map screen"
+        
+        # Take screenshot of the map screen with filters
+        d.screenshot("3_2_1_home_screen_view_map_opened.png")
 
 
 #def test_home_screen_videos(d):
