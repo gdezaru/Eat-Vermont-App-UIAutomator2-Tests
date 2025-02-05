@@ -177,7 +177,7 @@ def test_home_screen_events(d):
                 print(f"\nFound an event after {scroll_attempt + 1} scroll(s)")
                 found_event = True
                 # Take a screenshot after finding the event
-                d.screenshot(f"3_1_2_home_screen_events_{next_day.lower()}_after_scroll.png")
+                d.screenshot(f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
                 break
         
         if not found_event:
