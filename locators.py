@@ -26,8 +26,7 @@ class HomeScreen:
     """Locators for Home Screen UI Elements"""
     EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events")]'
     EVENTS_SEE_ALL = '//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
-    VIDEOS_SEE_ALL = ('//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[5]'
-                      '/android.widget.TextView[1]')
+    VIDEOS_SEE_ALL = '//android.widget.TextView[@text="See All"]'
     VIEW_MAP = '//android.widget.TextView[@text="View Map"]'
     DAY_TRIPS_SEE_ALL = '//*[contains(@text, "{}")]/following-sibling::*//android.widget.TextView[@text="See All"]'
     EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::*//android.widget.TextView'
@@ -77,6 +76,6 @@ class EventsScreen:
 
 class ViewMap:
     EVENTS_FILTER = '//android.widget.TextView[@text="Events" and @index="1"]'
-    FOOD_AND_DRINKS_FILTER = '//*[@text="Food & Drinks"]'
-    FARMS_FILTER = '//*[@text="Farms"]'
-    FOOD_PANTRIES_FILTER = '//*[@text="Food Pantries"]'
+    FOOD_AND_DRINKS_FILTER = '//android.widget.TextView[@text="Food & Drinks" and @index="2"]'
+    FARMS_FILTER = '//android.widget.TextView[@text="Farms" and @index="3"]'
+    FOOD_PANTRIES_FILTER = '//android.widget.TextView[@text="Food Pantries" and @index="4"]'
