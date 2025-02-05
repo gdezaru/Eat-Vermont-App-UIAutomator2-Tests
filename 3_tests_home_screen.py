@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, EventsScreen, ViewMap
+from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles
 from utils import get_next_day
 
 
@@ -552,16 +552,113 @@ def test_home_screen_day_trips(d):
             assert False, "Login failed - Could not verify successful login"
 
     # Single scroll to show Day Trips
-    d(scrollable=True).scroll.to(text="Day Trips")
-    assert d(text="Day Trips").exists(timeout=5), "Day Trips text not found"
+    d(scrollable=True).scroll.to(text="Day Trip")
+    assert d(text="Day Trip").exists(timeout=5), "Day Trip text not found"
     sleep(1)
 
     # Click "See all" next to Day Trips
-    day_trips_see_all = d.xpath(HomeScreen.DAY_TRIPS_SEE_ALL.format("Day Trips"))
-    assert day_trips_see_all.exists, "Could not find Day Trips 'See all' button"
+    day_trips_see_all = d.xpath(HomeScreen.DAY_TRIPS_SEE_ALL.format("Day Trip"))
+    assert day_trips_see_all.exists, "Could not find Day Trip 'See all' button"
     day_trips_see_all.click()
     sleep(2)
 
     # Take screenshot of the Day Trips page
     d.screenshot("3_5_1_home_screen_day_trips_opened.png")
     print("\nDay Trips page loaded and screenshot taken")
+
+
+def test_home_screen_events_within(d):
+    """
+    Tests the navigation to the home screen to the Events within ~30 minutes module.
+    """
+    # Handle notification permission if it appears
+    if d(text="Allow").exists:
+        d(text="Allow").click()
+        sleep(1)
+
+    # Find and click Sign In button
+    sign_in = None
+    if d(description="Sign In").exists(timeout=5):
+        sign_in = d(description="Sign In")
+    elif d(text="Sign In").exists(timeout=5):
+        sign_in = d(text="Sign In")
+
+    assert sign_in is not None, "Could not find Sign In button"
+    sign_in.click()
+    sleep(2)
+
+    # Enter email
+    email_field = d(text="Email")
+    assert email_field.exists(timeout=5), "Email field not found"
+    email_field.click()
+    d.send_keys(TEST_USER['email'])
+    sleep(1)
+
+    # Enter password
+    password_field = d(text="Password")
+    assert password_field.exists(timeout=5), "Password field not found"
+    password_field.click()
+    d.send_keys(TEST_USER['password'])
+    sleep(1)
+
+    # Click Log in and verify
+    login_attempts = 2
+    for attempt in range(login_attempts):
+        # Find and click login button
+        login_button = d(text="Log in")
+        assert login_button.exists(timeout=5), "Log in button not found"
+        login_button.click()
+        sleep(5)  # Wait for login process
+
+        # Check for error messages
+        error_messages = [
+            "Invalid email or password",
+            "Login failed",
+            "Error",
+            "Something went wrong",
+            "No internet connection"
+        ]
+
+        error_found = False
+        for error_msg in error_messages:
+            if d(textContains=error_msg).exists(timeout=2):
+                error_found = True
+                break
+
+        if error_found and attempt < login_attempts - 1:
+            continue
+
+        # Verify successful login by checking for common elements
+        success_indicators = ["Events", "Home", "Profile", "Search"]
+        for indicator in success_indicators:
+            if d(text=indicator).exists(timeout=5):
+                break
+        else:
+            if attempt < login_attempts - 1:
+                # Try to go back if needed
+                if d(text="Back").exists():
+                    d(text="Back").click()
+                    sleep(1)
+                continue
+            assert False, "Login failed - Could not verify successful login"
+
+    # Single scroll to show Events within ~30 minutes
+    d(scrollable=True).scroll.to(text="Events Further Than ~30min")
+    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
+    sleep(1)
+
+    # Check for content in Events within 30 minutes tile
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    event_found = False
+    for day in days_of_week:
+        events_tile = d.xpath(HomeScreenTiles.EVENTS_WITHIN_30_TILE.format(day))
+        if events_tile.exists:
+            event_found = True
+            break
+    
+    assert event_found, "Could not find any events with dates in Events within 30 minutes section"
+    sleep(1)
+
+    # Take screenshot of the Events within 30 minutes section
+    d.screenshot("3_6_1_home_screen_events_within.png")
+    sleep(1)

@@ -31,6 +31,8 @@ class HomeScreen:
     DAY_TRIPS_SEE_ALL = '//*[contains(@text, "{}")]/following-sibling::*//android.widget.TextView[@text="See All"]'
     EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::*//android.widget.TextView'
                                 '[@text="See All"]')
+    EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'
+                                      '/following-sibling::*//android.widget.TextView[@text="See All"]')
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
 
 
@@ -41,8 +43,7 @@ class HomeScreenTiles:
                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]')
     DAY_TRIPS_TILE = ('//android.view.ViewGroup[contains(@content-desc, "{}")]//android.widget.TextView'
                       '[@text="Read More"]')
-    EVENTS_WITHIN_30_TILE = ('//android.widget.ScrollView[1]/android.view.ViewGroup[1]'
-                             '/android.view.ViewGroup[4]/android.view.ViewGroup[contains(@content-desc, "{}")]')
+    EVENTS_WITHIN_30_TILE = '//android.widget.TextView[contains(@text, "{}, ")]'
     EVENTS_MORE_THAN_30_TILE = ('//android.widget.ScrollView[1]/android.view.ViewGroup[1]'
                                 '/android.view.ViewGroup[5]/android.view.ViewGroup[contains(@content-desc, "{}")]')
 
@@ -87,3 +88,5 @@ class AddInfo:
     ADD_UPDATE_INFO_FIELD = ('//android.widget.EditText[@text="e.g. '
                              '\"New hours: 9am-6pm daily.\" or \"New menu!\" (then attach an image)"]')
     SUBMIT_INFO_BUTTON = '//android.widget.TextView[@text="Submit"]'
+
+#class DayTripsScreen:
