@@ -662,3 +662,13 @@ def test_home_screen_events_within(d):
     # Take screenshot of the Events within 30 minutes section
     d.screenshot("3_6_1_home_screen_events_within.png")
     sleep(1)
+
+    # Click See All for Events within 30 minutes
+    see_all = d.xpath(HomeScreen.EVENTS_WITHIN_30_SEE_ALL.format("Events within ~30min"))
+    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
+    see_all.click()
+    sleep(2)  # Extra time for page transition
+
+    # Take screenshot of the Events within 30 minutes list view
+    d.screenshot("3_6_2_home_screen_events_within_list.png")
+    sleep(1)
