@@ -643,7 +643,7 @@ def test_home_screen_events_within(d):
             assert False, "Login failed - Could not verify successful login"
 
     # Single scroll to show Events within ~30 minutes
-    d(scrollable=True).scroll.to(text="Events Further Than ~30min")
+    d(scrollable=True).scroll.to(text="Events Within ~30min")
     assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
     sleep(1)
 
