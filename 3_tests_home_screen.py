@@ -459,3 +459,18 @@ def test_home_screen_add_info(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+        # Scroll until Add Info button is visible
+        d(scrollable=True).scroll.to(text="Add Info")
+        assert d(text="Add Info").exists(timeout=5), "Add Info button not found"
+        sleep(1)
+
+        # Click on Add Info button
+        add_info_button = d.xpath(HomeScreen.ADD_INFO_BUTTON)
+        assert add_info_button.exists, "Add Info button not found"
+        add_info_button.click()
+        sleep(5)
+
+        # Take screenshot of the Add Info page
+        d.screenshot("3_4_1_home_screen_add_info_opened.png")
+        print("\nAdd Info page loaded and screenshot taken")

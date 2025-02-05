@@ -79,3 +79,11 @@ class ViewMap:
     FOOD_AND_DRINKS_FILTER = '//android.widget.TextView[@text="Food & Drinks" and @index="2"]'
     FARMS_FILTER = '//android.widget.TextView[@text="Farms" and @index="3"]'
     FOOD_PANTRIES_FILTER = '//android.widget.TextView[@text="Food Pantries" and @index="4"]'
+
+
+class AddInfo:
+    """Locators for Add Info Screen"""
+    BUSINESS_NAME = '//android.widget.EditText[@text="Type here."]'
+    ADD_UPDATE_INFO_FIELD = ('//android.widget.EditText[@text="e.g. '
+                             '\"New hours: 9am-6pm daily.\" or \"New menu!\" (then attach an image)"]')
+    SUBMIT_INFO_BUTTON = '//android.widget.TextView[@text="Submit"]'
