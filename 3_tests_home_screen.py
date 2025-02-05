@@ -644,7 +644,7 @@ def test_home_screen_events_within(d):
 
     # Single scroll to show Events within ~30 minutes
     d(scrollable=True).scroll.to(text="Events Within ~30min")
-    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
+    assert d(text="Events Within ~30min").exists(timeout=5), "Events Within ~30min text not found"
     sleep(1)
 
     # Check for content in Events within 30 minutes tile
@@ -664,11 +664,118 @@ def test_home_screen_events_within(d):
     sleep(1)
 
     # Click See All for Events within 30 minutes
-    see_all = d.xpath(HomeScreen.EVENTS_WITHIN_30_SEE_ALL.format("Events within ~30min"))
+    see_all = d(text="See All")
     assert see_all.exists, "Could not find See All button for Events within 30 minutes"
     see_all.click()
     sleep(2)  # Extra time for page transition
 
     # Take screenshot of the Events within 30 minutes list view
     d.screenshot("3_6_2_home_screen_events_within_list.png")
+    sleep(1)
+
+
+def test_home_screen_events_within(d):
+    """
+    Tests the navigation to the home screen to the Events within ~30 minutes module.
+    """
+    # Handle notification permission if it appears
+    if d(text="Allow").exists:
+        d(text="Allow").click()
+        sleep(1)
+
+    # Find and click Sign In button
+    sign_in = None
+    if d(description="Sign In").exists(timeout=5):
+        sign_in = d(description="Sign In")
+    elif d(text="Sign In").exists(timeout=5):
+        sign_in = d(text="Sign In")
+
+    assert sign_in is not None, "Could not find Sign In button"
+    sign_in.click()
+    sleep(2)
+
+    # Enter email
+    email_field = d(text="Email")
+    assert email_field.exists(timeout=5), "Email field not found"
+    email_field.click()
+    d.send_keys(TEST_USER['email'])
+    sleep(1)
+
+    # Enter password
+    password_field = d(text="Password")
+    assert password_field.exists(timeout=5), "Password field not found"
+    password_field.click()
+    d.send_keys(TEST_USER['password'])
+    sleep(1)
+
+    # Click Log in and verify
+    login_attempts = 2
+    for attempt in range(login_attempts):
+        # Find and click login button
+        login_button = d(text="Log in")
+        assert login_button.exists(timeout=5), "Log in button not found"
+        login_button.click()
+        sleep(5)  # Wait for login process
+
+        # Check for error messages
+        error_messages = [
+            "Invalid email or password",
+            "Login failed",
+            "Error",
+            "Something went wrong",
+            "No internet connection"
+        ]
+
+        error_found = False
+        for error_msg in error_messages:
+            if d(textContains=error_msg).exists(timeout=2):
+                error_found = True
+                break
+
+        if error_found and attempt < login_attempts - 1:
+            continue
+
+        # Verify successful login by checking for common elements
+        success_indicators = ["Events", "Home", "Profile", "Search"]
+        for indicator in success_indicators:
+            if d(text=indicator).exists(timeout=5):
+                break
+        else:
+            if attempt < login_attempts - 1:
+                # Try to go back if needed
+                if d(text="Back").exists():
+                    d(text="Back").click()
+                    sleep(1)
+                continue
+            assert False, "Login failed - Could not verify successful login"
+
+    # Single scroll to show Events within ~30 minutes
+    d(scrollable=True).scroll.to(text="Events Further Than ~30min")
+    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
+    sleep(1)
+
+    # Check for content in Events within 30 minutes tile
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    event_found = False
+    for day in days_of_week:
+        events_tile = d.xpath(HomeScreenTiles.EVENTS_MORE_THAN_30_TILE.format(day))
+        if events_tile.exists:
+            event_found = True
+            break
+
+    assert event_found, "Could not find any events with dates in Events within 30 minutes section"
+    sleep(1)
+
+    # Take screenshot of the Events within 30 minutes section
+    d.screenshot("3_7_1_home_screen_events_further_than.png")
+    sleep(1)
+
+    # Click See All for Events within 30 minutes
+    see_all = d(text="See All")
+    assert see_all.exists, "Could not find See All button for Events Further Than 30 minutes"
+    see_all.click()
+    sleep(2)  # Extra time for page transition
+
+    # Take screenshot of the Events within 30 minutes list view
+    d.screenshot("3_7_2_home_screen_events_further_than_list.png")
     sleep(1)
