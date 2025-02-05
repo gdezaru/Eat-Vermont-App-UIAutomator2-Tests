@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, EventsScreen
+from locators import HomeScreen, EventsScreen, ViewMap
 from utils import get_next_day
 
 
@@ -279,3 +279,14 @@ def test_home_screen_view_map(d):
             assert False, "Login failed - Could not verify successful login"
 
     # Click "View Map" button
+    view_map = d.xpath(HomeScreen.VIEW_MAP)
+    assert view_map.exists, "Could not find View Map button"
+    view_map.click()
+    sleep(2)  # Wait for map screen to load
+    
+    # Assert that Events filter is visible
+    events_filter = d.xpath(ViewMap.EVENTS_FILTER)
+    assert events_filter.exists, "Events filter is not visible on the map screen"
+    
+    # Take screenshot of the map screen with filters
+    d.screenshot("3_2_1_home_screen_view_map_opened.png")
