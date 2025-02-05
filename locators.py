@@ -76,7 +76,7 @@ class EventsScreen:
 
 
 class ViewMap:
-    EVENTS_FILTER = '//*[@text="Events"]'
+    EVENTS_FILTER = '//android.widget.TextView[@text="Events" and @index="1"]'
     FOOD_AND_DRINKS_FILTER = '//*[@text="Food & Drinks"]'
     FARMS_FILTER = '//*[@text="Farms"]'
     FOOD_PANTRIES_FILTER = '//*[@text="Food Pantries"]'

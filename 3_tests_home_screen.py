@@ -290,3 +290,6 @@ def test_home_screen_view_map(d):
     
     # Take screenshot of the map screen with filters
     d.screenshot("3_2_1_home_screen_view_map_opened.png")
+
+
+#def test_home_screen_videos(d):
