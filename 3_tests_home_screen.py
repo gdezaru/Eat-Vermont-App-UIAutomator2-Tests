@@ -552,3 +552,16 @@ def test_home_screen_day_trips(d):
             assert False, "Login failed - Could not verify successful login"
 
     # Single scroll to show Day Trips
+    d(scrollable=True).scroll.to(text="Day Trips")
+    assert d(text="Day Trips").exists(timeout=5), "Day Trips text not found"
+    sleep(1)
+
+    # Click "See all" next to Day Trips
+    day_trips_see_all = d.xpath(HomeScreen.DAY_TRIPS_SEE_ALL.format("Day Trips"))
+    assert day_trips_see_all.exists, "Could not find Day Trips 'See all' button"
+    day_trips_see_all.click()
+    sleep(2)
+
+    # Take screenshot of the Day Trips page
+    d.screenshot("3_5_1_home_screen_day_trips_opened.png")
+    print("\nDay Trips page loaded and screenshot taken")
