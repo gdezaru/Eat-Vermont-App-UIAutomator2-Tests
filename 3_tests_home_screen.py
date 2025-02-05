@@ -674,9 +674,9 @@ def test_home_screen_events_within(d):
     sleep(1)
 
 
-def test_home_screen_events_within(d):
+def test_home_screen_events_further_than(d):
     """
-    Tests the navigation to the home screen to the Events within ~30 minutes module.
+    Tests the navigation to the home screen to the Events Further Than ~30 minutes module.
     """
     # Handle notification permission if it appears
     if d(text="Allow").exists:
