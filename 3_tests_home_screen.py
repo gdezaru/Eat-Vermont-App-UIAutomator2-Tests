@@ -380,3 +380,6 @@ def test_home_screen_videos(d):
     assert videos_see_all.exists, "Could not find Videos See All button"
     videos_see_all.click()
     sleep(2)  # Wait for videos page to load
+
+    # Take screenshot of the videos page
+    d.screenshot("3_3_1_home_screen_videos_opened.png")
