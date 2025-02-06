@@ -120,8 +120,10 @@ class SettingsScreen:
     LOG_OUT = '//android.view.ViewGroup[@content-desc="Log out" and @package="com.eatvermont"]'
 
 
-#class Events:
-
+class Events:
+    """Locators for Events"""
+    EVENT_CARD_DETAILS_TAB = '//android.view.ViewGroup[@content-desc="Details" and @package="com.eatvermont"]'
+    EVENT_CARD_MORE_INFO_TAB = '//android.view.ViewGroup[@content-desc="More Info" and @package="com.eatvermont"]'
 
 
 #class Businesses:
