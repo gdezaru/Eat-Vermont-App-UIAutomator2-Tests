@@ -34,6 +34,7 @@ class HomeScreen:
     EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'
                                       '/following-sibling::*//android.widget.TextView[@text="See All"]')
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
+    LOCATION_PICKER_HOME_SCREEN = '//android.widget.TextView[@text="Pick Your Location"]'
 
 
 class HomeScreenTiles:

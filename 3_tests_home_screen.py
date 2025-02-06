@@ -886,8 +886,8 @@ def test_home_screen_bottom_nav_bar(d):
     home_button.click()
     sleep(5)  # Wait for home page to load
 
-    # Assert that "Eat Vermont" text is present
-    assert d(text="Eat Vermont").exists, "Eat Vermont text not found on screen"
+    # Assert that "Events" text is present on home screen
+    assert d(text="Events").exists, "Events text not found on home screen"
 
     # Take screenshot
     d.screenshot("3_8_3_bottom_nav_home_screen.png")
