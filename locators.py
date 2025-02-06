@@ -34,6 +34,7 @@ class HomeScreen:
     EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'
                                       '/following-sibling::*//android.widget.TextView[@text="See All"]')
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
+    SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
 #    LOCATION_PICKER_HOME_SCREEN = *need button id because other locators don't work*'
 
 
@@ -101,3 +102,10 @@ class LocationManagement:
     LOCATION_SEARCH_INPUT = '//android.widget.EditText[@package="com.eatvermont"]'
     USE_MY_CURRENT_LOCATION = '//android.widget.TextView[@text="Use My Current Location" and @package="com.eatvermont"]'
     LOCATION_SEARCH_RESULT = '//android.widget.TextView[@text="{}" and @package="com.eatvermont"]'
+
+class SettingsScreen:
+    MANAGE_ACCOUNT = '//android.view.ViewGroup[@content-desc="Manage Account" and @package="com.eatvermont"]'
+    EDIT_PROFILE = '//android.view.ViewGroup[@content-desc="Edit Profile" and @package="com.eatvermont"]'
+    SHARE_MY_LOCATION = '//android.widget.TextView[@text="Share My Location" and @package="com.eatvermont"]'
+    LOCATION_TOGGLE = '//android.view.ViewGroup[@resource-id="main-style" and @package="com.eatvermont"]'
+    LOG_OUT = '//android.view.ViewGroup[@content-desc="Log out" and @package="com.eatvermont"]'
