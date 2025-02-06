@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles
+from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
 from utils import get_next_day
 
 
@@ -856,3 +856,51 @@ def test_home_screen_bottom_nav_bar(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
+    # Click Favorites button
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    favorites_button.click()
+    sleep(2)  # Wait for favorites page to load
+
+    # Assert that "Favorites" text is present
+    assert d(text="Favorites").exists, "Favorites text not found on screen"
+
+    # Take screenshot
+    d.screenshot("3_8_1_bottom_nav_favorites_screen.png")
+
+    # Click Events button
+    events_button = d.xpath(BottomNavBar.EVENTS)
+    assert events_button.exists, "Could not find Events button"
+    events_button.click()
+    sleep(5)  # Wait for events page to load
+
+    # Assert that "Events" text is present
+    assert d(text="Events").exists, "Events text not found on screen"
+
+    # Take screenshot
+    d.screenshot("3_8_2_bottom_nav_events_screen.png")
+
+    # Click Home button
+    home_button = d.xpath(BottomNavBar.NAV_HOME_BUTTON)
+    assert home_button.exists, "Could not find Home button"
+    home_button.click()
+    sleep(5)  # Wait for home page to load
+
+    # Assert that "Eat Vermont" text is present
+    assert d(text="Eat Vermont").exists, "Eat Vermont text not found on screen"
+
+    # Take screenshot
+    d.screenshot("3_8_3_bottom_nav_home_screen.png")
+
+    # Click EAT VERMONT button
+    eat_vermont_button = d.xpath(BottomNavBar.EAT_VERMONT_BUTTON)
+    assert eat_vermont_button.exists, "Could not find EAT VERMONT button"
+    eat_vermont_button.click()
+    sleep(2)  # Wait for menu to appear
+
+    # Assert that Check In button is visible
+    check_in_button = d.xpath(BottomNavBar.CHECK_IN_BUTTON)
+    assert check_in_button.exists, "Check In button not found on screen"
+
+    # Take screenshot
+    d.screenshot("3_8_4_eat_vermont_button_home_screen.png")

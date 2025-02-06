@@ -50,9 +50,14 @@ class HomeScreenTiles:
 
 class BottomNavBar:
     """Locators for Bottom Navigation Bar"""
+    NAV_HOME_BUTTON = '//android.widget.TextView[@text="Home"]'
     SEARCH = '//android.widget.TextView[@text="Search"]'
-    EVENTS = '//android.widget.TextView[@content-desc="Events"]/android.widget.TextView[1]'
+    EVENTS = '//android.widget.TextView[@text="Events"]'
     FAVORITES = '//android.widget.TextView[@text="Favorites"]'
+    EAT_VERMONT_BUTTON = '//com.horcrux.svg.GroupView[@package="com.eatvermont"]'
+    DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Day Trips"]'
+    CHECK_IN_BUTTON = '//android.widget.TextView[@text="Check In"]'
+    TRAILS_BUTTON = '//android.widget.TextView[@text="Trails"]'
 
 
 class SearchModule:
