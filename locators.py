@@ -55,12 +55,7 @@ class BottomNavBar:
     SEARCH = '//android.widget.TextView[@text="Search"]'
     EVENTS = '//android.widget.TextView[@text="Events"]'
     FAVORITES = '//android.widget.TextView[@text="Favorites"]'
-    EAT_VERMONT_BUTTON = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/'
-                          'android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                          '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                          '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                          '/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.View[1]'
-                          '/android.view.ViewGroup[1]/android.view.View[1]')
+    EAT_VERMONT_BUTTON = '//android.view.ViewGroup[@package="com.eatvermont" and @index="2"]'
     DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Day Trips"]'
     CHECK_IN_BUTTON = '//android.widget.TextView[@text="Check In"]'
     TRAILS_BUTTON = '//android.widget.TextView[@text="Trails"]'

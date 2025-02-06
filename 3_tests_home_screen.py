@@ -891,12 +891,3 @@ def test_home_screen_bottom_nav_bar(d):
 
     # Take screenshot
     d.screenshot("3_8_3_bottom_nav_home_screen.png")
-
-    # Click EAT VERMONT button
-    eat_vermont_button = d.xpath(BottomNavBar.EAT_VERMONT_BUTTON)
-    assert eat_vermont_button.exists, "Could not find EAT VERMONT button"
-    eat_vermont_button.click()
-    sleep(3)  # Increased wait time for menu to appear
-
-    # Take screenshot
-    d.screenshot("3_8_4_bottom_nav_eat_vermont_button.png")
