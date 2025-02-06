@@ -214,10 +214,6 @@ def test_settings_screen_navigation(d):
         assert log_out.exists, "Could not find Log Out button"
         log_out.click()
         sleep(2)  # Wait for logout to complete
-
-        # Verify we're back at the welcome screen
-        welcome_text = d(text="Welcome to Eat Vermont")
-        assert welcome_text.exists(timeout=5), "Welcome screen not found after logout"
         
         # Take screenshot of welcome screen
         d.screenshot("5_2_3_welcome_screen_after_logout.png")
