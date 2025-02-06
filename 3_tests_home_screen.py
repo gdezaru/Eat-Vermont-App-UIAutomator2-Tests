@@ -855,3 +855,4 @@ def test_home_screen_bottom_nav_bar(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
