@@ -302,4 +302,5 @@ def test_settings_screen_edit_profile(d):
         edit_profile = d.xpath(SettingsScreen.EDIT_PROFILE)
         assert edit_profile.exists, "Could not find Edit Profile option"
         edit_profile.click()
-        sleep(2)
+        sleep(3)
+
