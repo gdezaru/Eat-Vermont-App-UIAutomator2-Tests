@@ -2,7 +2,7 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, SettingsScreen
-from utils import generate_random_name
+from utils import generate_random_name, generate_random_username
 
 
 def test_settings_contents(d):
@@ -312,7 +312,25 @@ def test_settings_screen_edit_profile(d):
         d.clear_text()
         new_name = generate_random_name()
         d.send_keys(new_name)
+        sleep(3)  # Wait for text input
+
+        # Verify the new name was successfully inputted
+        assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
+        
+        # Take screenshot of the edited profile name
+        d.screenshot("5_3_1_edited_profile_name.png")
+
+        # Clear the username field and enter a new random username
+        edit_username = d.xpath(SettingsScreen.EDIT_USERNAME)
+        assert edit_username.exists, "Could not find Username field"
+        edit_username.click()
+        d.clear_text()
+        new_username = generate_random_username()
+        d.send_keys(new_username)
         sleep(1)  # Wait for text input
 
-        # Take screenshot of the edited profile
-        d.screenshot("5_3_1_edited_profile_name.png")
+        # Verify the new username was successfully inputted
+        assert edit_username.get_text() == new_username, f"Username was not updated correctly. Expected: {new_username}, Got: {edit_username.get_text()}"
+        
+        # Take screenshot of the edited profile username
+        d.screenshot("5_3_2_edited_profile_username.png")

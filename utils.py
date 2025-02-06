@@ -47,3 +47,9 @@ def generate_random_name():
     name_length = random.randint(5, 10)  # Random length between 5 and 10
     random_chars = ''.join(random.choices(string.ascii_lowercase, k=name_length-1))
     return 'D' + random_chars
+
+def generate_random_username():
+    """Generate a random username."""
+    username_length = random.randint(6, 12)
+    username = ''.join(random.choices(string.ascii_lowercase, k=username_length))
+    return username
