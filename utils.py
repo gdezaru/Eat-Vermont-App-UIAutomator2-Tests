@@ -3,6 +3,8 @@ Utility functions for test automation
 """
 from datetime import datetime
 import os
+import random
+import string
 
 def ensure_screenshots_dir():
     """Ensure screenshots directory exists"""
@@ -39,3 +41,9 @@ def get_next_day(current_day):
     current_index = days.index(current_day)
     next_index = (current_index + 1) % 7  # Use modulo to wrap around to Sunday
     return days[next_index]
+
+def generate_random_name():
+    """Generate a random name starting with 'D'."""
+    name_length = random.randint(5, 10)  # Random length between 5 and 10
+    random_chars = ''.join(random.choices(string.ascii_lowercase, k=name_length-1))
+    return 'D' + random_chars

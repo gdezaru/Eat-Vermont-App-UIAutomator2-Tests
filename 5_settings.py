@@ -2,6 +2,7 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, SettingsScreen
+from utils import generate_random_name
 
 
 def test_settings_contents(d):
@@ -304,3 +305,14 @@ def test_settings_screen_edit_profile(d):
         edit_profile.click()
         sleep(3)
 
+        # Clear the name field and enter a new random name
+        edit_name = d.xpath(SettingsScreen.EDIT_NAME)
+        assert edit_name.exists, "Could not find Name field"
+        edit_name.click()
+        d.clear_text()
+        new_name = generate_random_name()
+        d.send_keys(new_name)
+        sleep(1)  # Wait for text input
+
+        # Take screenshot of the edited profile
+        d.screenshot("5_3_1_edited_profile_name.png")
