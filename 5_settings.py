@@ -317,8 +317,12 @@ def test_settings_screen_edit_profile(d):
         # Verify the new name was successfully inputted
         assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
         
+        # Verify save button is present
+        save_button = d.xpath(SettingsScreen.EDIT_PROFILE_SAVE_BUTTON)
+        assert save_button.exists, "Save button is not present after editing name"
+        
         # Take screenshot of the edited profile name
-        d.screenshot("5_3_1_edited_profile_name.png")
+        d.screenshot("5_3_1_edited_profile_name_save_button_active.png")
 
         # Clear the username field and enter a new random username
         edit_username = d.xpath(SettingsScreen.EDIT_USERNAME)
@@ -333,4 +337,4 @@ def test_settings_screen_edit_profile(d):
         assert edit_username.get_text() == new_username, f"Username was not updated correctly. Expected: {new_username}, Got: {edit_username.get_text()}"
         
         # Take screenshot of the edited profile username
-        d.screenshot("5_3_2_edited_profile_username.png")
+        d.screenshot("5_3_2_edited_profile_username_save_button_active.png")

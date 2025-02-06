@@ -110,6 +110,7 @@ class SettingsScreen:
     BACK_BUTTON_SETTINGS = '//android.view.ViewGroup[@content-desc="My Profile" and @package="com.eatvermont"]'
     MANAGE_ACCOUNT = '//android.view.ViewGroup[@content-desc="Manage Account" and @package="com.eatvermont"]'
     EDIT_PROFILE = '//android.view.ViewGroup[@content-desc="Edit Profile" and @package="com.eatvermont"]'
+    EDIT_NAME = '//android.widget.EditText[@package="com.eatvermont" and @index="1"]'
     EDIT_USERNAME = '//android.view.ViewGroup[@index="5" and @package="com.eatvermont"]//android.widget.EditText'
     BIRTH_DATE = '//android.view.ViewGroup[@resource-id="edit-profile-birth-date" and @package="com.eatvermont"]'
     EDIT_PROFILE_SAVE_BUTTON = '//android.view.ViewGroup[@content-desc="Save" and @package="com.eatvermont"]'
@@ -117,4 +118,3 @@ class SettingsScreen:
     LOCATION_TOGGLE = '//com.horcrux.svg.CircleView[@package="com.eatvermont" and @index="1"]'
     LOCATION_ALLOW = '//android.widget.TextView[@text="Allow" and @package="com.eatvermont"]'
     LOG_OUT = '//android.view.ViewGroup[@content-desc="Log out" and @package="com.eatvermont"]'
-    EDIT_NAME = '//android.widget.EditText[@package="com.eatvermont" and @index="1"]'
