@@ -899,4 +899,4 @@ def test_home_screen_bottom_nav_bar(d):
     sleep(3)  # Increased wait time for menu to appear
 
     # Take screenshot
-    d.screenshot("3_8_4_eat_vermont_button_home_screen.png")
+    d.screenshot("3_8_4_bottom_nav_eat_vermont_button.png")
