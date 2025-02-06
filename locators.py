@@ -107,8 +107,10 @@ class LocationManagement:
 
 
 class SettingsScreen:
+    BACK_BUTTON_SETTINGS = '//android.view.ViewGroup[@content-desc="My Profile" and @package="com.eatvermont"]'
     MANAGE_ACCOUNT = '//android.view.ViewGroup[@content-desc="Manage Account" and @package="com.eatvermont"]'
     EDIT_PROFILE = '//android.view.ViewGroup[@content-desc="Edit Profile" and @package="com.eatvermont"]'
     SHARE_MY_LOCATION = '//android.widget.TextView[@text="Share My Location" and @package="com.eatvermont"]'
-    LOCATION_TOGGLE = '//android.view.ViewGroup[@resource-id="main-style" and @package="com.eatvermont"]'
+    LOCATION_TOGGLE = '//com.horcrux.svg.CircleView[@package="com.eatvermont" and @index="1"]'
+    LOCATION_ALLOW = '//android.widget.TextView[@text="Allow" and @package="com.eatvermont"]'
     LOG_OUT = '//android.view.ViewGroup[@content-desc="Log out" and @package="com.eatvermont"]'

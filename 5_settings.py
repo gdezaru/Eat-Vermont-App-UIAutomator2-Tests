@@ -189,14 +189,35 @@ def test_settings_screen_navigation(d):
         d.screenshot("5_2_1_edit_profile_screen.png")
         
         # Go back to Settings
-        d(text="Back").click()
+        back_button = d.xpath(SettingsScreen.BACK_BUTTON_SETTINGS)
+        assert back_button.exists, "Could not find Back button"
+        back_button.click()
         sleep(2)  # Wait for settings screen to reload
         
         # Click on Location Toggle
         location_toggle = d.xpath(SettingsScreen.LOCATION_TOGGLE)
         assert location_toggle.exists, "Could not find Location Toggle"
         location_toggle.click()
-        sleep(5)  # Wait for toggle to change state
+        sleep(1)  # Wait for toggle to change state
+
+        # Handle location permission dialog if it appears
+        location_allow = d.xpath(SettingsScreen.LOCATION_ALLOW)
+        if location_allow.wait(timeout=2):  # Wait up to 2 seconds for dialog
+            location_allow.click()
+            sleep(1)  # Wait for permission dialog to dismiss
         
         # Take screenshot of Settings screen with toggled location
         d.screenshot("5_2_2_settings_location_toggled.png")
+
+        # Click on Log Out
+        log_out = d.xpath(SettingsScreen.LOG_OUT)
+        assert log_out.exists, "Could not find Log Out button"
+        log_out.click()
+        sleep(2)  # Wait for logout to complete
+
+        # Verify we're back at the welcome screen
+        welcome_text = d(text="Welcome to Eat Vermont")
+        assert welcome_text.exists(timeout=5), "Welcome screen not found after logout"
+        
+        # Take screenshot of welcome screen
+        d.screenshot("5_2_3_welcome_screen_after_logout.png")
