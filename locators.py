@@ -118,3 +118,18 @@ class SettingsScreen:
     LOCATION_TOGGLE = '//com.horcrux.svg.CircleView[@package="com.eatvermont" and @index="1"]'
     LOCATION_ALLOW = '//android.widget.TextView[@text="Allow" and @package="com.eatvermont"]'
     LOG_OUT = '//android.view.ViewGroup[@content-desc="Log out" and @package="com.eatvermont"]'
+
+
+#class Events:
+
+
+
+#class Businesses:
+
+
+
+#class DayTrips:
+
+
+
+#class Trails:
