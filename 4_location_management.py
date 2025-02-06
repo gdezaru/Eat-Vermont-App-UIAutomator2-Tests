@@ -7,7 +7,7 @@ from utils import get_next_day
 
 
 def test_home_screen_location_picker(d):
-    """Test that the location picker button on the Home Screen works"""
+    Test that the location picker button on the Home Screen works
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
@@ -119,8 +119,9 @@ def test_home_screen_location_picker(d):
     d.screenshot("4_1_4_location_confirmed.png")
 
 
+
 def test_home_screen_use_current_location(d):
-    """Test that the 'Use Current Location' button on the Home Screen works"""
+    Test that the 'Use Current Location' button on the Home Screen works
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
