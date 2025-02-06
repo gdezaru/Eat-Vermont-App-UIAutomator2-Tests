@@ -97,10 +97,10 @@ def test_settings_contents(d):
     assert log_out.exists, "Log out option not found"
 
     # Take screenshot of settings screen
-    d.screenshot("5_1_settings_screen_contents.png")
+    d.screenshot("5_1_1_settings_screen_contents.png")
 
 
-def settings_screen_navigation(d):
+def test_settings_screen_navigation(d):
     """Tests the navigation within the settings screen."""
     # Handle notification permission if it appears
     if d(text="Allow").exists:
@@ -180,3 +180,23 @@ def settings_screen_navigation(d):
         sleep(2)
 
         # Click on Edit Profile
+        edit_profile = d.xpath(SettingsScreen.EDIT_PROFILE)
+        assert edit_profile.exists, "Could not find Edit Profile option"
+        edit_profile.click()
+        sleep(2)  # Wait for Edit Profile screen to load
+        
+        # Take screenshot of Edit Profile screen
+        d.screenshot("5_2_1_edit_profile_screen.png")
+        
+        # Go back to Settings
+        d(text="Back").click()
+        sleep(2)  # Wait for settings screen to reload
+        
+        # Click on Location Toggle
+        location_toggle = d.xpath(SettingsScreen.LOCATION_TOGGLE)
+        assert location_toggle.exists, "Could not find Location Toggle"
+        location_toggle.click()
+        sleep(5)  # Wait for toggle to change state
+        
+        # Take screenshot of Settings screen with toggled location
+        d.screenshot("5_2_2_settings_location_toggled.png")
