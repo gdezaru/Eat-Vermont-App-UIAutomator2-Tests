@@ -339,6 +339,10 @@ def test_settings_screen_edit_profile(d):
         # Take screenshot of the edited profile username
         d.screenshot("5_3_2_edited_profile_username_save_button_active.png")
 
+        # Scroll to bottom of screen to ensure save button is visible
+        d.swipe_ext("up", scale=0.8)
+        sleep(1)  # Wait for scroll to complete
+
         # Click save button and verify we return to settings screen
         save_button = d.xpath(SettingsScreen.EDIT_PROFILE_SAVE_BUTTON)
         save_button.click()
