@@ -34,7 +34,7 @@ class HomeScreen:
     EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'
                                       '/following-sibling::*//android.widget.TextView[@text="See All"]')
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
-    LOCATION_PICKER_HOME_SCREEN = '//android.widget.TextView[@text="Pick Your Location"]'
+#    LOCATION_PICKER_HOME_SCREEN = *need button id because other locators don't work*'
 
 
 class HomeScreenTiles:
@@ -73,11 +73,12 @@ class SearchModule:
 
 class EventsScreen:
     """Locators for Events Screen UI Elements"""
-    DAY_OF_WEEK = ('//android.view.ViewGroup[@clickable="true" and .//android.widget.TextView[@text="{}"]]'  # The clickable container
-                   '//android.widget.TextView[@text="{}"]')  # The day text itself
-    EVENTS_SCREEN_TILE_1 = '//android.widget.TextView[@text and @index="2"]'  # First event title text (index 2 from screenshot)
-    EVENTS_SCREEN_NO_EVENTS = '//android.widget.TextView[@text="No Events"]'  # Text shown when no events are available
-    EVENT_TITLE = '//android.widget.TextView[contains(@text, "{}")]'  # Event title in the details view
+    DAY_OF_WEEK = (
+        '//android.view.ViewGroup[@clickable="true" and .//android.widget.TextView[@text="{}"]]'
+        '//android.widget.TextView[@text="{}"]')  # The day text itself
+    EVENTS_SCREEN_TILE_1 = '//android.widget.TextView[@text and @index="2"]'
+    EVENTS_SCREEN_NO_EVENTS = '//android.widget.TextView[@text="No Events"]'
+    EVENT_TITLE = '//android.widget.TextView[contains(@text, "{}")]'
 
 
 class ViewMap:
@@ -94,4 +95,9 @@ class AddInfo:
                              '\"New hours: 9am-6pm daily.\" or \"New menu!\" (then attach an image)"]')
     SUBMIT_INFO_BUTTON = '//android.widget.TextView[@text="Submit"]'
 
-#class DayTripsScreen:
+
+class LocationManagement:
+    """Locators for Location Management"""
+    LOCATION_SEARCH_INPUT = '//android.widget.EditText[@package="com.eatvermont"]'
+    USE_MY_CURRENT_LOCATION = '//android.widget.TextView[@text="Use My Current Location" and @package="com.eatvermont"]'
+    LOCATION_SEARCH_RESULT = '//android.widget.TextView[@text="{}" and @package="com.eatvermont"]'
