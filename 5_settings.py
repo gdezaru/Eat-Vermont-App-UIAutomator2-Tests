@@ -338,3 +338,15 @@ def test_settings_screen_edit_profile(d):
         
         # Take screenshot of the edited profile username
         d.screenshot("5_3_2_edited_profile_username_save_button_active.png")
+
+        # Click save button and verify we return to settings screen
+        save_button = d.xpath(SettingsScreen.EDIT_PROFILE_SAVE_BUTTON)
+        save_button.click()
+        sleep(2)  # Wait for navigation
+
+        # Verify we're back at settings screen by checking for Log out text
+        log_out = d.xpath(SettingsScreen.LOG_OUT)
+        assert log_out.exists, "Did not return to settings screen after saving profile changes"
+
+        # Take screenshot of settings screen after saving changes
+        d.screenshot("5_3_3_settings_screen_after_save.png")
