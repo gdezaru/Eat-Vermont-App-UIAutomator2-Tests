@@ -121,10 +121,11 @@ class SettingsScreen:
 
 
 class Events:
-    """Locators for Events"""
+    """Locators for Events and Events Popup"""
     EVENT_CARD_DETAILS_TAB = '//android.view.ViewGroup[@content-desc="Details" and @package="com.eatvermont"]'
     EVENT_CARD_MORE_INFO_TAB = '//android.view.ViewGroup[@content-desc="More Info" and @package="com.eatvermont"]'
-
+    EVENTS_POPUP_MAIN = '//android.view.ViewGroup[./*[@text="Events For You"]]'
+    EVENTS_POPUP_CLOSE_BUTTON = '//android.view.ViewGroup[./*[@text="Events For You"]]/android.view.ViewGroup/com.horcrux.svg.SvgView'
 
 #class Businesses:
 

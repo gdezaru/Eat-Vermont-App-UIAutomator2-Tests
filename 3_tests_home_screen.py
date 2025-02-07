@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
+from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
 from utils import get_next_day
 
 
@@ -77,6 +77,29 @@ def test_home_screen_events(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        sleep(3)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        sleep(3)  # Wait for popup to close
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
 
     # Click "See all" next to events
     events_see_all = d.xpath(HomeScreen.EVENTS_SEE_ALL)
@@ -278,6 +301,29 @@ def test_home_screen_view_map(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        if events_popup.exists:
+            print("\nEvents popup is visible, closing it...")
+            sleep(3)
+            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+            print("\nChecking close button...")
+            print(f"Close button exists: {close_button.exists}")
+            if close_button.exists:
+                print(f"Close button info: {close_button.info}")
+            assert close_button.exists, "Close button not found on events popup"
+            print("\nAttempting to click close button...")
+            close_button.click()
+            print("\nClose button clicked")
+            sleep(3)  # Wait for popup to close
+
+            # Verify popup is closed
+            print("\nVerifying popup is closed...")
+            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+            assert not events_popup.exists, "Events popup is still visible after clicking close button"
+            print("Events popup successfully closed")
+        else:
+            print("\nNo events popup found, continuing with next steps...")
+
         # Single scroll to show View Map
         d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
         sleep(1)
@@ -371,6 +417,29 @@ def test_home_screen_videos(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        sleep(3)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        sleep(3)  # Wait for popup to close
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
+
     # Single scroll to show Videos
     d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
     sleep(1)
@@ -459,6 +528,29 @@ def test_home_screen_add_info(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        if events_popup.exists:
+            print("\nEvents popup is visible, closing it...")
+            sleep(3)
+            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+            print("\nChecking close button...")
+            print(f"Close button exists: {close_button.exists}")
+            if close_button.exists:
+                print(f"Close button info: {close_button.info}")
+            assert close_button.exists, "Close button not found on events popup"
+            print("\nAttempting to click close button...")
+            close_button.click()
+            print("\nClose button clicked")
+            sleep(3)  # Wait for popup to close
+
+            # Verify popup is closed
+            print("\nVerifying popup is closed...")
+            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+            assert not events_popup.exists, "Events popup is still visible after clicking close button"
+            print("Events popup successfully closed")
+        else:
+            print("\nNo events popup found, continuing with next steps...")
 
         # Scroll until Add Info button is visible
         d(scrollable=True).scroll.to(text="Add Info")
@@ -551,6 +643,29 @@ def test_home_screen_day_trips(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        sleep(3)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        sleep(3)  # Wait for popup to close
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
+
     # Single scroll to show Day Trips
     d(scrollable=True).scroll.to(text="Day Trip")
     assert d(text="Day Trip").exists(timeout=5), "Day Trip text not found"
@@ -641,6 +756,29 @@ def test_home_screen_events_within(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        sleep(3)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        sleep(3)  # Wait for popup to close
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
 
     # Single scroll to show Events within ~30 minutes
     d(scrollable=True).scroll.to(text="Events Within ~30min")
@@ -749,6 +887,29 @@ def test_home_screen_events_further_than(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        if events_popup.exists:
+            print("\nEvents popup is visible, closing it...")
+            sleep(3)
+            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+            print("\nChecking close button...")
+            print(f"Close button exists: {close_button.exists}")
+            if close_button.exists:
+                print(f"Close button info: {close_button.info}")
+            assert close_button.exists, "Close button not found on events popup"
+            print("\nAttempting to click close button...")
+            close_button.click()
+            print("\nClose button clicked")
+            sleep(3)  # Wait for popup to close
+
+            # Verify popup is closed
+            print("\nVerifying popup is closed...")
+            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+            assert not events_popup.exists, "Events popup is still visible after clicking close button"
+            print("Events popup successfully closed")
+        else:
+            print("\nNo events popup found, continuing with next steps...")
+
         # Single scroll to show Events within ~30 minutes
         d(scrollable=True).scroll.to(text="Events Further Than ~30min")
         assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Within ~30min text not found"
@@ -855,6 +1016,29 @@ def test_home_screen_bottom_nav_bar(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        sleep(3)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        sleep(3)  # Wait for popup to close
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
 
     # Click Favorites button
     favorites_button = d.xpath(BottomNavBar.FAVORITES)

@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, SettingsScreen
+from locators import HomeScreen, SettingsScreen, Events
 from utils import generate_random_name, generate_random_username
 
 
@@ -77,6 +77,29 @@ def test_settings_contents(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        sleep(3)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        sleep(3)  # Wait for popup to close
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
 
     # Click on Settings button
     settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
@@ -173,6 +196,29 @@ def test_settings_screen_navigation(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        if events_popup.exists:
+            print("\nEvents popup is visible, closing it...")
+            sleep(3)
+            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+            print("\nChecking close button...")
+            print(f"Close button exists: {close_button.exists}")
+            if close_button.exists:
+                print(f"Close button info: {close_button.info}")
+            assert close_button.exists, "Close button not found on events popup"
+            print("\nAttempting to click close button...")
+            close_button.click()
+            print("\nClose button clicked")
+            sleep(3)  # Wait for popup to close
+
+            # Verify popup is closed
+            print("\nVerifying popup is closed...")
+            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+            assert not events_popup.exists, "Events popup is still visible after clicking close button"
+            print("Events popup successfully closed")
+        else:
+            print("\nNo events popup found, continuing with next steps...")
 
         # Click on Settings button
         settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
@@ -292,6 +338,29 @@ def test_settings_screen_edit_profile(d):
                     sleep(1)
                 continue
             assert False, "Login failed - Could not verify successful login"
+
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        if events_popup.exists:
+            print("\nEvents popup is visible, closing it...")
+            sleep(3)
+            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+            print("\nChecking close button...")
+            print(f"Close button exists: {close_button.exists}")
+            if close_button.exists:
+                print(f"Close button info: {close_button.info}")
+            assert close_button.exists, "Close button not found on events popup"
+            print("\nAttempting to click close button...")
+            close_button.click()
+            print("\nClose button clicked")
+            sleep(3)  # Wait for popup to close
+
+            # Verify popup is closed
+            print("\nVerifying popup is closed...")
+            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+            assert not events_popup.exists, "Events popup is still visible after clicking close button"
+            print("Events popup successfully closed")
+        else:
+            print("\nNo events popup found, continuing with next steps...")
 
         # Click on Settings button
         settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
