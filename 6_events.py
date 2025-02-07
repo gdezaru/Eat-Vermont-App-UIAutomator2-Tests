@@ -1,7 +1,7 @@
 import time
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, SettingsScreen, Events
+from locators import HomeScreen, SettingsScreen, Events, HomeScreenTiles, BottomNavBar
 
 
 def test_events_popup(d):
@@ -107,7 +107,9 @@ def test_events_popup(d):
             time.sleep(10)
 
 
-def test_events_screen(d):
+
+
+def test_events_card(d):
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
@@ -202,10 +204,10 @@ def test_events_screen(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Click "See all" next to events
-    events_see_all = d.xpath(HomeScreen.EVENTS_SEE_ALL)
-    assert events_see_all.exists, "Could not find Events 'See all' button"
-    events_see_all.click()
-    sleep(15)
-
-
+    # Click on Events tab in bottom navigation
+    print("\nLocating Events tab...")
+    events_tab = d.xpath(BottomNavBar.EVENTS)
+    assert events_tab.exists, "Could not find Events tab"
+    print("Events tab found, clicking...")
+    events_tab.click()
+    sleep(3)  # Wait for navigation
