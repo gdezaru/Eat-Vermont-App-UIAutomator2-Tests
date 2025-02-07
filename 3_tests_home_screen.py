@@ -105,7 +105,7 @@ def test_home_screen_events(d):
     events_see_all = d.xpath(HomeScreen.EVENTS_SEE_ALL)
     assert events_see_all.exists, "Could not find Events 'See all' button"
     events_see_all.click()
-    sleep(15)  # Wait for events page to load
+    sleep(15)
     
     # Take screenshot of events page
     d.screenshot("3_1_1_home_screen_events.png")
