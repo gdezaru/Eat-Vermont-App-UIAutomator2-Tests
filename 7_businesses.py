@@ -105,6 +105,16 @@ def test_business_card_with_event(d):
             print("\nNo events popup found, continuing with next steps...")
             time.sleep(10)
 
+        # Click on Events carousel item
+        print("\nLocating Events carousel item...")
+        carousel_item = d.xpath(Events.CAROUSEL_ITEM)
+        assert carousel_item.exists, "Could not find Events carousel item"
+        print("Events carousel item found, clicking...")
+        carousel_item.click()
+        sleep(7)
+
+
+
 
 def test_business_card_with_menu(d):
     # Handle notification permission if it appears
