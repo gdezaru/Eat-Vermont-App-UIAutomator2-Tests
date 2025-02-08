@@ -113,7 +113,26 @@ def test_business_card_with_event(d):
         carousel_item.click()
         sleep(7)
 
+        # Click on business name in event card
+        print("\nLocating business name in event card...")
+        business_name = d.xpath(Businesses.BUSINESS_NAME_EVENT_CARD)
+        assert business_name.exists, "Could not find business name in event card"
+        print("Business name found, clicking...")
+        business_name.click()
+        sleep(5)  # Wait for business details to load
 
+        # Verify About tab is visible
+        print("\nVerifying About tab is visible...")
+        about_tab = d.xpath(Businesses.BUSINESS_ABOUT_TAB)
+        assert about_tab.exists, "About tab not found on business details page"
+        print("About tab is visible")
+
+        # Take screenshot of business details with About tab
+        print("\nTaking screenshot of business details with About tab...")
+        d.screenshot("7_1_1_business_card_with_event_about_tab.png")
+        print("Screenshot saved as 7_1_1_business_card_with_event_about_tab.png")
+
+        break
 
 
 def test_business_card_with_menu(d):
