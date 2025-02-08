@@ -136,11 +136,14 @@ class Events:
 
 class Businesses:
     BUSINESS_ABOUT_TAB = '//android.view.ViewGroup[contains(@content-desc, "About")]'
-    BUSINESS_ABOUT_TAB_CONTENTS = '//android.widget.TextView[following-sibling::android.widget.TextView[contains(@text, "Read More")]]'
+    BUSINESS_ABOUT_TAB_CONTENTS = ('//android.widget.TextView[following-sibling::android.widget.TextView'
+                                   '[contains(@text, "Read More")]]')
     BUSINESS_MENU_TAB = '//android.view.ViewGroup[contains(@content-desc, "Menu")]'
-    BUSINESS_MENU_TAB_CONTENTS = '//android.widget.TextView[ancestor::android.view.ViewGroup[descendant::android.widget.TextView[contains(@text, "$")]]]'
+    BUSINESS_MENU_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
+                                  '[descendant::android.widget.TextView[contains(@text, "$")]]]')
     BUSINESS_FYI_TAB = '//android.view.ViewGroup[contains(@content-desc, "FYI")]'
-    BUSINESS_FYI_TAB_CONTENTS = '//android.widget.TextView[ancestor::android.view.ViewGroup[descendant::android.widget.TextView[contains(@text, "FYI")]]]'
+    BUSINESS_FYI_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.'
+                                 '[descendant::android.widget.TextView[contains(@text, "FYI")]]]')
     BUSINESS_NAME_EVENT_CARD = ('//android.widget.TextView[following-sibling::android.view.ViewGroup'
                                 '/android.widget.TextView[contains(@text, "Details")]]')
 

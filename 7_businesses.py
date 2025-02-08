@@ -127,10 +127,35 @@ def test_business_card_with_event(d):
         assert about_tab.exists, "About tab not found on business details page"
         print("About tab is visible")
 
+        # Verify About tab contents are present
+        print("\nVerifying About tab contents are present...")
+        about_contents = d.xpath(Businesses.BUSINESS_ABOUT_TAB_CONTENTS)
+        assert about_contents.exists, "About tab contents not found"
+        print("About tab contents are present")
+
         # Take screenshot of business details with About tab
         print("\nTaking screenshot of business details with About tab...")
         d.screenshot("7_1_1_business_card_with_event_about_tab.png")
         print("Screenshot saved as 7_1_1_business_card_with_event_about_tab.png")
+
+        # Click on FYI tab and verify contents
+        print("\nLocating and clicking FYI tab...")
+        fyi_tab = d.xpath(Businesses.BUSINESS_FYI_TAB)
+        assert fyi_tab.exists, "FYI tab not found"
+        fyi_tab.click()
+        sleep(2)  # Wait for FYI contents to load
+        print("FYI tab clicked")
+
+        # Verify FYI tab contents are present
+        print("\nVerifying FYI tab contents are present...")
+        fyi_contents = d.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
+        assert fyi_contents.exists, "FYI tab contents not found"
+        print("FYI tab contents are present")
+
+        # Take screenshot of FYI tab contents
+        print("\nTaking screenshot of FYI tab contents...")
+        d.screenshot("7_1_2_business_card_with_event_fyi_tab.png")
+        print("Screenshot saved as 7_1_2_business_card_with_event_fyi_tab.png")
 
         break
 
