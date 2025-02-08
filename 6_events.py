@@ -96,7 +96,7 @@ def test_events_popup(d):
             close_button.click()
             print("\nClose button clicked")
             time.sleep(3)  # Wait for popup to close
-            
+
             # Verify popup is closed
             print("\nVerifying popup is closed...")
             events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
@@ -105,8 +105,6 @@ def test_events_popup(d):
         else:
             print("\nNo events popup found, continuing with next steps...")
             time.sleep(10)
-
-
 
 
 def test_events_card(d):
