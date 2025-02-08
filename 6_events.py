@@ -1,7 +1,7 @@
 import time
 from time import sleep
 from config import TEST_USER
-from locators import Events, BottomNavBar, HomeScreen
+from locators import Events
 
 
 def test_events_popup(d):

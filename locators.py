@@ -133,8 +133,10 @@ class Events:
                           'or contains(@text, "Where")]')
     ADD_TO_CALENDAR = '//android.widget.TextView[@text="Add to Calendar"]'
 
-#class Businesses:
-
+class Businesses:
+    BUSINESS_ABOUT_TAB = '//android.view.ViewGroup[contains(@content-desc, "About")]'
+    BUSINESS_MENU_TAB = '//android.view.ViewGroup[contains(@content-desc, "Menu")]'
+    BUSINESS_FYI_TAB = '//android.view.ViewGroup[contains(@content-desc, "FYI")]'
 
 #class DayTrips:
 
