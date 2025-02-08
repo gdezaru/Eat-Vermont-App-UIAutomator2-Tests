@@ -15,6 +15,9 @@ class LoginPage:
 
     # Forgot Password
     FORGOT_PASSWORD = '//android.view.ViewGroup[@content-desc="Forgot Password?"]'
+    RESET_PASSWORD_EMAIL_FIELD = '//android.widget.EditText[@text="Email"]'
+    RESET_PASSWORD_BUTTON = '//android.widget.TextView[@text="Reset Password"]'
+    VERIFY_EMAIL_MESSAGE = '//android.widget.TextView[@text="Check Email"]'
 
 
 class Permissions:
@@ -155,7 +158,10 @@ class Businesses:
                                 'android.widget.ScrollView/android.view.ViewGroup'
                                 '/android.view.ViewGroup[5]')
 
-#class DayTrips:
+
+class DayTrips:
+    """Locators for Day Trips"""
+
 
 
 #class Trails:

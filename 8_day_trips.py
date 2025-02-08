@@ -1,7 +1,7 @@
 import time
 from time import sleep
 from config import TEST_USER
-from locators import Businesses, Events
+from locators import Events, DayTrips
 from utils import handle_notification_permission
 
 
@@ -103,3 +103,10 @@ def test_day_trip_card(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
         time.sleep(10)
+
+    # Single scroll to show Day Trips
+    d(scrollable=True).scroll.to(text="Day Trip")
+    assert d(text="Day Trip").exists(timeout=5), "Day Trip text not found"
+    sleep(1)
+
+    # Click on Day Trips tile
