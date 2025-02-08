@@ -135,6 +135,10 @@ class Events:
 
 
 class Businesses:
+    """Locators for Businesses"""
+    BUSINESSES_SECTION = '//android.widget.TextView[@text="Businesses"]'
+    BUSINESS_UNDER_BUSINESSES = ('//android.widget.TextView[@text="Businesses"]/'
+                               'following::android.widget.TextView[@text="{}"]')
     BUSINESS_ABOUT_TAB = '//android.view.ViewGroup[contains(@content-desc, "About")]'
     BUSINESS_ABOUT_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
                                    '[descendant::android.view.ViewGroup[contains(@content-desc,'

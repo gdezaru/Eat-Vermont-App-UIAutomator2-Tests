@@ -1,7 +1,7 @@
 import time
 from time import sleep
 from config import TEST_USER
-from locators import Businesses, Events, LoginPage
+from locators import Businesses, Events
 from utils import handle_notification_permission
 
 
@@ -75,82 +75,85 @@ def test_business_card_with_event(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
-        # Check if events popup is visible and handle it
+    # Check if events popup is visible and handle it
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        # Take screenshot of the events popup
+        d.screenshot("3_6_1_events_popup.png")
+        time.sleep(7)
+        # Take second screenshot of the events popup
+        d.screenshot("3_6_2_events_popup.png")
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        time.sleep(3)  # Wait for popup to close
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
         events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        if events_popup.exists:
-            print("\nEvents popup is visible, closing it...")
-            # Take screenshot of the events popup
-            d.screenshot("3_6_1_events_popup.png")
-            time.sleep(7)
-            # Take second screenshot of the events popup
-            d.screenshot("3_6_2_events_popup.png")
-            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-            print("\nChecking close button...")
-            print(f"Close button exists: {close_button.exists}")
-            if close_button.exists:
-                print(f"Close button info: {close_button.info}")
-            assert close_button.exists, "Close button not found on events popup"
-            print("\nAttempting to click close button...")
-            close_button.click()
-            print("\nClose button clicked")
-            time.sleep(3)  # Wait for popup to close
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
+        time.sleep(10)
 
-            # Verify popup is closed
-            print("\nVerifying popup is closed...")
-            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-            assert not events_popup.exists, "Events popup is still visible after clicking close button"
-            print("Events popup successfully closed")
-        else:
-            print("\nNo events popup found, continuing with next steps...")
-            time.sleep(10)
+    # Find and click Search in bottom navigation
+    search_button = None
+    if d(description="Search").exists(timeout=5):
+        search_button = d(description="Search")
+    elif d(text="Search").exists(timeout=5):
+        search_button = d(text="Search")
+    elif d(resourceId="Search").exists(timeout=5):
+        search_button = d(resourceId="Search")
 
-        # Find and click Search in bottom navigation
-        search_button = None
-        if d(description="Search").exists(timeout=5):
-            search_button = d(description="Search")
-        elif d(text="Search").exists(timeout=5):
-            search_button = d(text="Search")
-        elif d(resourceId="Search").exists(timeout=5):
-            search_button = d(resourceId="Search")
+    assert search_button is not None, "Could not find Search button"
+    search_button.click()
+    sleep(2)
 
-        assert search_button is not None, "Could not find Search button"
-        search_button.click()
-        sleep(2)
+    # Find and click search field
+    search_field = None
+    search_selectors = [
+        lambda: d(description="Search"),
+        lambda: d(text="Search"),
+        lambda: d(resourceId="search-input"),
+        lambda: d(className="android.widget.EditText")
+    ]
 
-        # Find and click search field
-        search_field = None
-        search_selectors = [
-            lambda: d(description="Search"),
-            lambda: d(text="Search"),
-            lambda: d(resourceId="search-input"),
-            lambda: d(className="android.widget.EditText")
-        ]
+    for selector in search_selectors:
+        if selector().exists(timeout=3):
+            search_field = selector()
+            break
 
-        for selector in search_selectors:
-            if selector().exists(timeout=3):
-                search_field = selector()
-                break
+    assert search_field is not None, "Could not find search field"
+    search_field.click()
+    sleep(1)
 
-        assert search_field is not None, "Could not find search field"
-        search_field.click()
-        sleep(1)
+    # Enter search term and submit
+    d.send_keys("Higher Ground")
+    sleep(1)
+    d.press("enter")
+    sleep(10)
 
-        # Enter search term and submit
-        d.send_keys("Higher Ground")
-        sleep(1)
-        d.press("enter")
-        sleep(2)
+    # Wait for and verify Businesses section is present
+    print("\nVerifying Businesses section is present...")
+    businesses_section = d.xpath(Businesses.BUSINESSES_SECTION)
+    assert businesses_section.exists, "Businesses section not found in search results"
+    print("Found Businesses section")
 
-    # Click on Higher Ground search result
-    print("\nLocating Higher Ground in search results...")
-    search_result = d.xpath(Businesses.BUSINESS_SEARCH_RESULT_WITH_EVENTS)
-    assert search_result.exists, "Higher Ground not found in search results"
+    # Click on Higher Ground search result under Businesses
+    print("\nLocating Higher Ground under Businesses section...")
+    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format("Higher Ground"))
+    assert search_result.exists, "Higher Ground not found under Businesses section"
     print("Found Higher Ground, clicking...")
     search_result.click()
     sleep(3)  # Wait for business details to load
-
-    # Verify About tab is visible
-    print("\nVerifying About tab is visible...")
 
     # Verify About tab is visible
     print("\nVerifying About tab is visible...")
