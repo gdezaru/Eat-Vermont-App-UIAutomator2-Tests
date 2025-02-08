@@ -249,7 +249,6 @@ def test_search_businesses(d):
         else:
             print("\nNo events popup found, continuing with next steps...")
 
-
     # Find and click Search in bottom navigation
     search_button = None
     if d(description="Search").exists(timeout=5):
@@ -444,8 +443,8 @@ def test_search_day_trips(d):
             screen_size = d.window_size()
             for _ in range(3):  # Scroll 3 times to ensure we reach bottom
                 d.swipe(screen_size[0] * 0.5, screen_size[1] * 0.8,
-                       screen_size[0] * 0.5, screen_size[1] * 0.2,
-                       duration=0.5)
+                        screen_size[0] * 0.5, screen_size[1] * 0.2,
+                        duration=0.5)
                 sleep(2)  # Wait for content to load
             sleep(10)
             d.screenshot("2_3_search_day_trips.png")
@@ -598,8 +597,8 @@ def test_search_videos(d):
             screen_size = d.window_size()
             for _ in range(3):  # Scroll 3 times to ensure we reach bottom
                 d.swipe(screen_size[0] * 0.5, screen_size[1] * 0.8,
-                       screen_size[0] * 0.5, screen_size[1] * 0.2,
-                       duration=0.5)
+                        screen_size[0] * 0.5, screen_size[1] * 0.2,
+                        duration=0.5)
                 sleep(2)  # Wait for content to load
             sleep(10)
             d.screenshot("2_4_search_videos.png")

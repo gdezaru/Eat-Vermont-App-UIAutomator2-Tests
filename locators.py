@@ -56,7 +56,7 @@ class HomeScreenTiles:
 class BottomNavBar:
     """Locators for Bottom Navigation Bar"""
     NAV_HOME_BUTTON = '//android.widget.TextView[@text="Home"]'
-    SEARCH = '//android.widget.TextView[@text="Search"]'
+    SEARCH = '//android.view.ViewGroup[@content-desc="Search"]'
     EVENTS = '//android.widget.TextView[@text="Events"]'
     FAVORITES = '//android.widget.TextView[@text="Favorites"]'
     DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Day Trips"]'
@@ -136,16 +136,19 @@ class Events:
 
 class Businesses:
     BUSINESS_ABOUT_TAB = '//android.view.ViewGroup[contains(@content-desc, "About")]'
-    BUSINESS_ABOUT_TAB_CONTENTS = ('//android.widget.TextView[following-sibling::android.widget.TextView'
-                                   '[contains(@text, "Read More")]]')
+    BUSINESS_ABOUT_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
+                                   '[descendant::android.view.ViewGroup[contains(@content-desc,'
+                                   ' "About")]] and @text]')
     BUSINESS_MENU_TAB = '//android.view.ViewGroup[contains(@content-desc, "Menu")]'
     BUSINESS_MENU_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
                                   '[descendant::android.widget.TextView[contains(@text, "$")]]]')
     BUSINESS_FYI_TAB = '//android.view.ViewGroup[contains(@content-desc, "FYI")]'
-    BUSINESS_FYI_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.'
-                                 '[descendant::android.widget.TextView[contains(@text, "FYI")]]]')
-    BUSINESS_NAME_EVENT_CARD = ('//android.widget.TextView[following-sibling::android.view.ViewGroup'
-                                '/android.widget.TextView[contains(@text, "Details")]]')
+    BUSINESS_FYI_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
+                                 '[descendant::android.widget.TextView]]')
+    BUSINESS_NAME_EVENT_CARD = ('//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/'
+                                'android.widget.ScrollView/android.view.ViewGroup'
+                                '/android.view.ViewGroup[5]')
+    SEARCH_RESULT_BUSINESS_WITH_EVENTS = '//android.widget.TextView[@text="Higher Ground"]'
 
 #class DayTrips:
 
