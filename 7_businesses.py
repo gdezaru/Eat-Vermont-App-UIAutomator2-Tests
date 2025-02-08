@@ -188,8 +188,6 @@ def test_business_card_with_event(d):
     d.screenshot("7_1_2_business_card_with_event_fyi_tab.png")
     print("Screenshot saved as 7_1_2_business_card_with_event_fyi_tab.png")
 
-    break
-
 
 def test_business_card_with_menu(d):
     handle_notification_permission(d)
