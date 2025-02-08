@@ -2,14 +2,12 @@ import time
 from time import sleep
 from config import TEST_USER
 from locators import Events
+from utils import handle_notification_permission
 
 
 def test_events_popup(d):
     """Tests the contents of the events popup."""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -108,10 +106,7 @@ def test_events_popup(d):
 
 
 def test_events_card(d):
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None

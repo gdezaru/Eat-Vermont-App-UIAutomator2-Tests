@@ -139,6 +139,7 @@ class Businesses:
     BUSINESS_ABOUT_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
                                    '[descendant::android.view.ViewGroup[contains(@content-desc,'
                                    ' "About")]] and @text]')
+    BUSINESS_SEARCH_RESULT_WITH_EVENTS = '//android.widget.TextView[@text="Higher Ground"]'
     BUSINESS_MENU_TAB = '//android.view.ViewGroup[contains(@content-desc, "Menu")]'
     BUSINESS_MENU_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
                                   '[descendant::android.widget.TextView[contains(@text, "$")]]]')
@@ -148,7 +149,6 @@ class Businesses:
     BUSINESS_NAME_EVENT_CARD = ('//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/'
                                 'android.widget.ScrollView/android.view.ViewGroup'
                                 '/android.view.ViewGroup[5]')
-    SEARCH_RESULT_BUSINESS_WITH_EVENTS = '//android.widget.TextView[@text="Higher Ground"]'
 
 #class DayTrips:
 

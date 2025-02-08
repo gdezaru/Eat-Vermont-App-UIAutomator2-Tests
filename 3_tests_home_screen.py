@@ -2,15 +2,12 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
-from utils import get_next_day
+from utils import get_next_day, handle_notification_permission
 
 
 def test_home_screen_events(d):
     """Tests the navigation to the home screen and the events displayed."""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -230,10 +227,7 @@ def test_home_screen_events(d):
 
 def test_home_screen_view_map(d):
     """Tests the navigation to the home screen View Map module."""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -346,10 +340,7 @@ def test_home_screen_videos(d):
     """
     Tests the navigation to the home screen Videos module.
     """
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -458,10 +449,7 @@ def test_home_screen_add_info(d):
     """
     Tests the navigation to the home screen Add Info module.
     """
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -572,10 +560,7 @@ def test_home_screen_day_trips(d):
     """
     Tests the navigation to the home screen to the Day Trips module.
     """
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -686,10 +671,7 @@ def test_home_screen_events_within(d):
     """
     Tests the navigation to the home screen to the Events within ~30 minutes module.
     """
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -816,10 +798,7 @@ def test_home_screen_events_further_than(d):
     """
     Tests the navigation to the home screen to the Events Further Than ~30 minutes module.
     """
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -946,10 +925,7 @@ def test_home_screen_bottom_nav_bar(d):
     """
     Tests the navigation to the home screen to the bottom navigation bar.
     """
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None

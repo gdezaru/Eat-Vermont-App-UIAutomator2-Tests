@@ -2,15 +2,12 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, SettingsScreen, Events
-from utils import generate_random_name, generate_random_username
+from utils import generate_random_name, generate_random_username, handle_notification_permission
 
 
 def test_settings_contents(d):
     """Tests the contents of the settings screen."""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -126,10 +123,7 @@ def test_settings_contents(d):
 
 def test_settings_screen_navigation(d):
     """Tests the navigation within the settings screen."""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -268,10 +262,7 @@ def test_settings_screen_navigation(d):
 
 def test_settings_screen_edit_profile(d):
     """Tests the edit profile section within the settings screen."""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None

@@ -2,14 +2,12 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import Events
+from utils import handle_notification_permission
 
 
 def test_search_events(d):
     """Test searching for events"""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -154,10 +152,7 @@ def test_search_events(d):
 
 def test_search_businesses(d):
     """Test searching for businesses"""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -302,10 +297,7 @@ def test_search_businesses(d):
 
 def test_search_day_trips(d):
     """Test searching for day trips"""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -456,10 +448,7 @@ def test_search_day_trips(d):
 
 def test_search_videos(d):
     """Test searching for videos"""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None

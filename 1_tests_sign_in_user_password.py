@@ -1,14 +1,12 @@
 import pytest
 from time import sleep
 from config import TEST_USER
+from utils import handle_notification_permission
 
 
 def test_sign_in_user_password(d):
     """Test sign in with valid user and password"""
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
     
     # Find and click Sign In button
     sign_in = None

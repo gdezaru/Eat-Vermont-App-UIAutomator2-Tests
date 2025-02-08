@@ -1,15 +1,13 @@
 import time
 from time import sleep
 from config import TEST_USER
-from locators import Businesses, Events
+from locators import Businesses, Events, LoginPage
+from utils import handle_notification_permission
 
 
 def test_business_card_with_event(d):
-    # Handle notification permission if it appears
     global business_name
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None
@@ -106,98 +104,95 @@ def test_business_card_with_event(d):
             print("\nNo events popup found, continuing with next steps...")
             time.sleep(10)
 
-            # Find and click Search in bottom navigation
-            search_button = None
-            if d(description="Search").exists(timeout=5):
-                search_button = d(description="Search")
-            elif d(text="Search").exists(timeout=5):
-                search_button = d(text="Search")
-            elif d(resourceId="Search").exists(timeout=5):
-                search_button = d(resourceId="Search")
+        # Find and click Search in bottom navigation
+        search_button = None
+        if d(description="Search").exists(timeout=5):
+            search_button = d(description="Search")
+        elif d(text="Search").exists(timeout=5):
+            search_button = d(text="Search")
+        elif d(resourceId="Search").exists(timeout=5):
+            search_button = d(resourceId="Search")
 
-            assert search_button is not None, "Could not find Search button"
-            search_button.click()
-            sleep(2)
+        assert search_button is not None, "Could not find Search button"
+        search_button.click()
+        sleep(2)
 
-            # Find and click search field
-            search_field = None
-            search_selectors = [
-                lambda: d(description="Search"),
-                lambda: d(text="Search"),
-                lambda: d(resourceId="search-input"),
-                lambda: d(className="android.widget.EditText")
-            ]
+        # Find and click search field
+        search_field = None
+        search_selectors = [
+            lambda: d(description="Search"),
+            lambda: d(text="Search"),
+            lambda: d(resourceId="search-input"),
+            lambda: d(className="android.widget.EditText")
+        ]
 
-            for selector in search_selectors:
-                if selector().exists(timeout=3):
-                    search_field = selector()
-                    break
+        for selector in search_selectors:
+            if selector().exists(timeout=3):
+                search_field = selector()
+                break
 
-            assert search_field is not None, "Could not find search field"
-            search_field.click()
-            sleep(1)
+        assert search_field is not None, "Could not find search field"
+        search_field.click()
+        sleep(1)
 
-            # Enter search term and submit
-            d.send_keys("Higher Ground")
-            sleep(1)
-            d.press("enter")
-            sleep(2)
+        # Enter search term and submit
+        d.send_keys("Higher Ground")
+        sleep(1)
+        d.press("enter")
+        sleep(2)
 
-            # Click on Higher Ground search result
-            print("\nLocating Higher Ground in search results...")
-            search_result = d.xpath(Businesses.BUSINESS_SEARCH_RESULT)
-            assert search_result.exists, "Higher Ground not found in search results"
-            print("Found Higher Ground, clicking...")
-            search_result.click()
-            sleep(3)  # Wait for business details to load
+    # Click on Higher Ground search result
+    print("\nLocating Higher Ground in search results...")
+    search_result = d.xpath(Businesses.BUSINESS_SEARCH_RESULT_WITH_EVENTS)
+    assert search_result.exists, "Higher Ground not found in search results"
+    print("Found Higher Ground, clicking...")
+    search_result.click()
+    sleep(3)  # Wait for business details to load
 
-        # Verify About tab is visible
-        print("\nVerifying About tab is visible...")
+    # Verify About tab is visible
+    print("\nVerifying About tab is visible...")
 
-        # Verify About tab is visible
-        print("\nVerifying About tab is visible...")
-        about_tab = d.xpath(Businesses.BUSINESS_ABOUT_TAB)
-        assert about_tab.exists, "About tab not found on business details page"
-        print("About tab is visible")
+    # Verify About tab is visible
+    print("\nVerifying About tab is visible...")
+    about_tab = d.xpath(Businesses.BUSINESS_ABOUT_TAB)
+    assert about_tab.exists, "About tab not found on business details page"
+    print("About tab is visible")
 
-        # Verify About tab contents are present
-        print("\nVerifying About tab contents are present...")
-        about_contents = d.xpath(Businesses.BUSINESS_ABOUT_TAB_CONTENTS)
-        assert about_contents.exists, "About tab contents not found"
-        print("About tab contents are present")
+    # Verify About tab contents are present
+    print("\nVerifying About tab contents are present...")
+    about_contents = d.xpath(Businesses.BUSINESS_ABOUT_TAB_CONTENTS)
+    assert about_contents.exists, "About tab contents not found"
+    print("About tab contents are present")
 
-        # Take screenshot of business details with About tab
-        print("\nTaking screenshot of business details with About tab...")
-        d.screenshot("7_1_1_business_card_with_event_about_tab.png")
-        print("Screenshot saved as 7_1_1_business_card_with_event_about_tab.png")
+    # Take screenshot of business details with About tab
+    print("\nTaking screenshot of business details with About tab...")
+    d.screenshot("7_1_1_business_card_with_event_about_tab.png")
+    print("Screenshot saved as 7_1_1_business_card_with_event_about_tab.png")
 
-        # Click on FYI tab and verify contents
-        print("\nLocating and clicking FYI tab...")
-        fyi_tab = d.xpath(Businesses.BUSINESS_FYI_TAB)
-        assert fyi_tab.exists, "FYI tab not found"
-        fyi_tab.click()
-        sleep(2)  # Wait for FYI contents to load
-        print("FYI tab clicked")
+    # Click on FYI tab and verify contents
+    print("\nLocating and clicking FYI tab...")
+    fyi_tab = d.xpath(Businesses.BUSINESS_FYI_TAB)
+    assert fyi_tab.exists, "FYI tab not found"
+    fyi_tab.click()
+    sleep(2)  # Wait for FYI contents to load
+    print("FYI tab clicked")
 
-        # Verify FYI tab contents are present
-        print("\nVerifying FYI tab contents are present...")
-        fyi_contents = d.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
-        assert fyi_contents.exists, "FYI tab contents not found"
-        print("FYI tab contents are present")
+    # Verify FYI tab contents are present
+    print("\nVerifying FYI tab contents are present...")
+    fyi_contents = d.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
+    assert fyi_contents.exists, "FYI tab contents not found"
+    print("FYI tab contents are present")
 
-        # Take screenshot of FYI tab contents
-        print("\nTaking screenshot of FYI tab contents...")
-        d.screenshot("7_1_2_business_card_with_event_fyi_tab.png")
-        print("Screenshot saved as 7_1_2_business_card_with_event_fyi_tab.png")
+    # Take screenshot of FYI tab contents
+    print("\nTaking screenshot of FYI tab contents...")
+    d.screenshot("7_1_2_business_card_with_event_fyi_tab.png")
+    print("Screenshot saved as 7_1_2_business_card_with_event_fyi_tab.png")
 
-        break
+    break
 
 
 def test_business_card_with_menu(d):
-    # Handle notification permission if it appears
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    handle_notification_permission(d)
 
     # Find and click Sign In button
     sign_in = None

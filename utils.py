@@ -50,6 +50,18 @@ def generate_random_name():
 
 def generate_random_username():
     """Generate a random username."""
-    username_length = random.randint(6, 12)
-    username = ''.join(random.choices(string.ascii_lowercase, k=username_length))
-    return username
+    username_length = random.randint(8, 15)  # Random length between 8 and 15
+    random_chars = ''.join(random.choices(string.ascii_lowercase + string.digits, k=username_length))
+    return random_chars
+
+def handle_notification_permission(device):
+    """Handle notification permission dialogs if they appear."""
+    # Handle first permission dialog
+    if device(text="Allow").exists:
+        device(text="Allow").click()
+        device.sleep(1)
+
+        # Handle second permission dialog if it appears
+        if device(text="Allow").exists:
+            device(text="Allow").click()
+            device.sleep(1)
