@@ -1,7 +1,7 @@
 import time
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, SettingsScreen, Events, HomeScreenTiles, BottomNavBar
+from locators import Events, BottomNavBar, HomeScreen
 
 
 def test_events_popup(d):
@@ -202,10 +202,60 @@ def test_events_card(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Click on Events tab in bottom navigation
-    print("\nLocating Events tab...")
-    events_tab = d.xpath(BottomNavBar.EVENTS)
-    assert events_tab.exists, "Could not find Events tab"
-    print("Events tab found, clicking...")
-    events_tab.click()
-    sleep(3)  # Wait for navigation
+    # Click on Events carousel item
+    print("\nLocating Events carousel item...")
+    carousel_item = d.xpath(Events.CAROUSEL_ITEM)
+    assert carousel_item.exists, "Could not find Events carousel item"
+    print("Events carousel item found, clicking...")
+    carousel_item.click()
+    sleep(7)
+
+    # Scroll until event details text is visible
+    print("\nScrolling to find event details...")
+    max_swipes = 5
+    found = False
+    for i in range(max_swipes):
+        if d.xpath(Events.EVENT_DETAILS_TEXT).exists:
+            found = True
+            break
+        d.swipe_ext("up", scale=0.8)
+        sleep(1)
+    
+    assert found, "Could not find event details text after scrolling"
+    print("Event details text found")
+
+    # Take a screenshot of the event details
+    print("\nTaking screenshot of event details...")
+    d.screenshot("6_2_1_events_details.png")
+    print("Screenshot saved as 6_2_1_events_details.png")
+
+    # Check for More Info tab
+    print("\nChecking for More Info tab...")
+    more_info_tab = d.xpath(Events.EVENT_CARD_MORE_INFO_TAB)
+    if more_info_tab.exists:
+        print("More Info tab found, clicking...")
+        more_info_tab.click()
+        sleep(2)  # Wait for tab content to load
+        print("More Info tab clicked")
+        
+        # Scroll to bottom of screen
+        print("\nScrolling to bottom of screen...")
+        max_swipes = 5
+        last_screen = ""
+        for i in range(max_swipes):
+            current_screen = d.dump_hierarchy()
+            if current_screen == last_screen:  # We've reached the bottom when screen doesn't change
+                print(f"Reached bottom after {i+1} swipes")
+                break
+            last_screen = current_screen
+            d.swipe_ext("up", scale=0.8)
+            sleep(1)
+            print(f"Swipe {i+1}/{max_swipes}")
+        
+        # Take screenshot of More Info contents
+        print("\nTaking screenshot of More Info contents...")
+        d.screenshot("6_2_2_more_info_contents.png")
+        print("Screenshot saved as 6_2_2_more_info_contents.png")
+    else:
+        print("More Info tab not found, test complete")
+    sleep(10)

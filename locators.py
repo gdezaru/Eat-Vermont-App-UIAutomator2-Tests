@@ -25,7 +25,8 @@ class Permissions:
 class HomeScreen:
     """Locators for Home Screen UI Elements"""
     EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events")]'
-    EVENTS_SEE_ALL = '//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
+    EVENTS_SEE_ALL = ('//android.view.ViewGroup[.//android.widget.TextView[contains(@text, "Events")]]'
+                      '//android.widget.TextView[@text="See All"]')
     VIDEOS_SEE_ALL = '//android.widget.TextView[@text="See All"]'
     VIEW_MAP = '//android.widget.TextView[@text="View Map"]'
     DAY_TRIPS_SEE_ALL = '//*[contains(@text, "{}")]/following-sibling::*//android.widget.TextView[@text="See All"]'
@@ -125,14 +126,15 @@ class Events:
     EVENT_CARD_DETAILS_TAB = '//android.view.ViewGroup[@content-desc="Details" and @package="com.eatvermont"]'
     EVENT_CARD_MORE_INFO_TAB = '//android.view.ViewGroup[@content-desc="More Info" and @package="com.eatvermont"]'
     EVENTS_POPUP_MAIN = '//android.view.ViewGroup[./*[@text="Events For You"]]'
-    EVENTS_POPUP_CLOSE_BUTTON = '//android.view.ViewGroup[./*[@text="Events For You"]]/android.view.ViewGroup/com.horcrux.svg.SvgView'
+    EVENTS_POPUP_CLOSE_BUTTON = ('//android.view.ViewGroup[./*[@text="Events For You"]]'
+                                 '/android.view.ViewGroup/com.horcrux.svg.SvgView')
+    CAROUSEL_ITEM = '//android.view.ViewGroup[.//android.widget.ImageView and .//android.widget.TextView]'
+    EVENT_DETAILS_TEXT = '//android.widget.TextView[contains(@text, "Date") or contains(@text, "Time") or contains(@text, "Where")]'
 
 #class Businesses:
 
 
-
 #class DayTrips:
-
 
 
 #class Trails:
