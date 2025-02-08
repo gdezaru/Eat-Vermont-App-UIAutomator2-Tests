@@ -258,4 +258,19 @@ def test_events_card(d):
         print("Screenshot saved as 6_2_2_more_info_contents.png")
     else:
         print("More Info tab not found, test complete")
+
+    # Check for Add To Calendar button
+    print("\nChecking for Add To Calendar button...")
+    add_to_calendar = d.xpath(Events.ADD_TO_CALENDAR)
+    assert add_to_calendar.exists, "Could not find Add To Calendar button"
+    print("Add To Calendar button found")
+
+    # Click Add To Calendar and capture screenshot
+    print("Clicking Add To Calendar button...")
+    add_to_calendar.click()
+    sleep(2)  # Wait for calendar dialog to appear
+    print("\nTaking screenshot of calendar dialog...")
+    d.screenshot("6_2_3_add_to_calendar.png")
+    print("Screenshot saved as 6_2_3_add_to_calendar_button_working.png")
+
     sleep(10)

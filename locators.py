@@ -129,7 +129,9 @@ class Events:
     EVENTS_POPUP_CLOSE_BUTTON = ('//android.view.ViewGroup[./*[@text="Events For You"]]'
                                  '/android.view.ViewGroup/com.horcrux.svg.SvgView')
     CAROUSEL_ITEM = '//android.view.ViewGroup[.//android.widget.ImageView and .//android.widget.TextView]'
-    EVENT_DETAILS_TEXT = '//android.widget.TextView[contains(@text, "Date") or contains(@text, "Time") or contains(@text, "Where")]'
+    EVENT_DETAILS_TEXT = ('//android.widget.TextView[contains(@text, "Date") or contains(@text, "Time") '
+                          'or contains(@text, "Where")]')
+    ADD_TO_CALENDAR = '//android.widget.TextView[@text="Add to Calendar"]'
 
 #class Businesses:
 
