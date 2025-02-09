@@ -1,8 +1,8 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
-from utils import get_next_day, handle_notification_permission
+from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events, Videos
+from utils import get_next_day, handle_notification_permission, find_and_click_video, wait_for_video_to_load, verify_video_playback
 
 
 def test_videos_screen(d):
@@ -139,7 +139,29 @@ def test_videos_screen(d):
     
     assert videos_see_all.exists, "Could not find Videos See All button"
     videos_see_all.click()
-    sleep(5)  # Wait for videos page to load
+    sleep(5)
+
+    # Verify that video tiles are present
+    print("\nVerifying video tiles are present...")
+    video_tiles = d.xpath(Videos.VIDEO_TILE)
+    assert video_tiles.exists, "No video tiles found on the Videos screen"
+    
+    # Take screenshot of the videos screen
+    d.screenshot("10_1_1_videos_screen.png")
+    print("Found video tiles successfully")
+
+    # Find and click the first video
+    assert find_and_click_video(d, Videos.VIDEO_TILE), "Failed to find and click video"
+    sleep(10)
+    
+    # Wait for video to load
+    wait_for_video_to_load(d)
+    
+    # Take screenshot of video playing
+    d.screenshot("10_1_2_video_playing.png")
+    
+    # Verify video playback
+    assert verify_video_playback(d), "Video playback verification failed"
 
 
 def test_video_details_card(d):

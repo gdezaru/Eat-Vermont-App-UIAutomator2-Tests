@@ -65,3 +65,68 @@ def handle_notification_permission(device):
         if device(text="Allow").exists:
             device(text="Allow").click()
             device.sleep(1)
+
+def verify_video_playback(device):
+    """
+    Verify that a video is playing by checking app state and UI elements.
+    
+    Args:
+        device: UIAutomator2 device instance
+    
+    Returns:
+        bool: True if video is playing, False otherwise
+    """
+    print("\nVerifying video playback...")
+    
+    # Get current app info
+    app_info = device.info
+    print(f"\nCurrent app info: {app_info}")
+    
+    # Get current window hierarchy
+    xml_hierarchy = device.dump_hierarchy()
+    print(f"\nWindow hierarchy: {xml_hierarchy}")
+    
+    # Check if we're still in the app
+    if not device(packageName="com.eatvermont").exists:
+        print("App is no longer in foreground")
+        return False
+        
+    # Take screenshot of the video playing
+    take_screenshot(device, "video_playing")
+    print("Video state verification complete")
+    return True
+
+
+def find_and_click_video(device, video_locator):
+    """
+    Find a video using the provided locator and click it.
+    
+    Args:
+        device: UIAutomator2 device instance
+        video_locator: XPath locator for the video element
+    
+    Returns:
+        bool: True if video was found and clicked, False otherwise
+    """
+    print("\nLooking for video...")
+    video = device.xpath(video_locator)
+    
+    if not video.exists:
+        print("Video not found")
+        return False
+        
+    print("Video found, clicking...")
+    video.click()
+    return True
+
+
+def wait_for_video_to_load(device, timeout=5):
+    """
+    Wait for video to load after clicking.
+    
+    Args:
+        device: UIAutomator2 device instance
+        timeout: How long to wait for video to load (in seconds)
+    """
+    print(f"\nWaiting {timeout} seconds for video to load...")
+    device.sleep(timeout)  # Using device.sleep instead of time.sleep for consistency

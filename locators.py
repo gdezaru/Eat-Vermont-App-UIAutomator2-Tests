@@ -182,3 +182,10 @@ class Trails:
     VISITS_COMPLETED_NUMBER = '//android.widget.TextView[contains(@text, "/") and string-length(@text) <= 5]'
     TRAILS_SECTION = '//android.view.ViewGroup[.//android.widget.TextView[@package="com.eatvermont"]]'
     TRAILS_SECTION_TEXT = '//android.widget.TextView[@text="{}"]'
+
+
+class Videos:
+    """Locators for Videos screen UI Elements"""
+    VIDEO_TILE = ('//android.view.ViewGroup[.//android.widget.TextView and'
+                  ' .//android.widget.ImageView and @clickable="true"]')
+    VIDEO_PLAYER = '//android.widget.FrameLayout[./android.widget.FrameLayout and ./android.view.ViewGroup]'
