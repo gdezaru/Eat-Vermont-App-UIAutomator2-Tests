@@ -878,6 +878,35 @@ def test_remove_favorite_videos(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
+    # Click on Favorites button in bottom navigation
+    print("\nClicking on Favorites button...")
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    print("Found Favorites button, clicking...")
+    favorites_button.click()
+    sleep(2)
+
+    # Verify favorited video is present and take screenshot
+    print("\nVerifying favorited video is present...")
+    favorite_video = d.xpath(MyFavorites.ADDED_FAVORITE_VIDEO)
+    assert favorite_video.exists, "Could not find favorited video"
+    print("Found favorited video")
+    print("\nTook screenshot: 11_7_1_favorited_video_before_removal.png")
+    d.screenshot("11_9_1_favorited_video_before_removal.png")
+
+    # Click on favorite icon to remove from favorites
+    print("\nRemoving video from favorites...")
+    favorite_video.click()
+    sleep(2)
+
+    # Verify video is no longer in favorites
+    print("\nVerifying video was removed from favorites...")
+    assert not favorite_video.exists, "Video is still present in favorites"
+    print("Video successfully removed from favorites")
+    sleep(5)  # Wait for UI to update
+    print("\nTook screenshot: 11_7_2_favorites_after_removal.png")
+    d.screenshot("11_9_2_favorites_after_removal.png")
+
 
 @pytest.mark.smoke
 def test_remove_favorite_trails(d):
