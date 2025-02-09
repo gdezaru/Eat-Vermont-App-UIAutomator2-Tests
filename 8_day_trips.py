@@ -104,14 +104,34 @@ def test_day_trip_card(d):
         print("\nNo events popup found, continuing with next steps...")
         time.sleep(10)
 
-    # Single scroll to show Day Trips
+    # Scroll to center the Day Trip section
+    print("\nScrolling to Day Trip section...")
     d(scrollable=True).scroll.to(text="Day Trip")
     assert d(text="Day Trip").exists(timeout=5), "Day Trip text not found"
-    sleep(1)
+    sleep(2)
 
-    # Click on Day Trips Tile 1 Read More button
+    # Scroll very slowly until Read More is visible
+    print("\nFine-tuning scroll to find Read More button...")
+    max_small_scrolls = 3
     read_more_button = d.xpath(DayTrips.READ_MORE_HOME_SCREEN)
-    assert read_more_button.exists(timeout=5), "Read More button not found on Day Trip tile"
+    
+    # Get screen dimensions
+    screen_info = d.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    
+    # Calculate swipe coordinates (swipe in the middle of screen to avoid buttons)
+    start_x = width // 2
+    start_y = (height * 4) // 5
+    end_y = height // 2
+        
+    for _ in range(max_small_scrolls):
+        if read_more_button.exists:
+            break
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
+        sleep(1.5)
+    
+    assert read_more_button.exists, "Read More button not found on Day Trip tile"
     read_more_button.click()
     sleep(5)
     d.screenshot("8_1_1_day_trip_details.png")
