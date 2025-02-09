@@ -177,5 +177,6 @@ class Trails:
     TRAILS_SEARCH = '//android.widget.EditText[@text="Search"]'
     TRAILS_STATUS = '//android.widget.TextView[@text="Not Started" or @text="In Progress" or @text="Complete"]'
     PERCENTAGE_PROGRESS = '//android.widget.TextView[contains(@text, "%")]'
-    VISITS_COMPLETED_TEXT = '//android.widget.TextView[contains(translate(@text, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "visits completed")]'
+    VISITS_COMPLETED_TEXT = ('//android.widget.TextView[contains(translate(@text, "ABCDEFGHIJKLMNOPQRSTUVWXYZ",'
+                             ' "abcdefghijklmnopqrstuvwxyz"), "visits completed")]')
     VISITS_COMPLETED_NUMBER = '//android.widget.TextView[contains(@text, "/") and string-length(@text) <= 5]'
