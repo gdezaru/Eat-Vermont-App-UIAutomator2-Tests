@@ -63,7 +63,7 @@ class BottomNavBar:
     NAV_HOME_BUTTON = '//android.widget.TextView[@text="Home"]'
     SEARCH = '//android.view.ViewGroup[@content-desc="Search"]'
     EVENTS = '//android.widget.TextView[@text="Events"]'
-    FAVORITES = '//android.widget.TextView[@text="Favorites"]'
+    FAVORITES = '//*[@content-desc="Favorites"]/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]'
     DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Day Trips"]'
     CHECK_IN_BUTTON = '//android.widget.TextView[@text="Check In"]'
     TRAILS_BUTTON = '//android.widget.TextView[@text="Trails"]'
@@ -212,9 +212,23 @@ class MyFavorites:
                                   '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                   '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                   '/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]')
-    FAVORITE_TRAILS_ADD_REMOVE = ('//*[@content-desc="Vermont Pie Trail, Not Started, '
-                                  'Embark on a 3-stop adventure across southern Vermont, '
-                                  'traveling 20 miles to sample the state\'s most delicious pies. '
-                                  'From traditional apple pies to creative seasonal flavors, '
-                                  'this trail is perfect for pie lovers., Read More"]'
-                                  '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')
+    FAVORITE_TRAILS_ADD_REMOVE = ('//*[contains(@content-desc, "Trail") and contains(@content-desc, "Read More")]'
+                                  '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]'
+                                  '/com.horcrux.svg.GroupView[1]')
+    ADDED_FAVORITE_EVENT = ('//*[contains(@content-desc, ", ") and ('
+                            'contains(@content-desc, "Monday") or '
+                            'contains(@content-desc, "Tuesday") or '
+                            'contains(@content-desc, "Wednesday") or '
+                            'contains(@content-desc, "Thursday") or '
+                            'contains(@content-desc, "Friday") or '
+                            'contains(@content-desc, "Saturday") or '
+                            'contains(@content-desc, "Sunday"))]'
+                            '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')
+    ADDED_FAVORITE_BUSINESS = ('//*[contains(@content-desc, ", ") and ('
+                               'contains(@content-desc, "Open Now") or '
+                               'contains(@content-desc, "Closed") or '
+                               'contains(@content-desc, "Opening") or '
+                               'contains(@content-desc, "Closing"))]'
+                               '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')
+    ADDED_FAVORITE_TRAIL = ('//*[contains(translate(@content-desc, "TRAIL", "trail"), "trail")]'
+                           '/android.view.ViewGroup[2]')

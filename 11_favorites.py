@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import Events, MyFavorites, Businesses, HomeScreen
+from locators import Events, MyFavorites, Businesses, HomeScreen, Trails, BottomNavBar
 from utils import (
     handle_notification_permission
 )
@@ -524,6 +524,18 @@ def test_add_favorite_trails(d):
     trails_button.click()
     sleep(2)
 
+    # Find and click the favorite icon
+    print("\nLocating favorite icon...")
+    favorite_icon = d.xpath(MyFavorites.FAVORITE_TRAILS_ADD_REMOVE)
+    assert favorite_icon.exists, "Could not find favorite icon"
+    print("Favorite icon found, clicking...")
+    favorite_icon.click()
+    sleep(2)
+
+    # Take screenshot of favorited trail
+    print("\nTook screenshot: 11_4_1_trail_favorited.png")
+    d.screenshot("11_4_1_trail_favorited.png")
+
 
 @pytest.mark.smoke
 def test_remove_favorite_events(d):
@@ -619,6 +631,34 @@ def test_remove_favorite_events(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
+    # Click on Favorites button in bottom navigation
+    print("\nClicking on Favorites button...")
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    print("Found Favorites button, clicking...")
+    favorites_button.click()
+    sleep(2)
+
+    # Verify favorited event is present and take screenshot
+    print("\nVerifying favorited event is present...")
+    favorite_event = d.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
+    assert favorite_event.exists, "Could not find favorited event"
+    print("Found favorited event")
+    print("\nTook screenshot: 11_5_1_favorited_event_before_removal.png")
+    d.screenshot("11_5_1_favorited_event_before_removal.png")
+
+    # Click on favorite icon to remove from favorites
+    print("\nRemoving event from favorites...")
+    favorite_event.click()
+    sleep(2)
+
+    # Verify event is no longer in favorites
+    print("\nVerifying event was removed from favorites...")
+    assert not favorite_event.exists, "Event is still present in favorites"
+    print("Event successfully removed from favorites")
+    print("\nTook screenshot: 11_5_2_favorites_after_removal.png")
+    d.screenshot("11_5_2_favorites_after_removal.png")
+
 
 @pytest.mark.smoke
 def test_remove_favorite_businesses(d):
@@ -713,6 +753,35 @@ def test_remove_favorite_businesses(d):
         print("Events popup successfully closed")
     else:
         print("\nNo events popup found, continuing with next steps...")
+
+    # Click on Favorites button in bottom navigation
+    print("\nClicking on Favorites button...")
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    print("Found Favorites button, clicking...")
+    favorites_button.click()
+    sleep(2)
+
+    # Verify favorited business is present and take screenshot
+    print("\nVerifying favorited business is present...")
+    favorite_business = d.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
+    assert favorite_business.exists, "Could not find favorited business"
+    print("Found favorited business")
+    print("\nTook screenshot: 11_6_1_favorited_business_before_removal.png")
+    d.screenshot("11_6_1_favorited_business_before_removal.png")
+
+    # Click on favorite icon to remove from favorites
+    print("\nRemoving business from favorites...")
+    favorite_business.click()
+    sleep(2)
+
+    # Verify business is no longer in favorites
+    print("\nVerifying business was removed from favorites...")
+    assert not favorite_business.exists, "Business is still present in favorites"
+    print("Business successfully removed from favorites")
+    sleep(3)  # Wait for UI to update
+    print("\nTook screenshot: 11_6_2_favorites_after_removal.png")
+    d.screenshot("11_6_2_favorites_after_removal.png")
 
 
 @pytest.mark.smoke
