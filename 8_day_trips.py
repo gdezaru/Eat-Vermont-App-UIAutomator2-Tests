@@ -109,4 +109,9 @@ def test_day_trip_card(d):
     assert d(text="Day Trip").exists(timeout=5), "Day Trip text not found"
     sleep(1)
 
-    # Click on Day Trips tile
+    # Click on Day Trips Tile 1 Read More button
+    read_more_button = d.xpath(DayTrips.READ_MORE_HOME_SCREEN)
+    assert read_more_button.exists(timeout=5), "Read More button not found on Day Trip tile"
+    read_more_button.click()
+    sleep(5)
+    d.screenshot("8_1_1_day_trip_details.png")

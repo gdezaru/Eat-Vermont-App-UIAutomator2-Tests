@@ -161,7 +161,9 @@ class Businesses:
 
 class DayTrips:
     """Locators for Day Trips"""
-
+    READ_MORE_HOME_SCREEN = ('//android.widget.TextView[@text="Read More"]'
+                            '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains(@text, "Day Trip")]]]'
+                            '[1]')
 
 
 #class Trails:
