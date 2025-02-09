@@ -190,3 +190,8 @@ class Videos:
     VIDEO_TILE = ('//android.widget.ScrollView//android.view.ViewGroup[.//android.widget.ImageView and'
                   ' .//android.widget.TextView]')
     VIDEO_PLAYER = '//android.widget.FrameLayout[./android.widget.FrameLayout and ./android.view.ViewGroup]'
+
+
+class MyFavorites:
+    FAVORITE_EVENTS_ADD_REMOVE = ('//android.view.ViewGroup[contains(@content-desc, "{}")]//'
+                                 'com.horcrux.svg.SvgView')
