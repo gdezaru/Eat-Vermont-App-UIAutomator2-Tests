@@ -3,8 +3,9 @@ from time import sleep
 from config import TEST_USER
 from locators import Events, HomeScreen, Trails
 from utils import handle_notification_permission
+import pytest
 
-
+@pytest.mark.smoke
 def test_trails_screen(d):
     """Test the Trails functionality"""
     handle_notification_permission(d)
@@ -137,6 +138,7 @@ def test_trails_screen(d):
     sleep(1)
 
 
+@pytest.mark.smoke
 def test_trails_details(d):
     """Test the Trails details screen"""
     handle_notification_permission(d)

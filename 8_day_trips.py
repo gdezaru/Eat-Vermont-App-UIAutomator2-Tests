@@ -3,8 +3,9 @@ from time import sleep
 from config import TEST_USER
 from locators import Events, DayTrips
 from utils import handle_notification_permission
+import pytest
 
-
+@pytest.mark.smoke
 def test_day_trip_card(d):
     """Test the Day Trip card on the Home screen"""
     handle_notification_permission(d)

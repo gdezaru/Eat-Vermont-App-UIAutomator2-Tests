@@ -3,8 +3,9 @@ from time import sleep
 from config import TEST_USER
 from locators import Events
 from utils import handle_notification_permission
+import pytest
 
-
+@pytest.mark.smoke
 def test_events_popup(d):
     """Tests the contents of the events popup."""
     handle_notification_permission(d)
@@ -105,6 +106,7 @@ def test_events_popup(d):
             time.sleep(10)
 
 
+@pytest.mark.smoke
 def test_events_card(d):
     handle_notification_permission(d)
 

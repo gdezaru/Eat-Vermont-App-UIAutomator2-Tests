@@ -3,9 +3,7 @@ from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, HomeScreenTiles, Events, Videos
 from utils import (
-    handle_notification_permission,
-    scroll_to_find_text,
-    scroll_until_element_is_visible
+    handle_notification_permission
 )
 
 
@@ -155,6 +153,7 @@ def test_videos_screen(d):
     print("Found video tiles successfully")
 
 
+@pytest.mark.smoke
 def test_video_details_card(d):
     """Test the Videos screen"""
     handle_notification_permission(d)

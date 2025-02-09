@@ -3,12 +3,14 @@ from time import sleep
 from config import TEST_USER
 from locators import Businesses, Events
 from utils import handle_notification_permission
+import pytest
 
 # Initialize business names at module level
 business_name = "Higher Ground"
 menu_business_name = "Big Fatty's BBQ"
 
 
+@pytest.mark.smoke
 def test_business_card_with_event(d):
     handle_notification_permission(d)
 
@@ -195,6 +197,7 @@ def test_business_card_with_event(d):
     print("Screenshot saved as 7_1_2_business_card_with_event_fyi_tab.png")
 
 
+@pytest.mark.smoke
 def test_business_card_with_menu(d):
     handle_notification_permission(d)
 

@@ -5,6 +5,7 @@ from locators import HomeScreen, SettingsScreen, Events
 from utils import generate_random_name, generate_random_username, handle_notification_permission
 
 
+@pytest.mark.smoke
 def test_settings_contents(d):
     """Tests the contents of the settings screen."""
     handle_notification_permission(d)
@@ -121,6 +122,7 @@ def test_settings_contents(d):
     d.screenshot("5_1_1_settings_screen_contents.png")
 
 
+@pytest.mark.smoke
 def test_settings_screen_navigation(d):
     """Tests the navigation within the settings screen."""
     handle_notification_permission(d)
@@ -260,6 +262,7 @@ def test_settings_screen_navigation(d):
         d.screenshot("5_2_3_welcome_screen_after_logout.png")
 
 
+@pytest.mark.smoke
 def test_settings_screen_edit_profile(d):
     """Tests the edit profile section within the settings screen."""
     handle_notification_permission(d)

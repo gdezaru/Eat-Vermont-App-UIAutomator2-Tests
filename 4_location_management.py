@@ -6,6 +6,7 @@ from locators import HomeScreen, EventsScreen, HomeScreenTiles, BottomNavBar, Lo
 from utils import get_next_day
 
 
+@pytest.mark.smoke
 def test_home_screen_location_picker(d):
     Test that the location picker button on the Home Screen works
     # Handle notification permission if it appears
@@ -119,7 +120,7 @@ def test_home_screen_location_picker(d):
     d.screenshot("4_1_4_location_confirmed.png")
 
 
-
+@pytest.mark.smoke
 def test_home_screen_use_current_location(d):
     Test that the 'Use Current Location' button on the Home Screen works
     # Handle notification permission if it appears
@@ -202,5 +203,5 @@ def test_home_screen_use_current_location(d):
         # Take screenshot
         d.screenshot("4_2_1_location_picker_home_screen.png")
 
-"""
 
+"""

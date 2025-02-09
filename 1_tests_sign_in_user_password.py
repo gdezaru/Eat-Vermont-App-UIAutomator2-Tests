@@ -5,6 +5,7 @@ from utils import handle_notification_permission
 from locators import LoginPage
 
 
+@pytest.mark.smoke
 def test_sign_in_user_password(d):
     """Test sign in with valid user and password"""
     handle_notification_permission(d)
@@ -90,6 +91,7 @@ def test_sign_in_user_password(d):
     assert False, "Login failed - Could not verify successful login"
 
 
+@pytest.mark.smoke
 def test_forgot_password(d):
     """Test forgot password functionality"""
     handle_notification_permission(d)

@@ -5,6 +5,7 @@ from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomN
 from utils import get_next_day, handle_notification_permission
 
 
+@pytest.mark.smoke
 def test_home_screen_events(d):
     """Tests the navigation to the home screen and the events displayed."""
     handle_notification_permission(d)
@@ -225,6 +226,7 @@ def test_home_screen_events(d):
         print("\nEvent details page loaded and screenshot taken")
 
 
+@pytest.mark.smoke
 def test_home_screen_view_map(d):
     """Tests the navigation to the home screen View Map module."""
     handle_notification_permission(d)
@@ -336,6 +338,7 @@ def test_home_screen_view_map(d):
         d.screenshot("3_2_1_home_screen_view_map_opened.png")
 
 
+@pytest.mark.smoke
 def test_home_screen_videos(d):
     """Tests the navigation to the home screen Videos module."""
     handle_notification_permission(d)
@@ -476,6 +479,7 @@ def test_home_screen_videos(d):
     d.screenshot("3_3_1_home_screen_videos_opened.png")
 
 
+@pytest.mark.smoke
 def test_home_screen_add_info(d):
     """
     Tests the navigation to the home screen Add Info module.
@@ -587,6 +591,7 @@ def test_home_screen_add_info(d):
         print("\nAdd Info page loaded and screenshot taken")
 
 
+@pytest.mark.smoke
 def test_home_screen_day_trips(d):
     """
     Tests the navigation to the home screen to the Day Trips module.
@@ -698,6 +703,7 @@ def test_home_screen_day_trips(d):
     print("\nDay Trips page loaded and screenshot taken")
 
 
+@pytest.mark.smoke
 def test_home_screen_events_within(d):
     """
     Tests the navigation to the home screen to the Events within ~30 minutes module.
@@ -825,6 +831,7 @@ def test_home_screen_events_within(d):
     sleep(1)
 
 
+@pytest.mark.smoke
 def test_home_screen_events_further_than(d):
     """
     Tests the navigation to the home screen to the Events Further Than ~30 minutes module.
@@ -952,6 +959,7 @@ def test_home_screen_events_further_than(d):
         sleep(1)
 
 
+@pytest.mark.smoke
 def test_home_screen_bottom_nav_bar(d):
     """
     Tests the navigation to the home screen to the bottom navigation bar.

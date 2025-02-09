@@ -5,6 +5,7 @@ from locators import Events
 from utils import handle_notification_permission
 
 
+@pytest.mark.smoke
 def test_search_events(d):
     """Test searching for events"""
     handle_notification_permission(d)
@@ -150,6 +151,7 @@ def test_search_events(d):
     assert False, "Search failed - Could not verify search results"
 
 
+@pytest.mark.smoke
 def test_search_businesses(d):
     """Test searching for businesses"""
     handle_notification_permission(d)
@@ -295,6 +297,7 @@ def test_search_businesses(d):
     assert False, "Search failed - Could not verify search results"
 
 
+@pytest.mark.smoke
 def test_search_day_trips(d):
     """Test searching for day trips"""
     handle_notification_permission(d)
@@ -446,6 +449,7 @@ def test_search_day_trips(d):
     assert False, "Search failed - Could not verify search results"
 
 
+@pytest.mark.smoke
 def test_search_videos(d):
     """Test searching for videos"""
     handle_notification_permission(d)
