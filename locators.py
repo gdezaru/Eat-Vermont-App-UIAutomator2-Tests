@@ -180,3 +180,5 @@ class Trails:
     VISITS_COMPLETED_TEXT = ('//android.widget.TextView[contains(translate(@text, "ABCDEFGHIJKLMNOPQRSTUVWXYZ",'
                              ' "abcdefghijklmnopqrstuvwxyz"), "visits completed")]')
     VISITS_COMPLETED_NUMBER = '//android.widget.TextView[contains(@text, "/") and string-length(@text) <= 5]'
+    TRAILS_SECTION = '//android.view.ViewGroup[.//android.widget.TextView[@package="com.eatvermont"]]'
+    TRAILS_SECTION_TEXT = '//android.widget.TextView[@text="{}"]'

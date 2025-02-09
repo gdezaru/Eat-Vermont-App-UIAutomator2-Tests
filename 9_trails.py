@@ -269,13 +269,19 @@ def test_trails_details(d):
 
     # Take screenshot of trail details
     print("\nTaking screenshot of trail details...")
-    d.screenshot("9_2_1_trail_details_main.png")
+    d.screenshot("9_2_1_trail_details.png")
     sleep(1)
 
-    # Scroll to bottom and take another screenshot
-    print("\nScrolling to bottom...")
-    d(scrollable=True).scroll.toEnd()
-    sleep(2)  # Wait for scroll to complete
+    # Scroll using swipe
+    print("\nScrolling using swipe...")
+    screen_size = d.window_size()
+    start_x = screen_size[0] * 0.5
+    start_y = screen_size[1] * 0.8  # Start from 80% of screen height
+    end_y = screen_size[1] * 0.2    # End at 20% of screen height
+    
+    for _ in range(3):  # Do multiple swipes
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.5)
+        sleep(1)
 
     print("\nTaking screenshot of trail details visits...")
     d.screenshot("9_2_2_trail_details_visits.png")
