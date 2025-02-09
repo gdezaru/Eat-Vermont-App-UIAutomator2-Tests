@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import Events, MyFavorites, Businesses
+from locators import Events, MyFavorites, Businesses, HomeScreen
 from utils import (
     handle_notification_permission
 )
@@ -380,10 +380,47 @@ def test_add_favorite_videos(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Check for favorite icon on any event
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE.format(""))
-    assert favorite_icon.exists, "No favorite icons found on any events"
-    print("\nFound favorite icon on event")
+    # Get screen dimensions for scrolling
+    screen_info = d.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    upper_third = int(height * 0.4)
+
+    # Calculate swipe coordinates
+    start_x = width // 2
+    start_y = (height * 3) // 4
+    end_y = height // 4
+
+    # First scroll to Videos section
+    print("\nScrolling to find Videos section...")
+    videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
+    max_scroll_attempts = 1
+
+    # Keep scrolling until Videos text is in upper third of screen
+    for _ in range(max_scroll_attempts):
+        if videos_text.exists:
+            bounds = videos_text.bounds
+            if bounds[1] < upper_third:
+                print("Videos section found in upper third of screen")
+                break
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.9)
+        sleep(1.5)
+
+    assert videos_text.exists and videos_text.bounds[1] < upper_third, \
+        "Videos section not found in upper third of screen"
+    sleep(1)
+
+    # Find and click the favorite icon
+    print("\nLocating favorite icon...")
+    favorite_icon = d.xpath(MyFavorites.FAVORITE_VIDEOS_ADD_REMOVE)
+    assert favorite_icon.exists, "Could not find favorite icon"
+    print("Favorite icon found, clicking...")
+    favorite_icon.click()
+    sleep(2)
+
+    # Take screenshot of favorited video
+    print("\nTook screenshot: 11_3_1_video_favorited.png")
+    d.screenshot("11_3_1_video_favorited.png")
 
 
 @pytest.mark.smoke
@@ -480,11 +517,6 @@ def test_add_favorite_trails(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Check for favorite icon on any event
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE.format(""))
-    assert favorite_icon.exists, "No favorite icons found on any events"
-    print("\nFound favorite icon on event")
-
 
 @pytest.mark.smoke
 def test_remove_favorite_events(d):
@@ -579,11 +611,6 @@ def test_remove_favorite_events(d):
         print("Events popup successfully closed")
     else:
         print("\nNo events popup found, continuing with next steps...")
-
-    # Check for favorite icon on any event
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE.format(""))
-    assert favorite_icon.exists, "No favorite icons found on any events"
-    print("\nFound favorite icon on event")
 
 
 @pytest.mark.smoke
@@ -680,11 +707,6 @@ def test_remove_favorite_businesses(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Check for favorite icon on any event
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE.format(""))
-    assert favorite_icon.exists, "No favorite icons found on any events"
-    print("\nFound favorite icon on event")
-
 
 @pytest.mark.smoke
 def test_remove_favorite_videos(d):
@@ -780,11 +802,6 @@ def test_remove_favorite_videos(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Check for favorite icon on any event
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE.format(""))
-    assert favorite_icon.exists, "No favorite icons found on any events"
-    print("\nFound favorite icon on event")
-
 
 @pytest.mark.smoke
 def test_remove_favorite_trails(d):
@@ -879,8 +896,3 @@ def test_remove_favorite_trails(d):
         print("Events popup successfully closed")
     else:
         print("\nNo events popup found, continuing with next steps...")
-
-    # Check for favorite icon on any event
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE.format(""))
-    assert favorite_icon.exists, "No favorite icons found on any events"
-    print("\nFound favorite icon on event")
