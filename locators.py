@@ -193,5 +193,22 @@ class Videos:
 
 
 class MyFavorites:
-    FAVORITE_EVENTS_ADD_REMOVE = ('//android.view.ViewGroup[contains(@content-desc, "{}")]//'
-                                 'com.horcrux.svg.SvgView')
+    FAVORITE_EVENTS_ADD_REMOVE = ('//*[@resource-id="android:id/content"]'
+                                  '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+                                  '/android.view.ViewGroup[2]/android.view.ViewGroup[2]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                  '/android.view.ViewGroup[1]/android.widget.ScrollView[1]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
+                                  '/com.horcrux.svg.SvgView[1]')
+    FAVORITE_BUSINESS_ADD_REMOVE = ('//*[@resource-id="android:id/content"]'
+                                    '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[3]'
+                                    '/com.horcrux.svg.SvgView[1]')
+    FAVORITE_VIDEOS_ADD_REMOVE = ('//android.widget.HorizontalScrollView'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]')
