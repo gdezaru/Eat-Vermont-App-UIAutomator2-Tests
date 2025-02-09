@@ -209,6 +209,12 @@ class MyFavorites:
                                     '/android.view.ViewGroup[1]/android.view.ViewGroup[3]'
                                     '/com.horcrux.svg.SvgView[1]')
     FAVORITE_VIDEOS_ADD_REMOVE = ('//android.widget.HorizontalScrollView'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]')
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                  '/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]')
+    FAVORITE_TRAILS_ADD_REMOVE = ('//*[@content-desc="Vermont Pie Trail, Not Started, '
+                                  'Embark on a 3-stop adventure across southern Vermont, '
+                                  'traveling 20 miles to sample the state\'s most delicious pies. '
+                                  'From traditional apple pies to creative seasonal flavors, '
+                                  'this trail is perfect for pie lovers., Read More"]'
+                                  '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')

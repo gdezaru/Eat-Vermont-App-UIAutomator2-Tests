@@ -517,6 +517,13 @@ def test_add_favorite_trails(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
+    # Click on Trails button
+    print("\nClicking on Trails button...")
+    trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
+    assert trails_button.wait(timeout=5), "Trails button not found"
+    trails_button.click()
+    sleep(2)
+
 
 @pytest.mark.smoke
 def test_remove_favorite_events(d):
