@@ -39,6 +39,7 @@ class HomeScreen:
                                       '/following-sibling::*//android.widget.TextView[@text="See All"]')
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
+    TRAILS_BUTTON = '//android.widget.TextView[@text="Trails"]'
 
 
 #    LOCATION_PICKER_HOME_SCREEN = *need button id because other locators don't work*'
@@ -168,4 +169,12 @@ class DayTrips:
 
 class Trails:
     """Locators for Trails"""
-    TRAILS_BUTTON = '//android.widget.TextView[@text="Trails"]'
+    READ_MORE_TRAILS = ('//android.widget.TextView[@text="Read More"]'
+                        '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains(@text, "Trail")]]]'
+                        '[1]')
+    TRAIL_NAME = '//android.widget.TextView[@text="{}"]'
+    TRAILS_SEARCH = '//android.widget.EditText[@text="Search"]'
+    TRAILS_STATUS = '//android.widget.TextView[@text="Not Started" or @text="In Progress" or @text="Complete"]'
+    PERCENTAGE_PROGRESS = '//android.widget.TextView[contains(@text, "%") and translate(@text, "0123456789", "") = "%"]'
+    VISITS_COMPLETED_TEXT = '//android.widget.TextView[@text="Visits Completed:"]'
+    VISITS_COMPLETED_NUMBER =

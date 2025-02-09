@@ -1,12 +1,12 @@
 import time
 from time import sleep
 from config import TEST_USER
-from locators import Events, DayTrips, HomeScreen
+from locators import Events, HomeScreen, Trails
 from utils import handle_notification_permission
 
 
 def test_trails_screen(d):
-    """Test the Trails screen"""
+    """Test the Trails functionality"""
     handle_notification_permission(d)
 
     # Find and click Sign In button
@@ -103,3 +103,42 @@ def test_trails_screen(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
         time.sleep(10)
+
+    # Click on Trails button
+    print("\nClicking on Trails button...")
+    trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
+    assert trails_button.exists(timeout=5), "Trails button not found"
+    trails_button.click()
+    sleep(2)
+
+    # Find and verify any trail name
+    print("\nFinding trail name...")
+    # First find any TextView containing "Trail" to get its text
+    trail_text = d(textContains="Trail").get_text()
+    print(f"Found trail: {trail_text}")
+    
+    # Now use that text with our TRAIL_NAME locator
+    trail_element = d.xpath(Trails.TRAIL_NAME.format(trail_text))
+    assert trail_element.exists(timeout=5), f"Trail element not found"
+    sleep(1)
+
+    # Verify trail status
+    print("\nChecking trail status...")
+    status_element = d.xpath(Trails.TRAILS_STATUS)
+    assert status_element.exists(timeout=5), "Trail status not found"
+    current_status = status_element.get_text()
+    print(f"Trail status is: {current_status}")
+    assert current_status in ["Not Started", "In Progress", "Complete"], f"Unexpected trail status: {current_status}"
+    sleep(1)
+
+    # Take screenshot of trails main screen
+    print("\nTaking screenshot of trails main screen...")
+    d.screenshot("9_1_1_trails_main_screen.png")
+    sleep(1)
+
+    # Click Read More button
+    print("\nClicking Read More button...")
+    read_more_button = d.xpath(Trails.READ_MORE_TRAILS)
+    assert read_more_button.exists(timeout=5), "Read More button not found"
+    read_more_button.click()
+    sleep(2)
