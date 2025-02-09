@@ -126,5 +126,40 @@ def test_view_map_filters(d):
         assert food_pantries_filter.exists, "Food Pantries filter is not visible on the map screen"
 
         # Take screenshot of all filters
-        print("\nTook screenshot: 13_1_1_map_filters.png")
+        print("\nTook screenshot: 13_1_1_map_filters_present.png")
         d.screenshot("13_1_1_map_filters_present.png")
+
+        # Click Events filter and take screenshot
+        print("\nClicking Events filter...")
+        events_filter.click()
+        sleep(2)  # Wait for map to update
+        print("\nTook screenshot: 13_1_2_events_filter_active.png")
+        d.screenshot("13_1_2_events_filter_active.png")
+
+        # Click Food & Drinks filter and take screenshot
+        print("\nClicking Food & Drinks filter...")
+        food_drinks_filter.click()
+        sleep(2)  # Wait for map to update
+        print("\nTook screenshot: 13_1_3_food_drinks_filter_active.png")
+        d.screenshot("13_1_3_food_drinks_filter_active.png")
+
+        # Click Farms filter and take screenshot
+        print("\nClicking Farms filter...")
+        farms_filter.click()
+        sleep(2)  # Wait for map to update
+        print("\nTook screenshot: 13_1_4_farms_filter_active.png")
+        d.screenshot("13_1_4_farms_filter_active.png")
+
+        # Scroll right on filters header
+        print("\nScrolling right on filters header...")
+        filters_header = d.xpath(ViewMap.FILTERS_HEADER)
+        assert filters_header.exists, "Could not find filters header"
+        filters_header.swipe("left", steps=10)
+        sleep(2)
+
+        # Click Food Pantries filter and take screenshot
+        print("\nClicking Food Pantries filter...")
+        food_pantries_filter.click()
+        sleep(2)  # Wait for map to update
+        print("\nTook screenshot: 13_1_5_food_pantries_filter_active.png")
+        d.screenshot("13_1_5_food_pantries_filter_active.png")
