@@ -269,5 +269,14 @@ def test_trails_details(d):
 
     # Take screenshot of trail details
     print("\nTaking screenshot of trail details...")
-    d.screenshot("9_2_1_trail_details.png")
+    d.screenshot("9_2_1_trail_details_main.png")
+    sleep(1)
+
+    # Scroll to bottom and take another screenshot
+    print("\nScrolling to bottom...")
+    d(scrollable=True).scroll.toEnd()
+    sleep(2)  # Wait for scroll to complete
+
+    print("\nTaking screenshot of trail details visits...")
+    d.screenshot("9_2_2_trail_details_visits.png")
     sleep(1)
