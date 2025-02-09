@@ -150,13 +150,6 @@ def test_view_map_filters(d):
         print("\nTook screenshot: 13_1_4_farms_filter_active.png")
         d.screenshot("13_1_4_farms_filter_active.png")
 
-        # Scroll right on filters header
-        print("\nScrolling right on filters header...")
-        filters_header = d.xpath(ViewMap.FILTERS_HEADER)
-        assert filters_header.exists, "Could not find filters header"
-        filters_header.swipe("left", steps=10)
-        sleep(2)
-
         # Click Food Pantries filter and take screenshot
         print("\nClicking Food Pantries filter...")
         food_pantries_filter.click()

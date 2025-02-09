@@ -95,18 +95,8 @@ class ViewMap:
     FOOD_AND_DRINKS_FILTER = '//android.widget.TextView[@text="Food & Drinks"]'
     FARMS_FILTER = '//android.widget.TextView[@text="Farms"]'
     FOOD_PANTRIES_FILTER = '//android.widget.TextView[@text="Food Pantries"]'
-    FILTERS_HEADER = ('//*[@resource-id="android:id/content"]'
-                      '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                      '/android.view.ViewGroup[3]')
+    FILTERS_HEADER = ('//android.view.ViewGroup[.//android.widget.TextView[@text="Events" or '
+                     '@text="Food & Drinks" or @text="Farms" or @text="Food Pantries"]]')
 
 
 class AddInfo:
