@@ -972,3 +972,32 @@ def test_remove_favorite_trails(d):
         print("Events popup successfully closed")
     else:
         print("\nNo events popup found, continuing with next steps...")
+
+    # Click on Favorites button in bottom navigation
+    print("\nClicking on Favorites button...")
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    print("Found Favorites button, clicking...")
+    favorites_button.click()
+    sleep(2)
+
+    # Verify favorited trail is present and take screenshot
+    print("\nVerifying favorited trail is present...")
+    favorite_trail = d.xpath(MyFavorites.ADDED_FAVORITE_TRAIL)
+    assert favorite_trail.exists, "Could not find favorited trail"
+    print("Found favorited trail")
+    print("\nTook screenshot: 11_8_1_favorited_trail_before_removal.png")
+    d.screenshot("11_7_1_favorited_trail_before_removal.png")
+
+    # Click on favorite icon to remove from favorites
+    print("\nRemoving trail from favorites...")
+    favorite_trail.click()
+    sleep(2)
+
+    # Verify trail is no longer in favorites
+    print("\nVerifying trail was removed from favorites...")
+    assert not favorite_trail.exists, "Trail is still present in favorites"
+    print("Trail successfully removed from favorites")
+    sleep(5)  # Wait for UI to update
+    print("\nTook screenshot: 11_8_2_favorites_after_removal.png")
+    d.screenshot("11_7_2_favorites_after_removal.png")

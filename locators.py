@@ -231,4 +231,6 @@ class MyFavorites:
                                'contains(@content-desc, "Closing"))]'
                                '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')
     ADDED_FAVORITE_TRAIL = ('//*[contains(translate(@content-desc, "TRAIL", "trail"), "trail")]'
-                           '/android.view.ViewGroup[2]')
+                            '/android.view.ViewGroup[2]')
+    ADDED_FAVORITE_VIDEO = ('//*[@content-desc]'
+                            '/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]')
