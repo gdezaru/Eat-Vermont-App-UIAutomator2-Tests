@@ -91,10 +91,10 @@ class EventsScreen:
 
 
 class ViewMap:
-    EVENTS_FILTER = '//android.widget.TextView[@text="Events" and @index="1"]'
-    FOOD_AND_DRINKS_FILTER = '//android.widget.TextView[@text="Food & Drinks" and @index="2"]'
-    FARMS_FILTER = '//android.widget.TextView[@text="Farms" and @index="3"]'
-    FOOD_PANTRIES_FILTER = '//android.widget.TextView[@text="Food Pantries" and @index="4"]'
+    EVENTS_FILTER = '//android.widget.TextView[@text="Events"]'
+    FOOD_AND_DRINKS_FILTER = '//android.widget.TextView[@text="Food & Drinks"]'
+    FARMS_FILTER = '//android.widget.TextView[@text="Farms"]'
+    FOOD_PANTRIES_FILTER = '//android.widget.TextView[@text="Food Pantries"]'
 
 
 class AddInfo:
