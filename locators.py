@@ -186,6 +186,6 @@ class Trails:
 
 class Videos:
     """Locators for Videos screen UI Elements"""
-    VIDEO_TILE = ('//android.view.ViewGroup[.//android.widget.TextView and'
-                  ' .//android.widget.ImageView and @clickable="true"]')
+    VIDEO_TILE = ('//android.widget.ScrollView//android.view.ViewGroup[.//android.widget.ImageView and'
+                  ' .//android.widget.TextView]')
     VIDEO_PLAYER = '//android.widget.FrameLayout[./android.widget.FrameLayout and ./android.view.ViewGroup]'
