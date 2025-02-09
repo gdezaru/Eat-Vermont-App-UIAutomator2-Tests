@@ -39,7 +39,7 @@ class HomeScreen:
                                       '/following-sibling::*//android.widget.TextView[@text="See All"]')
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
-    TRAILS_BUTTON = '//android.widget.TextView[@text="Trails"]'
+    TRAILS_BUTTON = '//android.view.ViewGroup[@content-desc="Trail"]'
 
 
 #    LOCATION_PICKER_HOME_SCREEN = *need button id because other locators don't work*'
@@ -163,7 +163,8 @@ class Businesses:
 class DayTrips:
     """Locators for Day Trips"""
     READ_MORE_HOME_SCREEN = ('//android.widget.TextView[@text="Read More"]'
-                             '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains(@text, "Day Trip")]]]'
+                             '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains'
+                             '(@text, "Day Trip")]]]'
                              '[1]')
 
 
@@ -175,6 +176,6 @@ class Trails:
     TRAIL_NAME = '//android.widget.TextView[@text="{}"]'
     TRAILS_SEARCH = '//android.widget.EditText[@text="Search"]'
     TRAILS_STATUS = '//android.widget.TextView[@text="Not Started" or @text="In Progress" or @text="Complete"]'
-    PERCENTAGE_PROGRESS = '//android.widget.TextView[contains(@text, "%") and translate(@text, "0123456789", "") = "%"]'
-    VISITS_COMPLETED_TEXT = '//android.widget.TextView[@text="Visits Completed:"]'
-    VISITS_COMPLETED_NUMBER =
+    PERCENTAGE_PROGRESS = '//android.widget.TextView[contains(@text, "%")]'
+    VISITS_COMPLETED_TEXT = '//android.widget.TextView[contains(translate(@text, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"), "visits completed")]'
+    VISITS_COMPLETED_NUMBER = '//android.widget.TextView[contains(@text, "/") and string-length(@text) <= 5]'
