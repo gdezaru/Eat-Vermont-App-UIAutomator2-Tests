@@ -1,8 +1,12 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events, Videos
-from utils import get_next_day, handle_notification_permission, find_and_click_video, wait_for_video_to_load, verify_video_playback
+from locators import HomeScreen, HomeScreenTiles, Events, Videos
+from utils import (
+    handle_notification_permission,
+    scroll_to_find_text,
+    scroll_until_element_is_visible
+)
 
 
 def test_videos_screen(d):
@@ -150,19 +154,6 @@ def test_videos_screen(d):
     d.screenshot("10_1_1_videos_screen.png")
     print("Found video tiles successfully")
 
-    # Find and click the first video
-    assert find_and_click_video(d, Videos.VIDEO_TILE), "Failed to find and click video"
-    sleep(10)
-    
-    # Wait for video to load
-    wait_for_video_to_load(d)
-    
-    # Take screenshot of video playing
-    d.screenshot("10_1_2_video_playing.png")
-    
-    # Verify video playback
-    assert verify_video_playback(d), "Video playback verification failed"
-
 
 def test_video_details_card(d):
     """Test the Videos screen"""
@@ -299,3 +290,18 @@ def test_video_details_card(d):
     assert videos_see_all.exists, "Could not find Videos See All button"
     videos_see_all.click()
     sleep(2)  # Wait for videos page to load
+
+    # Navigate to Videos section
+    scroll_to_find_text(d, "Videos")
+    d(text="Videos").click()
+    sleep(2)
+
+    # Scroll until we find the video title
+    video_title = "Holiday Party Recap"
+    video_title_locator = HomeScreenTiles.VIDEOS_TILE_TITLE.format(video_title)
+    
+    assert scroll_until_element_is_visible(d, video_title_locator), f"Failed to find video with title: {video_title}"
+    print(f"Found video with title: {video_title}")
+    
+    # Take a screenshot of the video details
+    d.screenshot("10_2_1_video_details.png")

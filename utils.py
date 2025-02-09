@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 import random
 import string
+import time
 
 def ensure_screenshots_dir():
     """Ensure screenshots directory exists"""
@@ -130,3 +131,62 @@ def wait_for_video_to_load(device, timeout=5):
     """
     print(f"\nWaiting {timeout} seconds for video to load...")
     device.sleep(timeout)  # Using device.sleep instead of time.sleep for consistency
+
+
+def scroll_to_find_text(device, text, max_attempts=5):
+    """
+    Scroll the screen until text is found
+    
+    Args:
+        device: UIAutomator2 device instance
+        text: Text to find
+        max_attempts: Maximum number of scroll attempts
+        
+    Returns:
+        bool: True if text was found, False otherwise
+    """
+    screen_info = device.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    
+    start_x = width // 2
+    start_y = (height * 3) // 4
+    end_y = height // 4
+    
+    for _ in range(max_attempts):
+        if device(text=text).exists:
+            return True
+        device.swipe(start_x, start_y, start_x, end_y, duration=0.8)
+        time.sleep(1.5)
+    
+    return device(text=text).exists
+
+
+def scroll_until_element_is_visible(device, locator, max_attempts=5):
+    """
+    Scroll the screen until the element with the given locator is visible
+    
+    Args:
+        device: UIAutomator2 device instance
+        locator: XPath locator string
+        max_attempts: Maximum number of scroll attempts
+        
+    Returns:
+        bool: True if element was found, False otherwise
+    """
+    screen_info = device.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    
+    start_x = width // 2
+    start_y = (height * 3) // 4
+    end_y = height // 4
+    
+    for _ in range(max_attempts):
+        element = device.xpath(locator)
+        if element.exists:
+            return True
+        device.swipe(start_x, start_y, start_x, end_y, duration=0.8)
+        time.sleep(1.5)
+    
+    return device.xpath(locator).exists

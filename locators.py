@@ -50,6 +50,7 @@ class HomeScreenTiles:
     EVENTS_TILE = '//android.view.ViewGroup[contains(@content-desc, "{}")]'
     VIDEOS_TILE = ('//android.widget.HorizontalScrollView/android.view.ViewGroup[1]'
                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]')
+    VIDEOS_TILE_TITLE = '//android.widget.TextView[@text="{}"]'
     DAY_TRIPS_TILE = ('//android.view.ViewGroup[contains(@content-desc, "{}")]//android.widget.TextView'
                       '[@text="Read More"]')
     EVENTS_WITHIN_30_TILE = '//android.widget.TextView[contains(@text, "{}, ")]'
