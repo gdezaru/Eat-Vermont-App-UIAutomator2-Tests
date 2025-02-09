@@ -193,6 +193,7 @@ class Videos:
 
 
 class MyFavorites:
+    """Locators for My Favorites"""
     FAVORITE_EVENTS_ADD_REMOVE = ('//*[@resource-id="android:id/content"]'
                                   '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
                                   '/android.view.ViewGroup[2]/android.view.ViewGroup[2]'
@@ -234,3 +235,8 @@ class MyFavorites:
                             '/android.view.ViewGroup[2]')
     ADDED_FAVORITE_VIDEO = ('//*[@content-desc]'
                             '/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]')
+
+
+class VisitHistory:
+    """Locators for Visit History"""
+    VISIT_HISTORY_TAB = '//android.widget.TextView[@text="Visit History"]'

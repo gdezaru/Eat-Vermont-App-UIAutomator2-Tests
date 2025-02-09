@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from config import TEST_USER
-from locators import Events
+from locators import Events, BottomNavBar, VisitHistory
 from utils import (
     handle_notification_permission
 )
@@ -99,3 +99,23 @@ def test_visit_history_screen(d):
         print("Events popup successfully closed")
     else:
         print("\nNo events popup found, continuing with next steps...")
+
+    # Click on Favorites button in bottom navigation
+    print("\nClicking on Favorites button...")
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    print("Found Favorites button, clicking...")
+    favorites_button.click()
+    sleep(2)
+
+    # Click on Visit History tab
+    print("\nClicking on Visit History tab...")
+    visit_history_tab = d.xpath(VisitHistory.VISIT_HISTORY_TAB)
+    assert visit_history_tab.exists, "Could not find Visit History tab"
+    print("Found Visit History tab, clicking...")
+    visit_history_tab.click()
+    sleep(2)
+
+    # Take confirmation screenshot
+    print("\nTook screenshot: 12_1_visit_history_screen.png")
+    d.screenshot("12_1_1_visit_history_screen.png")
