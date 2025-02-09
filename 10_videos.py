@@ -98,15 +98,48 @@ def test_videos_screen(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Single scroll to show Videos
-    d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
+    # Get screen dimensions for scrolling
+    screen_info = d.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    
+    # First scroll until we find Videos text using the specific locator
+    print("\nScrolling to find Videos section...")
+    videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
+    max_scroll_attempts = 5
+    
+    # Calculate swipe coordinates for finding Videos
+    start_x = width // 2
+    start_y = (height * 3) // 4  # Start from 75%
+    end_y = height // 4          # End at 25%
+    
+    for _ in range(max_scroll_attempts):
+        if videos_text.exists:
+            break
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
+        sleep(1.5)
+    
+    assert videos_text.exists, "Videos section not found"
     sleep(1)
 
-    # Click "See All" in Videos section
+    # Now do smaller scrolls to find See All
+    print("\nFine-tuning scroll to find See All button...")
+    max_small_scrolls = 3
     videos_see_all = d.xpath(HomeScreen.VIDEOS_SEE_ALL)
+    
+    # Smaller swipes for fine-tuning
+    fine_tune_start_y = (height * 3) // 5  # Start from 60%
+    fine_tune_end_y = (height * 2) // 5    # End at 40%
+        
+    for _ in range(max_small_scrolls):
+        if videos_see_all.exists:
+            break
+        d.swipe(start_x, fine_tune_start_y, start_x, fine_tune_end_y, duration=1.0)
+        sleep(1.5)
+    
     assert videos_see_all.exists, "Could not find Videos See All button"
     videos_see_all.click()
-    sleep(2)  # Wait for videos page to load
+    sleep(5)  # Wait for videos page to load
 
 
 def test_video_details_card(d):
@@ -202,12 +235,45 @@ def test_video_details_card(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-    # Single scroll to show Videos
-    d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
+    # Get screen dimensions for scrolling
+    screen_info = d.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    
+    # First scroll until we find Videos text using the specific locator
+    print("\nScrolling to find Videos section...")
+    videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
+    max_scroll_attempts = 5
+    
+    # Calculate swipe coordinates for finding Videos
+    start_x = width // 2
+    start_y = (height * 3) // 4  # Start from 75%
+    end_y = height // 4          # End at 25%
+    
+    for _ in range(max_scroll_attempts):
+        if videos_text.exists:
+            break
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
+        sleep(1.5)
+    
+    assert videos_text.exists, "Videos section not found"
     sleep(1)
 
-    # Click "See All" in Videos section
+    # Now do smaller scrolls to find See All
+    print("\nFine-tuning scroll to find See All button...")
+    max_small_scrolls = 3
     videos_see_all = d.xpath(HomeScreen.VIDEOS_SEE_ALL)
+    
+    # Smaller swipes for fine-tuning
+    fine_tune_start_y = (height * 3) // 5  # Start from 60%
+    fine_tune_end_y = (height * 2) // 5    # End at 40%
+        
+    for _ in range(max_small_scrolls):
+        if videos_see_all.exists:
+            break
+        d.swipe(start_x, fine_tune_start_y, start_x, fine_tune_end_y, duration=1.0)
+        sleep(1.5)
+    
     assert videos_see_all.exists, "Could not find Videos See All button"
     videos_see_all.click()
     sleep(2)  # Wait for videos page to load
