@@ -41,8 +41,6 @@ class HomeScreen:
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
     TRAILS_BUTTON = '//android.view.ViewGroup[@content-desc="Trail"]'
-
-
 #    LOCATION_PICKER_HOME_SCREEN = *need button id because other locators don't work*'
 
 
@@ -248,16 +246,7 @@ class VisitHistory:
 class GuestMode:
     """Locators for Guest Mode module"""
     CONTINUE_AS_GUEST_BUTTON = '//android.widget.TextView[@text="Continue as a guest."]'
-    GUEST_MODE_SIGN_IN_BUTTON = ('//*[@resource-id="android:id/content"]'
-                                 '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                 '/android.view.ViewGroup[1]')
+#    GUEST_MODE_SIGN_IN_BUTTON = *need button id because other locators don't work*'
     EVENTS_LIMITED_RESULTS = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_HOME_SCREEN_PROMPT = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS = ('//android.widget.HorizontalScrollView'
@@ -269,9 +258,5 @@ class GuestMode:
 
 class PlansPopup:
     """Locators for Plans Popup"""
-    PLANS_POPUP_CLOSE_BUTTON = ('//*[@resource-id="android:id/content"]'
-                                '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
-                                '/android.view.ViewGroup[2]/android.view.ViewGroup[2]'
-                                '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                '/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
-                                '/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
+    PLANS_POPUP_CONTINUE_BUTTON = ('//android.widget.TextView[@text="Continue as a guest."]'
+                                   ' | //android.view.ViewGroup[@content-desc="Continue as a guest."]')

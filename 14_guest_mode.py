@@ -16,15 +16,20 @@ def test_guest_mode_button(d):
     guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
     assert guest_mode_button.exists, "Continue as guest button not found"
     guest_mode_button.click()
+    sleep(5)  # Wait longer for popup to appear
 
-    # Handle plans popup if present
-    plans_popup_close = d.xpath(PlansPopup.PLANS_POPUP_CLOSE_BUTTON)
-    if plans_popup_close.exists:
-        print("\nPlans popup is visible, closing it...")
-        plans_popup_close.click()
+    # Check for plans popup
+    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
+    if plans_popup_continue.exists:
+        print("\nPlans popup is visible, clicking continue...")
+        sleep(3)
+        plans_popup_continue.click()
+        print("Clicked continue on plans popup")
     else:
         print("\nNo plans popup found, continuing with test...")
+        sleep(5)
 
+    # Handle events popup if present
     events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
     if events_popup.exists:
         print("\nEvents popup is visible, closing it...")
