@@ -6,6 +6,7 @@ Locators for the EatVermont app UI elements using XPath selectors
 class LoginPage:
     """Locators for login flow"""
     # Buttons
+    GET_STARTED = '//android.widget.TextView[@text="Get Started"]'
     SIGN_IN_BUTTON = '//android.widget.TextView[@text="Sign In"]'
     LOG_IN_BUTTON = '//android.widget.TextView[@text="Log in"]'
 
@@ -96,7 +97,7 @@ class ViewMap:
     FARMS_FILTER = '//android.widget.TextView[@text="Farms"]'
     FOOD_PANTRIES_FILTER = '//android.widget.TextView[@text="Food Pantries"]'
     FILTERS_HEADER = ('//android.view.ViewGroup[.//android.widget.TextView[@text="Events" or '
-                     '@text="Food & Drinks" or @text="Farms" or @text="Food Pantries"]]')
+                      '@text="Food & Drinks" or @text="Farms" or @text="Food Pantries"]]')
 
 
 class AddInfo:
@@ -242,3 +243,35 @@ class MyFavorites:
 class VisitHistory:
     """Locators for Visit History"""
     VISIT_HISTORY_TAB = '//android.widget.TextView[@text="Visit History"]'
+
+
+class GuestMode:
+    """Locators for Guest Mode module"""
+    CONTINUE_AS_GUEST_BUTTON = '//android.widget.TextView[@text="Continue as a guest."]'
+    GUEST_MODE_SIGN_IN_BUTTON = ('//*[@resource-id="android:id/content"]'
+                                 '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]')
+    EVENTS_LIMITED_RESULTS = '//android.widget.TextView[@text="Limited Results"]'
+    GUEST_MODE_HOME_SCREEN_PROMPT = '//android.widget.TextView[@text="Limited Results"]'
+    GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS = ('//android.widget.HorizontalScrollView'
+                                            '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                            '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                            '/android.view.ViewGroup[3]/android.view.ViewGroup[1]'
+                                            '/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
+
+
+class PlansPopup:
+    """Locators for Plans Popup"""
+    PLANS_POPUP_CLOSE_BUTTON = ('//*[@resource-id="android:id/content"]'
+                                '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+                                '/android.view.ViewGroup[2]/android.view.ViewGroup[2]'
+                                '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                '/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
+                                '/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
