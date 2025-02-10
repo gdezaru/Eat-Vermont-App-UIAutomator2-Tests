@@ -229,7 +229,7 @@ def test_guest_mode_videos(d):
 
 @pytest.mark.smoke
 def test_guest_mode_search(d):
-    """Test the Guest Mode videos screen"""
+    """Test the Guest Mode search screen"""
     handle_notification_permission(d)
 
     # Find and click Guest Mode button
@@ -296,7 +296,7 @@ def test_guest_mode_search(d):
 
 @pytest.mark.smoke
 def test_guest_mode_favorites(d):
-    """Test the Guest Mode videos screen"""
+    """Test the Guest Mode favorites screen"""
     handle_notification_permission(d)
 
     # Find and click Guest Mode button
@@ -359,3 +359,82 @@ def test_guest_mode_favorites(d):
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
     d.screenshot("14_5_1_guest_mode_search_triggered_plans_popup.png")
+
+
+@pytest.mark.smoke
+def test_guest_mode_prompt_end_screen(d):
+    """Test the Guest Mode prompt from the bottom of the screen"""
+    handle_notification_permission(d)
+
+    # Find and click Guest Mode button
+    d.xpath(LoginPage.GET_STARTED).click()
+    sleep(3)
+
+    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
+    assert guest_mode_button.exists, "Continue as guest button not found"
+    guest_mode_button.click()
+    sleep(5)  # Wait longer for popup to appear
+
+    # Check for plans popup
+    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
+    if plans_popup_continue.exists:
+        print("\nPlans popup is visible, clicking continue...")
+        sleep(3)
+        plans_popup_continue.click()
+        print("Clicked continue on plans popup")
+    else:
+        print("\nNo plans popup found, continuing with test...")
+        sleep(5)
+
+    # Handle events popup if present
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("\nEvents popup is visible, closing it...")
+        sleep(3)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        print("\nChecking close button...")
+        print(f"Close button exists: {close_button.exists}")
+        if close_button.exists:
+            print(f"Close button info: {close_button.info}")
+        assert close_button.exists, "Close button not found on events popup"
+        print("\nAttempting to click close button...")
+        close_button.click()
+        print("\nClose button clicked")
+        sleep(3)
+
+        # Verify popup is closed
+        print("\nVerifying popup is closed...")
+        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
+        assert not events_popup.exists, "Events popup is still visible after clicking close button"
+        print("Events popup successfully closed")
+    else:
+        print("\nNo events popup found, continuing with next steps...")
+
+    # Get screen dimensions for scrolling
+    screen_info = d.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+
+    # Calculate swipe coordinates for maximum scroll
+    start_x = width // 2
+    start_y = (height * 3) // 4
+    end_y = height // 4
+
+    # Scroll to the end of screen
+    print("\nScrolling to end of screen...")
+    max_scroll_attempts = 5
+
+    # Keep scrolling until we reach the end
+    for _ in range(max_scroll_attempts):
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.9)
+        sleep(1.5)
+
+    # Verify guest mode prompt is present
+    print("\nVerifying guest mode prompt...")
+    guest_mode_prompt = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_PROMPT)
+    assert guest_mode_prompt.exists, "Guest mode prompt not found"
+    print("Guest mode prompt is present")
+
+    # Take a confirmation screenshot
+    print("\nTaking confirmation screenshot...")
+    d.screenshot("14_6_1_guest_mode_prompt_end_screen.png")
