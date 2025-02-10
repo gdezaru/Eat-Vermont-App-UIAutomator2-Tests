@@ -48,4 +48,6 @@ def test_guest_mode_button(d):
     else:
         print("\nNo events popup found, continuing with next steps...")
 
-
+    # Take a confirmation screenshot
+    print("\nTaking confirmation screenshot...")
+    d.screenshot("14_1_1_guest_mode_button.png")
