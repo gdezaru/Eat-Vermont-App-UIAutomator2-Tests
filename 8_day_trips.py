@@ -5,6 +5,7 @@ from locators import Events, DayTrips
 from utils import handle_notification_permission
 import pytest
 
+
 @pytest.mark.smoke
 def test_day_trip_card(d):
     """Test the Day Trip card on the Home screen"""
@@ -115,23 +116,23 @@ def test_day_trip_card(d):
     print("\nFine-tuning scroll to find Read More button...")
     max_small_scrolls = 3
     read_more_button = d.xpath(DayTrips.READ_MORE_HOME_SCREEN)
-    
+
     # Get screen dimensions
     screen_info = d.info
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
-    
+
     # Calculate swipe coordinates (swipe in the middle of screen to avoid buttons)
     start_x = width // 2
     start_y = (height * 4) // 5
     end_y = height // 2
-        
+
     for _ in range(max_small_scrolls):
         if read_more_button.exists:
             break
         d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
         sleep(1.5)
-    
+
     assert read_more_button.exists, "Read More button not found on Day Trip tile"
     read_more_button.click()
     sleep(5)
