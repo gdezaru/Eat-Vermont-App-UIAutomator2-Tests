@@ -254,6 +254,8 @@ class GuestMode:
                                             '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                             '/android.view.ViewGroup[3]/android.view.ViewGroup[1]'
                                             '/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
+    GUEST_MODE_ADD_INFO = '//android.widget.TextView[@text="Add Info"]'
+    GUEST_MODE_VIDEOS_SEE_ALL = '//android.view.ViewGroup[@content-desc="See All"]'
 
 
 class PlansPopup:
