@@ -1,4 +1,3 @@
-import time
 from time import sleep
 from locators import HomeScreen, Trails
 from utils import sign_in_user, handle_events_popup, handle_notification_permission
