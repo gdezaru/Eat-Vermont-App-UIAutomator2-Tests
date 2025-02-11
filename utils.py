@@ -7,12 +7,14 @@ import random
 import string
 import time
 from config import TEST_USER
-from locators import Events, LoginPage
+from locators import Events, PlansPopup
+
 
 def ensure_screenshots_dir():
     """Ensure screenshots directory exists"""
     if not os.path.exists("screenshots"):
         os.makedirs("screenshots")
+
 
 def take_screenshot(device, name):
     """Take a screenshot and save it with timestamp"""
@@ -23,6 +25,7 @@ def take_screenshot(device, name):
     device.screenshot(screenshot_path)
     print(f"Screenshot saved: {screenshot_path}")
 
+
 def clear_app_state(device):
     """Clear app data and restart the app"""
     print("Clearing app state...")
@@ -31,6 +34,7 @@ def clear_app_state(device):
     device.app_clear(app_id)  # Clear app data
     device.app_start(app_id)  # Start the app fresh
     print("App state cleared and restarted")
+
 
 def get_next_day(current_day):
     """
@@ -45,17 +49,20 @@ def get_next_day(current_day):
     next_index = (current_index + 1) % 7  # Use modulo to wrap around to Sunday
     return days[next_index]
 
+
 def generate_random_name():
     """Generate a random name starting with 'D'."""
     name_length = random.randint(5, 10)  # Random length between 5 and 10
-    random_chars = ''.join(random.choices(string.ascii_lowercase, k=name_length-1))
+    random_chars = ''.join(random.choices(string.ascii_lowercase, k=name_length - 1))
     return 'D' + random_chars
+
 
 def generate_random_username():
     """Generate a random username."""
     username_length = random.randint(8, 15)  # Random length between 8 and 15
     random_chars = ''.join(random.choices(string.ascii_lowercase + string.digits, k=username_length))
     return random_chars
+
 
 def handle_notification_permission(device):
     """Handle notification permission dialogs if they appear."""
@@ -69,6 +76,7 @@ def handle_notification_permission(device):
             device(text="Allow").click()
             device.sleep(1)
 
+
 def verify_video_playback(device):
     """
     Verify that a video is playing by checking app state and UI elements.
@@ -80,20 +88,20 @@ def verify_video_playback(device):
         bool: True if video is playing, False otherwise
     """
     print("\nVerifying video playback...")
-    
+
     # Get current app info
     app_info = device.info
     print(f"\nCurrent app info: {app_info}")
-    
+
     # Get current window hierarchy
     xml_hierarchy = device.dump_hierarchy()
     print(f"\nWindow hierarchy: {xml_hierarchy}")
-    
+
     # Check if we're still in the app
     if not device(packageName="com.eatvermont").exists:
         print("App is no longer in foreground")
         return False
-        
+
     # Take screenshot of the video playing
     take_screenshot(device, "video_playing")
     print("Video state verification complete")
@@ -113,11 +121,11 @@ def find_and_click_video(device, video_locator):
     """
     print("\nLooking for video...")
     video = device.xpath(video_locator)
-    
+
     if not video.exists:
         print("Video not found")
         return False
-        
+
     print("Video found, clicking...")
     video.click()
     return True
@@ -150,17 +158,17 @@ def scroll_to_find_text(device, text, max_attempts=5):
     screen_info = device.info
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
-    
+
     start_x = width // 2
     start_y = (height * 3) // 4
     end_y = height // 4
-    
+
     for _ in range(max_attempts):
         if device(text=text).exists:
             return True
         device.swipe(start_x, start_y, start_x, end_y, duration=0.8)
         time.sleep(1.5)
-    
+
     return device(text=text).exists
 
 
@@ -179,19 +187,20 @@ def scroll_until_element_is_visible(device, locator, max_attempts=5):
     screen_info = device.info
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
-    
+
     start_x = width // 2
     start_y = (height * 3) // 4
     end_y = height // 4
-    
+
     for _ in range(max_attempts):
         element = device.xpath(locator)
         if element.exists:
             return True
         device.swipe(start_x, start_y, start_x, end_y, duration=0.8)
         time.sleep(1.5)
-    
+
     return device.xpath(locator).exists
+
 
 def sign_in_user(d):
     """
@@ -268,6 +277,7 @@ def sign_in_user(d):
                 continue
             assert False, "Login failed - Could not verify successful login"
 
+
 def handle_events_popup(device):
     """
     Handle events popup if it appears.
@@ -279,7 +289,7 @@ def handle_events_popup(device):
     events_popup = device.xpath(Events.EVENTS_POPUP_MAIN)
     if events_popup.exists:
         print("Events popup found, handling it...")
-        
+
         # Click close button
         close_button = device.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
         if close_button.exists:
@@ -290,3 +300,21 @@ def handle_events_popup(device):
             print("No close button found on events popup")
     else:
         print("No events popup found")
+
+
+def handle_guest_mode_plans_popup(d):
+    """
+    Handles the plans popup in guest mode.
+
+    Args:
+        d: UIAutomator2 device instance
+    """
+    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
+    if plans_popup_continue.exists:
+        print("\nPlans popup is visible, clicking continue...")
+        time.sleep(3)
+        plans_popup_continue.click()
+        print("Clicked continue on plans popup")
+    else:
+        print("\nNo plans popup found, continuing with test...")
+        time.sleep(5)
