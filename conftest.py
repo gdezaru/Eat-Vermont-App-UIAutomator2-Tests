@@ -16,6 +16,7 @@ import os
 import random
 import subprocess
 import uiautomator2 as u2
+from datetime import datetime
 
 def run_adb_command(command):
     """Run an ADB command and return its output"""
@@ -174,3 +175,54 @@ def d():
     # Cleanup after test
     print("\nCleaning up after test...")
     run_adb_command("shell am force-stop com.eatvermont")
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    # Execute all other hooks to obtain the report object
+    outcome = yield
+    rep = outcome.get_result()
+
+    # We only look at actual test calls, not setup/teardown
+    if rep.when == "call" and rep.failed:
+        try:
+            if "d" in item.funcargs:  # Check if test has the 'd' fixture
+                driver = item.funcargs["d"]
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                
+                # Get the test name from the item
+                test_module = item.module.__name__  # Gets the module name (e.g., test_login)
+                test_name = item.name  # Gets the test function name
+                
+                # Extract step number from the test function's docstring or code
+                step_num = "unknown_step"
+                if hasattr(item.function, '__doc__') and item.function.__doc__:
+                    doc = item.function.__doc__
+                    # Look for step number in docstring (format: Step X:)
+                    import re
+                    step_match = re.search(r'Step (\d+):', doc)
+                    if step_match:
+                        step_num = step_match.group(1)
+                
+                # Format: failure_[module]_[test_name]_step[X]_[timestamp].png
+                screenshot_name = f"failure_{test_module}_{test_name}_step{step_num}_{timestamp}.png"
+                screenshot_dir = "screenshots/failures"
+                
+                # Create failures directory if it doesn't exist
+                if not os.path.exists(screenshot_dir):
+                    os.makedirs(screenshot_dir)
+                
+                screenshot_path = os.path.join(screenshot_dir, screenshot_name)
+                driver.screenshot(screenshot_path)
+                print(f"\nTest failed! Screenshot saved: {screenshot_path}")
+                
+                # Also capture device logs with the same naming convention
+                device_id = 'b0ba3ece'  # This is already defined in the fixture
+                logs = run_adb_command(f"-s {device_id} logcat -d")
+                if logs:
+                    log_name = f"failure_{test_module}_{test_name}_step{step_num}_{timestamp}.log"
+                    log_path = os.path.join(screenshot_dir, log_name)
+                    with open(log_path, 'w') as f:
+                        f.write(logs)
+                    print(f"Device logs saved: {log_path}")
+        except Exception as e:
+            print(f"Failed to capture failure screenshot: {str(e)}")
