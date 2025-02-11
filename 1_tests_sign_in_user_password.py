@@ -23,8 +23,13 @@ def test_forgot_password(d):
     handle_notification_permission(d)
 
     # Find and click Sign In button
-    sign_in = d.xpath(LoginPage.SIGN_IN_BUTTON)
-    assert sign_in.wait(timeout=5), "Could not find Sign In button"
+    sign_in = None
+    if d(description="Sign In").exists(timeout=5):
+        sign_in = d(description="Sign In")
+    elif d(text="Sign In").exists(timeout=5):
+        sign_in = d(text="Sign In")
+
+    assert sign_in is not None, "Could not find Sign In button"
     sign_in.click()
     sleep(2)
 
