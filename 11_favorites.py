@@ -1,6 +1,5 @@
 import pytest
 from time import sleep
-from config import TEST_USER
 from locators import Events, MyFavorites, Businesses, HomeScreen, BottomNavBar
 from utils import (
     handle_notification_permission, sign_in_user, handle_events_popup

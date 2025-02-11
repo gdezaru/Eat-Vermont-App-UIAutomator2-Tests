@@ -134,12 +134,12 @@ def driver():
 
 @pytest.fixture
 def d():
-    # Connect to the device
-    device = u2.connect()
+    # Connect to the device using direct USB connection
+    device = u2.connect_usb()
     
     # Clean up the app state before starting
     print("\nCleaning up app state...")
-    device.app_stop("com.eatvermont")
+    run_adb_command("shell am force-stop com.eatvermont")
     run_adb_command("shell pm clear com.eatvermont")
     sleep(1)  # Wait for cleanup
     
@@ -156,7 +156,7 @@ def d():
         run_adb_command(f"shell pm grant com.eatvermont {permission}")
     
     print("\nStarting app...")
-    device.app_start("com.eatvermont")
+    run_adb_command("shell monkey -p com.eatvermont -c android.intent.category.LAUNCHER 1")
     sleep(3)  # Wait for app to load
     
     # Handle any remaining permission dialogs
@@ -173,4 +173,4 @@ def d():
     
     # Cleanup after test
     print("\nCleaning up after test...")
-    device.app_stop("com.eatvermont")
+    run_adb_command("shell am force-stop com.eatvermont")

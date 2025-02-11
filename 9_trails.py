@@ -3,13 +3,14 @@ from locators import HomeScreen, Trails
 from utils import sign_in_user, handle_events_popup, handle_notification_permission
 import pytest
 
+
 @pytest.mark.smoke
 def test_trails_screen(d):
     """Test the Trails functionality"""
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
-    
+
     # Handle events popup using the utility method
     handle_events_popup(d)
     sleep(10)
@@ -26,7 +27,7 @@ def test_trails_screen(d):
     # First find any TextView containing "Trail" to get its text
     trail_text = d(textContains="Trail").get_text()
     print(f"Found trail: {trail_text}")
-    
+
     # Now use that text with our TRAIL_NAME locator
     trail_element = d.xpath(Trails.TRAIL_NAME.format(trail_text))
     assert trail_element.wait(timeout=5), f"Trail element not found"
@@ -53,7 +54,7 @@ def test_trails_details(d):
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
-    
+
     # Handle events popup using the utility method
     handle_events_popup(d)
     sleep(10)
@@ -83,7 +84,7 @@ def test_trails_details(d):
     print("\nVerifying visits completed...")
     visits_text = d.xpath(Trails.VISITS_COMPLETED_TEXT)
     assert visits_text.wait(timeout=5), "Visits completed text not found"
-    
+
     visits_number = d.xpath(Trails.VISITS_COMPLETED_NUMBER)
     assert visits_number.wait(timeout=5), "Visits completed number not found"
     visits = visits_number.get_text()
@@ -99,8 +100,8 @@ def test_trails_details(d):
     screen_size = d.window_size()
     start_x = screen_size[0] * 0.5
     start_y = screen_size[1] * 0.8  # Start from 80% of screen height
-    end_y = screen_size[1] * 0.2    # End at 20% of screen height
-    
+    end_y = screen_size[1] * 0.2  # End at 20% of screen height
+
     for _ in range(3):  # Do multiple swipes
         d.swipe(start_x, start_y, start_x, end_y, duration=0.5)
         sleep(1)

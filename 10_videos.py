@@ -7,6 +7,7 @@ from utils import (
 )
 
 
+@pytest.mark.smoke
 def test_videos_screen(d):
     """Test the Videos screen"""
     handle_notification_permission(d)
