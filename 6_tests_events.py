@@ -1,6 +1,4 @@
-import time
 from time import sleep
-from config import TEST_USER
 from locators import Events
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
 import pytest

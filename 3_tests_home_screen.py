@@ -162,7 +162,7 @@ def test_home_screen_view_map(d):
     view_map = d.xpath(HomeScreen.VIEW_MAP)
     assert view_map.exists, "Could not find View Map button"
     view_map.click()
-    sleep(5)
+    sleep(2)
 
     # Assert that Events filter is visible
     events_filter = d.xpath(ViewMap.EVENTS_FILTER)

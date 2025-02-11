@@ -29,15 +29,27 @@ class Permissions:
 class HomeScreen:
     """Locators for Home Screen UI Elements"""
     EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events")]'
-    EVENTS_SEE_ALL = '//*[@text="Events"]/following::*[@text="See All"][1]'
-    VIDEOS_SEE_ALL = '//*[@text="Videos"]/following::*[@text="See All"][1]'
+    EVENTS_SEE_ALL = '//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[3]'
+    VIDEOS_SEE_ALL = ('//android.widget.ScrollView/android.view.ViewGroup[1]/'
+                      'android.view.ViewGroup[6]/android.widget.TextView[1]')
     VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Videos" and ./parent::android.view.ViewGroup]'
-    VIEW_MAP = '//android.widget.TextView[@text="View Map"]'
-    DAY_TRIPS_SEE_ALL = '//*[contains(@text, "{}")]/following-sibling::*//android.widget.TextView[@text="See All"]'
-    EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::*//android.widget.TextView'
-                                '[@text="See All"]')
+    DAY_TRIPS_SEE_ALL = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                         '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                         '/android.view.ViewGroup[1]/android.widget.ScrollView[1]/android.view.ViewGroup[1]'
+                         '/android.view.ViewGroup[2]/android.view.ViewGroup[1]')
+    EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::'
+                                '*//android.widget.TextView[@text="See All"]')
     EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'
                                       '/following-sibling::*//android.widget.TextView[@text="See All"]')
+    EVENTS_WITHIN_30_TILE = ('//*[contains(@content-desc, "{}")]/android.view.ViewGroup[4]'
+                             '/android.widget.TextView[1]')
+    EVENTS_MORE_THAN_30_MIN = ('//*[contains(@content-desc, "{}")]/android.view.ViewGroup[4]'
+                               '/android.widget.TextView[1]')
+    VIEW_MAP = '//android.widget.TextView[@text="View Map"]'
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
     TRAILS_BUTTON = '//android.view.ViewGroup[@content-desc="Trail"]'
@@ -62,7 +74,7 @@ class BottomNavBar:
     NAV_HOME_BUTTON = '//android.widget.TextView[@text="Home"]'
     SEARCH = '//android.view.ViewGroup[@content-desc="Search"]'
     EVENTS = '//android.widget.TextView[@text="Events"]'
-    FAVORITES = '//*[@content-desc="Favorites"]/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]'
+    FAVORITES = '//*[@content-desc="Favorites"]/com.horcrux.svg.SvgView[1]'
     DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Day Trips"]'
     CHECK_IN_BUTTON = '//android.widget.TextView[@text="Check In"]'
     TRAILS_BUTTON = '//android.widget.TextView[@text="Trails"]'
