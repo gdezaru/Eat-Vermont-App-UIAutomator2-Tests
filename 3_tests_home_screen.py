@@ -2,102 +2,19 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
-from utils import get_next_day, handle_notification_permission
+from utils import get_next_day, handle_notification_permission, sign_in_user, handle_events_popup
 
 
 @pytest.mark.smoke
 def test_home_screen_events(d):
     """Tests the navigation to the home screen and the events displayed."""
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
-
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
-    sleep(1)
-
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
-    sleep(1)
-
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
-
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)  # Wait for popup to close
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
     # Click "See all" next to events
     events_see_all = d.xpath(HomeScreen.EVENTS_SEE_ALL)
@@ -164,7 +81,7 @@ def test_home_screen_events(d):
         # Move to next day if this one didn't work
         current_try_day = next_day
         days_tried += 1
-        
+
         if days_tried == max_days_to_try:
             assert False, "Could not find any clickable day after trying all days of the week"
     
@@ -230,207 +147,41 @@ def test_home_screen_events(d):
 def test_home_screen_view_map(d):
     """Tests the navigation to the home screen View Map module."""
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
+    # Single scroll to show View Map
+    d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
     sleep(1)
 
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
-    sleep(1)
+    # Click "View Map" button
+    view_map = d.xpath(HomeScreen.VIEW_MAP)
+    assert view_map.exists, "Could not find View Map button"
+    view_map.click()
+    sleep(5)
 
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
+    # Assert that Events filter is visible
+    events_filter = d.xpath(ViewMap.EVENTS_FILTER)
+    assert events_filter.exists, "Events filter is not visible on the map screen"
 
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        if events_popup.exists:
-            print("\nEvents popup is visible, closing it...")
-            sleep(3)
-            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-            print("\nChecking close button...")
-            print(f"Close button exists: {close_button.exists}")
-            if close_button.exists:
-                print(f"Close button info: {close_button.info}")
-            assert close_button.exists, "Close button not found on events popup"
-            print("\nAttempting to click close button...")
-            close_button.click()
-            print("\nClose button clicked")
-            sleep(3)  # Wait for popup to close
-
-            # Verify popup is closed
-            print("\nVerifying popup is closed...")
-            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-            assert not events_popup.exists, "Events popup is still visible after clicking close button"
-            print("Events popup successfully closed")
-        else:
-            print("\nNo events popup found, continuing with next steps...")
-
-        # Single scroll to show View Map
-        d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
-        sleep(1)
-
-        # Click "View Map" button
-        view_map = d.xpath(HomeScreen.VIEW_MAP)
-        assert view_map.exists, "Could not find View Map button"
-        view_map.click()
-        sleep(5)
-        
-        # Assert that Events filter is visible
-        events_filter = d.xpath(ViewMap.EVENTS_FILTER)
-        assert events_filter.exists, "Events filter is not visible on the map screen"
-        
-        # Take screenshot of the map screen with filters
-        d.screenshot("3_2_1_home_screen_view_map_opened.png")
+    # Take screenshot of the map screen with filters
+    d.screenshot("3_2_1_home_screen_view_map_opened.png")
 
 
 @pytest.mark.smoke
 def test_home_screen_videos(d):
     """Tests the navigation to the home screen Videos module."""
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
-
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
-    sleep(1)
-
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
-    sleep(1)
-
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
-
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)  # Wait for popup to close
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
     # Get screen dimensions for scrolling
     screen_info = d.info
@@ -485,110 +236,27 @@ def test_home_screen_add_info(d):
     Tests the navigation to the home screen Add Info module.
     """
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
+    # Scroll until Add Info button is visible
+    d(scrollable=True).scroll.to(text="Add Info")
+    assert d(text="Add Info").exists(timeout=5), "Add Info button not found"
     sleep(1)
 
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
-    sleep(1)
+    # Click on Add Info button
+    add_info_button = d.xpath(HomeScreen.ADD_INFO_BUTTON)
+    assert add_info_button.exists, "Add Info button not found"
+    add_info_button.click()
+    sleep(5)
 
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
-
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        if events_popup.exists:
-            print("\nEvents popup is visible, closing it...")
-            sleep(3)
-            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-            print("\nChecking close button...")
-            print(f"Close button exists: {close_button.exists}")
-            if close_button.exists:
-                print(f"Close button info: {close_button.info}")
-            assert close_button.exists, "Close button not found on events popup"
-            print("\nAttempting to click close button...")
-            close_button.click()
-            print("\nClose button clicked")
-            sleep(3)  # Wait for popup to close
-
-            # Verify popup is closed
-            print("\nVerifying popup is closed...")
-            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-            assert not events_popup.exists, "Events popup is still visible after clicking close button"
-            print("Events popup successfully closed")
-        else:
-            print("\nNo events popup found, continuing with next steps...")
-
-        # Scroll until Add Info button is visible
-        d(scrollable=True).scroll.to(text="Add Info")
-        assert d(text="Add Info").exists(timeout=5), "Add Info button not found"
-        sleep(1)
-
-        # Click on Add Info button
-        add_info_button = d.xpath(HomeScreen.ADD_INFO_BUTTON)
-        assert add_info_button.exists, "Add Info button not found"
-        add_info_button.click()
-        sleep(5)
-
-        # Take screenshot of the Add Info page
-        d.screenshot("3_4_1_home_screen_add_info_opened.png")
-        print("\nAdd Info page loaded and screenshot taken")
+    # Take screenshot of the Add Info page
+    d.screenshot("3_4_1_home_screen_add_info_opened.png")
+    print("\nAdd Info page loaded and screenshot taken")
 
 
 @pytest.mark.smoke
@@ -597,95 +265,12 @@ def test_home_screen_day_trips(d):
     Tests the navigation to the home screen to the Day Trips module.
     """
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
-
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
-    sleep(1)
-
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
-    sleep(1)
-
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
-
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)  # Wait for popup to close
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
     # Single scroll to show Day Trips
     d(scrollable=True).scroll.to(text="Day Trip")
@@ -709,95 +294,12 @@ def test_home_screen_events_within(d):
     Tests the navigation to the home screen to the Events within ~30 minutes module.
     """
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
-
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
-    sleep(1)
-
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
-    sleep(1)
-
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
-
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)  # Wait for popup to close
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
     # Single scroll to show Events within ~30 minutes
     d(scrollable=True).scroll.to(text="Events Within ~30min")
@@ -837,126 +339,43 @@ def test_home_screen_events_further_than(d):
     Tests the navigation to the home screen to the Events Further Than ~30 minutes module.
     """
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
+    # Single scroll to show Events within ~30 minutes
+    d(scrollable=True).scroll.to(text="Events Further Than ~30min")
+    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Within ~30min text not found"
     sleep(1)
 
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
+    # Check for content in Events within 30 minutes tile
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    event_found = False
+    for day in days_of_week:
+        events_tile = d.xpath(HomeScreenTiles.EVENTS_WITHIN_30_TILE.format(day))
+        if events_tile.exists:
+            event_found = True
+            break
+
+    assert event_found, "Could not find any events with dates in Events within 30 minutes section"
     sleep(1)
 
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
+    # Take screenshot of the Events within 30 minutes section
+    d.screenshot("3_7_1_home_screen_events_further_than.png")
+    sleep(1)
 
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
+    # Click See All for Events within 30 minutes
+    see_all = d(text="See All")
+    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
+    see_all.click()
+    sleep(2)  # Extra time for page transition
 
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        if events_popup.exists:
-            print("\nEvents popup is visible, closing it...")
-            sleep(3)
-            close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-            print("\nChecking close button...")
-            print(f"Close button exists: {close_button.exists}")
-            if close_button.exists:
-                print(f"Close button info: {close_button.info}")
-            assert close_button.exists, "Close button not found on events popup"
-            print("\nAttempting to click close button...")
-            close_button.click()
-            print("\nClose button clicked")
-            sleep(3)  # Wait for popup to close
-
-            # Verify popup is closed
-            print("\nVerifying popup is closed...")
-            events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-            assert not events_popup.exists, "Events popup is still visible after clicking close button"
-            print("Events popup successfully closed")
-        else:
-            print("\nNo events popup found, continuing with next steps...")
-
-        # Single scroll to show Events within ~30 minutes
-        d(scrollable=True).scroll.to(text="Events Further Than ~30min")
-        assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Within ~30min text not found"
-        sleep(1)
-
-        # Check for content in Events within 30 minutes tile
-        days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        event_found = False
-        for day in days_of_week:
-            events_tile = d.xpath(HomeScreenTiles.EVENTS_WITHIN_30_TILE.format(day))
-            if events_tile.exists:
-                event_found = True
-                break
-
-        assert event_found, "Could not find any events with dates in Events within 30 minutes section"
-        sleep(1)
-
-        # Take screenshot of the Events within 30 minutes section
-        d.screenshot("3_7_1_home_screen_events_further_than.png")
-        sleep(1)
-
-        # Click See All for Events within 30 minutes
-        see_all = d(text="See All")
-        assert see_all.exists, "Could not find See All button for Events within 30 minutes"
-        see_all.click()
-        sleep(2)  # Extra time for page transition
-
-        # Take screenshot of the Events within 30 minutes list view
-        d.screenshot("3_7_2_home_screen_events_more_than_list.png")
-        sleep(1)
+    # Take screenshot of the Events within 30 minutes list view
+    d.screenshot("3_7_2_home_screen_events_more_than_list.png")
+    sleep(1)
 
 
 @pytest.mark.smoke
@@ -965,95 +384,12 @@ def test_home_screen_bottom_nav_bar(d):
     Tests the navigation to the home screen to the bottom navigation bar.
     """
     handle_notification_permission(d)
+    # Sign in using the utility method
+    sign_in_user(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
-
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d(text="Email")
-    assert email_field.exists(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
-    sleep(1)
-
-    # Enter password
-    password_field = d(text="Password")
-    assert password_field.exists(timeout=5), "Password field not found"
-    password_field.click()
-    d.send_keys(TEST_USER['password'])
-    sleep(1)
-
-    # Click Log in and verify
-    login_attempts = 2
-    for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
-        sleep(5)  # Wait for login process
-
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
-
-        # Verify successful login by checking for common elements
-        success_indicators = ["Events", "Home", "Profile", "Search"]
-        for indicator in success_indicators:
-            if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
-
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)  # Wait for popup to close
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    # Handle events popup using the utility method
+    handle_events_popup(d)
+    sleep(10)
 
     # Click Favorites button
     favorites_button = d.xpath(BottomNavBar.FAVORITES)

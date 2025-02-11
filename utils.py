@@ -6,6 +6,8 @@ import os
 import random
 import string
 import time
+from config import TEST_USER
+from locators import Events, LoginPage
 
 def ensure_screenshots_dir():
     """Ensure screenshots directory exists"""
@@ -190,3 +192,101 @@ def scroll_until_element_is_visible(device, locator, max_attempts=5):
         time.sleep(1.5)
     
     return device.xpath(locator).exists
+
+def sign_in_user(d):
+    """
+    Sign in to the app using test user credentials.
+    
+    Args:
+        d: UIAutomator2 device instance
+    """
+    handle_notification_permission(d)
+
+    # Find and click Sign In button
+    sign_in = None
+    if d(description="Sign In").exists(timeout=5):
+        sign_in = d(description="Sign In")
+    elif d(text="Sign In").exists(timeout=5):
+        sign_in = d(text="Sign In")
+
+    assert sign_in is not None, "Could not find Sign In button"
+    sign_in.click()
+    time.sleep(2)
+
+    # Enter email
+    email_field = d(text="Email")
+    assert email_field.exists(timeout=5), "Email field not found"
+    email_field.click()
+    d.send_keys(TEST_USER['email'])
+    time.sleep(1)
+
+    # Enter password
+    password_field = d(text="Password")
+    assert password_field.exists(timeout=5), "Password field not found"
+    password_field.click()
+    d.send_keys(TEST_USER['password'])
+    time.sleep(1)
+
+    # Click Log in and verify
+    login_attempts = 2
+    for attempt in range(login_attempts):
+        # Find and click login button
+        login_button = d(text="Log in")
+        assert login_button.exists(timeout=5), "Log in button not found"
+        login_button.click()
+        time.sleep(5)  # Wait for login process
+
+        # Check for error messages
+        error_messages = [
+            "Invalid email or password",
+            "Login failed",
+            "Error",
+            "Something went wrong",
+            "No internet connection"
+        ]
+
+        error_found = False
+        for error_msg in error_messages:
+            if d(textContains=error_msg).exists(timeout=2):
+                error_found = True
+                break
+
+        if error_found and attempt < login_attempts - 1:
+            continue
+
+        # Verify successful login by checking for common elements
+        success_indicators = ["Events", "Home", "Profile", "Search"]
+        for indicator in success_indicators:
+            if d(text=indicator).exists(timeout=5):
+                break
+        else:
+            if attempt < login_attempts - 1:
+                # Try to go back if needed
+                if d(text="Back").exists():
+                    d(text="Back").click()
+                    time.sleep(1)
+                continue
+            assert False, "Login failed - Could not verify successful login"
+
+def handle_events_popup(device):
+    """
+    Handle events popup if it appears.
+    
+    Args:
+        device: UIAutomator2 device instance
+    """
+    # Check if events popup exists
+    events_popup = device.xpath(Events.EVENTS_POPUP_MAIN)
+    if events_popup.exists:
+        print("Events popup found, handling it...")
+        
+        # Click close button
+        close_button = device.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        if close_button.exists:
+            close_button.click()
+            time.sleep(1)
+            print("Closed events popup")
+        else:
+            print("No close button found on events popup")
+    else:
+        print("No events popup found")
