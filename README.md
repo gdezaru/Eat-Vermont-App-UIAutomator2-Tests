@@ -74,6 +74,7 @@ EatVermontAppAutomatedTests/
 ## Running Tests
 
 ### Run All Tests
+To run all tests:
 ```bash
 pytest
 ```
@@ -97,6 +98,24 @@ pytest -v
 ```bash
 pytest -n auto  # Runs tests in parallel using available CPU cores
 ```
+
+### Run Smoke Tests
+To run smoke tests:
+```bash
+pytest -m smoke
+```
+
+### Run Tests in Numerical Order
+The test files are numbered from 1 to 14 (e.g., `1_tests_sign_in_user_password.py`, `2_tests_search_module.py`, etc.). To run smoke tests in numerical order, use:
+```bash
+python run_ordered_tests.py
+```
+
+This script will:
+1. Find all test files that start with a number
+2. Sort them in natural numerical order (1, 2, 3... instead of 1, 10, 11...)
+3. Run only the smoke tests from these files in sequence
+4. Generate a test report in the `reports` directory
 
 ## Retry Mechanism
 

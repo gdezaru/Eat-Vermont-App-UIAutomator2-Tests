@@ -27,6 +27,17 @@ def pytest_collection_modifyitems(items):
     """Store test items for later use in reporting"""
     pytest.test_items = items
 
+    """Order test files numerically based on their filename prefix."""
+    def get_test_order(item):
+        # Extract the number from the test file name (e.g., '1' from '1_tests_sign_in_user_password.py')
+        try:
+            return int(item.module.__file__.split('\\')[-1].split('_')[0])
+        except (ValueError, IndexError):
+            return float('inf')  # Put non-numbered files at the end
+    
+    # Sort the test items based on their numerical prefix
+    items.sort(key=get_test_order)
+
 # Create a single instance of the reporter
 reporter = ExcelReporter()
 
