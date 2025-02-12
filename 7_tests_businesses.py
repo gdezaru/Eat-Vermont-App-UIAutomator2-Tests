@@ -12,20 +12,18 @@ menu_business_name = "Big Fatty's BBQ"
 @pytest.mark.smoke
 def test_business_card_with_event(d, screenshots_dir):
     """
-    Tests the contents of a business card with event.
+    Test business card functionality with event details.
+    
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Search in bottom navigation
-    5. Enter search term and submit
-    6. Wait for and verify Businesses section is present
-    7. Click on Higher Ground search result under Businesses
-    8. Verify About tab is visible
-    9. Verify About tab contents are present
-    10. Take screenshot of business details with About tab
-    11. Click on FYI tab and verify contents
-    12. Take screenshot of FYI tab contents
+    1. Handle notification permission if it appears
+    2. Sign in with test user credentials
+    3. Handle events popup if it appears
+    4. Navigate to the About tab
+    5. Take screenshot of About tab contents
+    6. Navigate to the FYI tab
+    7. Take screenshot of FYI tab contents
+    8. Verify all business card elements are present
+    9. Verify business card navigation works correctly
     """
     handle_notification_permission(d)
     # Sign in using the utility method
@@ -134,22 +132,20 @@ def test_business_card_with_event(d, screenshots_dir):
 @pytest.mark.smoke
 def test_business_card_with_menu(d, screenshots_dir):
     """
-    Tests the contents of a business card with menu.
+    Test business card functionality with menu details.
+    
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Search in bottom navigation
-    5. Enter search term and submit
-    6. Wait for and verify Businesses section is present
-    7. Click on Big Fatty's BBQ search result under Businesses
-    8. Verify About tab is visible
-    9. Verify About tab contents are present
-    10. Take screenshot of business details with About tab
-    11. Verify Menu tab is visible
-    12. Click on Menu tab
-    13. Verify Menu tab contents are present
-    14. Take screenshot of business details with Menu tab
+    1. Handle notification permission if it appears
+    2. Sign in with test user credentials
+    3. Handle events popup if it appears
+    4. Navigate to the Menu tab
+    5. Take screenshot of Menu tab contents
+    6. Navigate to the About tab
+    7. Take screenshot of About tab contents
+    8. Navigate to the FYI tab
+    9. Take screenshot of FYI tab contents
+    10. Verify all menu items are displayed correctly
+    11. Verify business card navigation works correctly
     """
     handle_notification_permission(d)
     # Sign in using the utility method

@@ -131,51 +131,71 @@ def test_flaky_feature():
     # Test code here
 ```
 
+## Screenshot Management
+
+The framework includes a robust screenshot management system:
+
+### Screenshot Organization
+- Screenshots are initially saved to a root `screenshots` directory
+- After each test run completes, screenshots are automatically moved to a test-specific folder within the `reports` directory
+- Each test run gets its own timestamped folder to prevent overwriting
+
+### Screenshot Naming Convention
+- Screenshots follow a consistent naming pattern:
+  - `<test_number>_<test_part>_<description>.png`
+  - Example: `7_1_1_business_card_with_event.png`
+
+### Screenshot Locations
+1. **During Test Execution**
+   - Temporarily stored in: `screenshots/`
+   - Managed by the `screenshots_dir` fixture
+
+2. **After Test Completion**
+   - Moved to: `reports/test_run_YYYYMMDD_HHMMSS/screenshots/`
+   - Organized alongside the test report
+
+### Screenshot Usage
+- Screenshots are taken at key points in tests to document UI state
+- Additional screenshots are automatically captured on test failures
+- All screenshots are referenced in the Excel report with clickable links
+
 ## Test Reports
 
-The framework automatically generates detailed Excel reports after each test run. Reports include:
+The framework generates comprehensive Excel reports after each test run:
 
-### Report Location
-- Reports are saved in the `reports` directory
-- Format: `test_report_YYYYMMDD_HHMMSS.xlsx`
+### Report Structure
+1. **Test Run Directory**
+   ```
+   reports/
+   └── test_run_YYYYMMDD_HHMMSS/
+       ├── test_report.xlsx
+       └── screenshots/
+           ├── 7_1_1_business_card_with_event.png
+           ├── 7_1_2_business_card_with_menu.png
+           └── ...
+   ```
 
-### Report Contents
-1. **Test Information**
-   - Test name and status
-   - Start and end times
-   - Test duration
+2. **Excel Report Contents**
+   - Test execution summary
+   - Detailed test results
+   - Screenshot references
+   - Error logs and stack traces
+   - Test retry information
 
-2. **Failure Analysis**
-   - Error messages
-   - Stack traces
-   - Steps to reproduce
-   - Screenshot locations
-
-3. **Retry Information**
-   - Number of retry attempts
-   - Failure reason for each attempt
-   - Final test status
-
-### Viewing Reports
-The Excel report includes:
-- Color-coded test status (Green for pass, Red for fail)
-- Filterable columns
-- Detailed error information
-- Links to failure screenshots
-
-### Screenshots
-- Automatically captured on test failure
-- Saved in the `screenshots` directory
-- Named with test name and timestamp
-- Referenced in the Excel report
+### Report Features
+- **Screenshot Integration**: Direct links to screenshots
+- **Failure Analysis**: Detailed error information
+- **Test Statistics**: Pass/fail rates and durations
+- **Filtering**: Sortable and filterable columns
+- **Color Coding**: Visual status indicators
 
 ### Example Usage
 ```bash
 # Run tests and generate report
 pytest
 
-# Report will be generated at:
-# reports/test_report_YYYYMMDD_HHMMSS.xlsx
+# Report and screenshots will be in:
+# reports/test_run_YYYYMMDD_HHMMSS/
 ```
 
 ## Key Components

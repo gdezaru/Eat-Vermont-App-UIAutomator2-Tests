@@ -7,18 +7,15 @@ import os
 @pytest.mark.smoke
 def test_guest_mode_button(d, screenshots_dir):
     """
-    Test the Guest Mode Home screen
+    Test the Guest Mode Home screen.
+    
     Steps:
-    1. Launch app
-    2. Handle notification permissions
-    3. Click Continue as Guest
-    4. Verify guest mode UI
-    5. Check available features
-    6. Verify restricted features
-    7. Test navigation limits
-    8. Check sign-in prompts
-    9. Verify data persistence
-    10. Test guest session expiry
+    1. Handle notification permission if it appears
+    2. Click Continue as Guest button
+    3. Handle events popup if it appears
+    4. Take screenshot of guest mode home screen
+    5. Verify guest mode elements are present
+    6. Verify guest mode restrictions are in place
     """
     handle_notification_permission(d)
 
@@ -48,18 +45,17 @@ def test_guest_mode_button(d, screenshots_dir):
 @pytest.mark.smoke
 def test_guest_mode_events(d, screenshots_dir):
     """
-    Test the Guest Mode events screen
+    Test the Guest Mode events screen.
+    
     Steps:
-    1. Launch app
-    2. Continue as Guest
-    3. Navigate to Events
-    4. Verify events list
-    5. Check event details
-    6. Test event filtering
-    7. Verify event limits
-    8. Check sign-in prompts
-    9. Verify data persistence
-    10. Test guest session expiry
+    1. Handle notification permission if it appears
+    2. Click Continue as Guest button
+    3. Handle events popup if it appears
+    4. Navigate to Events tab
+    5. Take screenshot of guest mode events screen
+    6. Verify events list is visible
+    7. Verify event details are accessible
+    8. Verify guest mode restrictions on event interactions
     """
     handle_notification_permission(d)
 
@@ -103,18 +99,18 @@ def test_guest_mode_events(d, screenshots_dir):
 @pytest.mark.smoke
 def test_guest_mode_videos(d, screenshots_dir):
     """
-    Test the Guest Mode videos screen
+    Test the Guest Mode videos screen.
+    
     Steps:
-    1. Launch app
-    2. Continue as Guest
-    3. Navigate to Videos
-    4. Verify video list
-    5. Check video playback
-    6. Test video filtering
-    7. Verify video limits
-    8. Check sign-in prompts
-    9. Verify data persistence
-    10. Test guest session expiry
+    1. Handle notification permission if it appears
+    2. Click Continue as Guest button
+    3. Handle events popup if it appears
+    4. Navigate to Videos section
+    5. Take screenshot of guest mode videos screen
+    6. Verify videos list is visible
+    7. Attempt to interact with locked videos
+    8. Verify plans popup appears for restricted content
+    9. Take screenshot of plans popup
     """
     handle_notification_permission(d)
 

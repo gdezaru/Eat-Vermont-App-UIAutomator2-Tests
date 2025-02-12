@@ -198,31 +198,42 @@ class ExcelReporter:
                 'fg_color': '#FFC7CE',
                 'font_color': '#9C0006'
             })
+
+            # Add text wrapping format for steps
+            steps_format = workbook.add_format({
+                'text_wrap': True,
+                'valign': 'top',
+                'align': 'left'
+            })
             
-            # Write the column headers with the header format
+            # Write headers with format
             for col_num, value in enumerate(df.columns.values):
                 worksheet.write(0, col_num, value, header_format)
-                
+            
+            # Format the status column
+            status_col = df.columns.get_loc('status')
+            for row_num, status in enumerate(df['status'], start=1):
+                if status == 'passed':
+                    worksheet.write(row_num, status_col, status, pass_format)
+                elif status == 'failed':
+                    worksheet.write(row_num, status_col, status, fail_format)
+                else:
+                    worksheet.write(row_num, status_col, status)
+
+            # Format the steps column with text wrapping
+            steps_col = df.columns.get_loc('steps_to_reproduce')
+            for row_num, steps in enumerate(df['steps_to_reproduce'], start=1):
+                worksheet.write(row_num, steps_col, steps, steps_format)
+            
             # Set column widths
             worksheet.set_column('A:A', 50)  # test_name
-            worksheet.set_column('B:B', 15)  # status
+            worksheet.set_column('B:B', 10)  # status
             worksheet.set_column('C:D', 20)  # start_time, end_time
             worksheet.set_column('E:E', 10)  # duration
-            worksheet.set_column('F:G', 50)  # error_message, traceback
+            worksheet.set_column('F:F', 50)  # error_message
+            worksheet.set_column('G:G', 50)  # traceback
             worksheet.set_column('H:H', 30)  # screenshots
             worksheet.set_column('I:I', 50)  # steps_to_reproduce
-            
-            # Add conditional formatting for status column
-            worksheet.conditional_format('B2:B1048576', {
-                'type': 'text',
-                'criteria': 'containing',
-                'value': '"passed"',
-                'format': pass_format
-            })
-            
-            worksheet.conditional_format('B2:B1048576', {
-                'type': 'text',
-                'criteria': 'containing',
-                'value': '"failed"',
-                'format': fail_format
-            })
+
+            # Set row height to accommodate wrapped text
+            worksheet.set_default_row(30)

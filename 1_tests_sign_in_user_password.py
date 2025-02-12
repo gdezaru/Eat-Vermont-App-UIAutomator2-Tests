@@ -7,14 +7,19 @@ from locators import LoginPage
 
 
 @pytest.mark.smoke
-def test_sign_in_user_password(d, screenshots_dir):
+def test_sign_in_with_valid_credentials(d, screenshots_dir):
     """
-    Test sign in with valid user and password
+    Test sign in with valid user and password.
+    
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Verify successful login
-    4. Handle events popup
+    1. Handle notification permission if it appears
+    2. Click Sign In button
+    3. Enter valid username
+    4. Enter valid password
+    5. Click Log In button
+    6. Wait for successful sign in
+    7. Take screenshot of successful sign in
+    8. Verify user is logged in successfully
     """
     handle_notification_permission(d)
     # Sign in using the utility method
@@ -32,14 +37,16 @@ def test_sign_in_user_password(d, screenshots_dir):
 @pytest.mark.smoke
 def test_forgot_password(d, screenshots_dir):
     """
-    Test forgot password functionality
+    Test forgot password functionality.
+    
     Steps:
-    1. Handle notification permissions
+    1. Handle notification permission if it appears
     2. Click Sign In button
     3. Click Forgot Password link
-    4. Enter email address
-    5. Click Reset Password button
-    6. Verify confirmation message
+    4. Enter registered email address
+    5. Click Send Reset Link button
+    6. Take screenshot of confirmation screen
+    7. Verify success message is displayed
     """
     handle_notification_permission(d)
 
