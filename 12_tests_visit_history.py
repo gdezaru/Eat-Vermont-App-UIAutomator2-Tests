@@ -1,14 +1,12 @@
-import pytest
 from time import sleep
+import pytest
 from locators import BottomNavBar, VisitHistory
 from utils import (
     handle_notification_permission, sign_in_user, handle_events_popup
 )
-from retry_decorator import retry
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_visit_history_screen(d):
     """
     Test visit history screen functionality

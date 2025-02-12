@@ -1,23 +1,10 @@
 import pytest
-from appium import webdriver
-from appium.options.android import UiAutomator2Options
-from appium.webdriver.appium_connection import AppiumConnection
-from selenium.webdriver.common.options import BaseOptions
-from selenium.webdriver.common.selenium_manager import SeleniumManager
-from selenium.webdriver.remote.command import Command
-from selenium.webdriver.remote.remote_connection import RemoteConnection
-from appium.options.common.base import AppiumOptions
-from selenium.webdriver.remote.webdriver import WebDriver
-from appium.webdriver.common.appiumby import AppiumBy
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from time import sleep
 import os
 import random
 import subprocess
+from time import sleep
 import uiautomator2 as u2
 from datetime import datetime
-from retry_decorator import retry
 from test_reporter import ExcelReporter
 
 # Initialize test items list
@@ -42,58 +29,17 @@ def pytest_collection_modifyitems(items):
 reporter = ExcelReporter()
 
 def pytest_configure(config):
-    """Configure pytest with retry settings and register the Excel reporter."""
-    config.addinivalue_line(
-        "markers",
-        "flaky: mark test to be automatically retried on failure",
-    )
-    
+    """Configure pytest and register the Excel reporter."""
     # Register the reporter as a plugin
     config.pluginmanager.register(reporter)
 
 def pytest_addoption(parser):
-    """Add retry-related command line options."""
-    parser.addoption(
-        "--max-retries",
-        action="store",
-        default="2",
-        help="number of retries for flaky tests"
-    )
+    """Add command line options."""
+    pass
 
 @pytest.fixture
-def flaky_retry(request):
-    """
-    Fixture that provides retry functionality for flaky tests.
-    Usage: add @pytest.mark.flaky to your test
-    """
-    marker = request.node.get_closest_marker("flaky")
-    if marker:
-        retries = int(request.config.getoption("--max-retries"))
-        return retry(retries=retries, delay=1, backoff=2)
-    return lambda f: f  # Return no-op decorator if test is not marked as flaky
-
-def run_adb_command(command):
-    """Run an ADB command and return its output"""
-    try:
-        # Use explicit path to ADB and force local server
-        adb_path = os.path.expanduser("~/AppData/Local/Android/Sdk/platform-tools/adb.exe")
-        if not os.path.exists(adb_path):
-            print(f"ADB not found at {adb_path}")
-            # Try alternative path
-            adb_path = "adb"  # Use adb from PATH
-            
-        result = subprocess.run(f"{adb_path} {command}", shell=True, capture_output=True, text=True)
-        if result.stderr:
-            print(f"ADB command warning/error: {result.stderr}")
-        return result.stdout.strip()
-    except Exception as e:
-        print(f"Error running ADB command: {e}")
-        return None
-
-@pytest.fixture
-def driver():
-    driver = None
-    system_port = random.randint(8200, 8299)
+def d():
+    """Initialize UI Automator 2 device connection and setup"""
     device_id = 'b0ba3ece'
     
     # First, kill any existing ADB server
@@ -116,102 +62,47 @@ def driver():
             "3. You have approved the USB debugging prompt on your device\n"
             "Current connected devices: " + str(devices)
         )
-    
-    capabilities = {
-        'platformName': 'Android',
-        'automationName': 'UiAutomator2',
-        'deviceName': device_id,
-        'appPackage': 'com.eatvermont',
-        'appActivity': '.MainActivity',
-        'noReset': True,
-        'autoLaunch': True,
-        # Minimal timeouts
-        'newCommandTimeout': 15,
-        'uiautomator2ServerLaunchTimeout': 20000,
-        'uiautomator2ServerInstallTimeout': 20000,
-        'androidInstallTimeout': 30000,
-        'adbExecTimeout': 20000,
-        'waitForIdleTimeout': 0,
-        # Quick startup options
-        'systemPort': system_port,
-        'skipServerInstallation': False,
-        'skipDeviceInitialization': False,
-        'enforceAppInstall': True,
-        'autoGrantPermissions': True,
-        'disableWindowAnimation': True,
-        'ignoreHiddenApiPolicyError': True,
-        'noSign': True,
-        'dontStopAppOnReset': True
-    }
 
-    options = UiAutomator2Options().load_capabilities(capabilities)
-
-    try:
-        # Force stop the app and clear UiAutomator data
-        print("\nClearing app and UiAutomator state...")
-        run_adb_command(f"-s {device_id} shell am force-stop {capabilities['appPackage']}")
-        run_adb_command(f"-s {device_id} shell pm clear io.appium.uiautomator2.server")
-        run_adb_command(f"-s {device_id} shell pm clear io.appium.uiautomator2.server.test")
-        sleep(1)
-        
-        # Uninstall UiAutomator2 server if it exists
-        print("\nRemoving old UiAutomator2 server...")
-        run_adb_command(f"-s {device_id} uninstall io.appium.uiautomator2.server")
-        run_adb_command(f"-s {device_id} uninstall io.appium.uiautomator2.server.test")
-        sleep(1)
-        
-        print(f"\nStarting driver with system port: {system_port}")
-        driver = webdriver.Remote('http://127.0.0.1:4723', options=options)
-        
-        # Quick app restart
-        print("\nRestarting app...")
-        driver.terminate_app('com.eatvermont')
-        sleep(1)
-        driver.activate_app('com.eatvermont')
-        sleep(2)  # Keep minimal wait for app to load
-        
-        yield driver
-        
-    except Exception as e:
-        print(f"\nError during driver setup: {str(e)}")
-        # Get device logs for debugging
-        logs = run_adb_command(f"-s {device_id} logcat -d")
-        if logs:
-            print("\nDevice logs:")
-            print(logs)
-        raise
-        
-    finally:
-        if driver:
-            driver.quit()
-            run_adb_command(f"-s {device_id} shell pm clear io.appium.uiautomator2.server")
-            run_adb_command(f"-s {device_id} shell pm clear io.appium.uiautomator2.server.test")
-
-@pytest.fixture
-def d():
     # Connect to the device using direct USB connection
     device = u2.connect_usb()
     
+    # Restart UI Automator service
+    print("\nRestarting UI Automator service...")
+    run_adb_command(f"-s {device_id} shell am force-stop com.github.uiautomator")
+    run_adb_command(f"-s {device_id} shell am force-stop com.github.uiautomator.test")
+    sleep(2)
+    device.service("uiautomator").stop()
+    sleep(2)
+    device.service("uiautomator").start()
+    sleep(3)  # Wait for service to fully start
+    
     # Clean up the app state before starting
     print("\nCleaning up app state...")
-    run_adb_command("shell am force-stop com.eatvermont")
-    run_adb_command("shell pm clear com.eatvermont")
+    force_stop_output = run_adb_command(f"-s {device_id} shell am force-stop com.eatvermont")
+    clear_output = run_adb_command(f"-s {device_id} shell pm clear com.eatvermont")
+    print(f"Force stop output: {force_stop_output}")
+    print(f"Clear output: {clear_output}")
     sleep(1)  # Wait for cleanup
     
     # Grant necessary permissions before starting
-    print("\nGranting necessary permissions...")
     permissions = [
-        "android.permission.POST_NOTIFICATIONS",
-        "android.permission.CAMERA",
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.READ_EXTERNAL_STORAGE"
+        'android.permission.ACCESS_FINE_LOCATION',
+        'android.permission.ACCESS_COARSE_LOCATION',
+        'android.permission.CAMERA',
+        'android.permission.READ_EXTERNAL_STORAGE',
+        'android.permission.POST_NOTIFICATIONS',
+        'android.permission.RECORD_AUDIO',
+        'android.permission.READ_CALENDAR',
+        'android.permission.WRITE_CALENDAR'
     ]
-    for permission in permissions:
-        run_adb_command(f"shell pm grant com.eatvermont {permission}")
     
+    print("\nGranting app permissions...")
+    for permission in permissions:
+        run_adb_command(f"-s {device_id} shell pm grant com.eatvermont {permission}")
+    
+    # Start the app using UI Automator 2's app_start
     print("\nStarting app...")
-    run_adb_command("shell monkey -p com.eatvermont -c android.intent.category.LAUNCHER 1")
+    device.app_start("com.eatvermont", ".MainActivity")
     sleep(3)  # Wait for app to load
     
     # Handle any remaining permission dialogs
@@ -223,35 +114,46 @@ def d():
     current_app = device.app_current()
     print(f"Current app: {current_app}")
     assert current_app['package'] == "com.eatvermont", "App is not running!"
-    
+
     yield device
-    
-    # Cleanup after test
-    print("\nCleaning up after test...")
-    run_adb_command("shell am force-stop com.eatvermont")
+
+    # Cleanup after tests
+    print("\nCleaning up after tests...")
+    device.app_stop("com.eatvermont")
+    run_adb_command(f"-s {device_id} shell am force-stop com.eatvermont")
+
+def run_adb_command(command):
+    """Run an ADB command and return its output"""
+    try:
+        # Use explicit path to ADB and force local server
+        adb_path = os.path.expanduser("~/AppData/Local/Android/Sdk/platform-tools/adb.exe")
+        if not os.path.exists(adb_path):
+            print(f"ADB not found at {adb_path}")
+            # Try alternative path
+            adb_path = "adb"  # Use adb from PATH
+            
+        result = subprocess.run(f"{adb_path} {command}", shell=True, capture_output=True, text=True)
+        if result.stderr:
+            print(f"ADB command warning/error: {result.stderr}")
+        return result.stdout.strip()
+    except Exception as e:
+        print(f"Error running ADB command: {e}")
+        return None
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
-    Extends test reporting to include screenshots and retry information.
+    Extends test reporting to include screenshots.
     """
     outcome = yield
     report = outcome.get_result()
     
     test_fn = item.function.__name__
     
-    # Add retry information
-    if hasattr(call, 'excinfo') and call.excinfo is not None:
-        reporter.add_retry_info(
-            item.nodeid,
-            getattr(item, '_retry_count', 0),
-            str(call.excinfo.value)
-        )
-    
-    # Take screenshot on failure
+    # Take screenshot on failure using UI Automator 2
     if report.when == "call" and report.failed:
         try:
-            driver = item.funcargs['d']  # Get the driver fixture
+            device = item.funcargs['d']  # Get the device fixture
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
             os.makedirs(screenshot_dir, exist_ok=True)
@@ -262,7 +164,7 @@ def pytest_runtest_makereport(item, call):
             )
             
             # Take screenshot using UIAutomator2
-            driver.screenshot(screenshot_path)
+            device.screenshot(screenshot_path)
             
             # Add screenshot to the report
             reporter.add_screenshot(item.nodeid, screenshot_path)
@@ -277,3 +179,6 @@ def pytest_runtest_makereport(item, call):
             steps = [step.strip() for step in item.function.__doc__.split('\n') if step.strip()]
             for step in steps:
                 reporter.add_step(item.nodeid, step)
+        
+        # Add test result to reporter
+        reporter.pytest_runtest_logreport(report)

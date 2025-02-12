@@ -4,11 +4,9 @@ from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, HomeScreenTiles, BottomNavBar, LocationManagement
 from utils import get_next_day, handle_notification_permission, sign_in_user
-from retry_decorator import retry
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_location_picker(d):
     "
     Test that the location picker button on the Home Screen works
@@ -140,7 +138,6 @@ def test_home_screen_location_picker(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_use_current_location(d):
     Test that the 'Use Current Location' button on the Home Screen works
     Steps:

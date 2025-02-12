@@ -5,11 +5,8 @@ from locators import HomeScreen, HomeScreenTiles, Events, Videos
 from utils import (
     handle_notification_permission, sign_in_user, handle_events_popup
 )
-from retry_decorator import retry
-
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_videos_screen(d):
     """
     Test the Videos screen
@@ -83,7 +80,6 @@ def test_videos_screen(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_video_details_card(d):
     """
     Test the video details card

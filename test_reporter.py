@@ -14,9 +14,8 @@ class ExcelReporter:
     def __init__(self):
         self.results = []
         self.current_test = {}
-        self.retry_attempts = {}
         self.screenshots = {}
-        self.steps = {}
+        self.steps = {}  # Add steps dictionary back
         
     def _extract_steps_from_docstring(self, docstring: str) -> List[str]:
         """Extract steps from docstring in a clean format."""
@@ -45,11 +44,9 @@ class ExcelReporter:
             'test_name': nodeid,
             'start_time': datetime.now(),
             'status': 'running',
-            'retry_count': 0,
-            'retry_details': [],
-            'screenshots': [],
             'error_message': '',
             'traceback': '',
+            'screenshots': [],
             'steps_to_reproduce': ''  # Initialize as empty string
         }
         
@@ -86,10 +83,6 @@ class ExcelReporter:
                 if steps:
                     self.current_test['steps_to_reproduce'] = '\n'.join([f"{i+1}. {step}" for i, step in enumerate(steps)])
                 
-            # Add retry information if available
-            if hasattr(report, '_retry_count'):
-                self.current_test['retry_count'] = report._retry_count
-                
             self.current_test['end_time'] = datetime.now()
             self.current_test['duration'] = (self.current_test['end_time'] - self.current_test['start_time']).total_seconds()
             
@@ -112,8 +105,7 @@ class ExcelReporter:
         # Ensure all columns exist with default values
         required_columns = [
             'test_name', 'status', 'start_time', 'end_time', 'duration', 
-            'retry_count', 'retry_details', 'error_message', 'traceback', 
-            'screenshots', 'steps_to_reproduce'
+            'error_message', 'traceback', 'screenshots', 'steps_to_reproduce'
         ]
         
         for col in required_columns:
@@ -127,8 +119,6 @@ class ExcelReporter:
             'start_time': 'Start Time',
             'end_time': 'End Time',
             'duration': 'Duration (s)',
-            'retry_count': 'Retry Count',
-            'retry_details': 'Retry Details',
             'error_message': 'Error Message',
             'traceback': 'Stack Trace',
             'screenshots': 'Screenshots',
@@ -185,12 +175,10 @@ class ExcelReporter:
             worksheet.set_column('B:B', 15)  # Status
             worksheet.set_column('C:D', 20)  # Start/End Time
             worksheet.set_column('E:E', 15)  # Duration
-            worksheet.set_column('F:F', 12)  # Retry Count
-            worksheet.set_column('G:G', 50)  # Retry Details
-            worksheet.set_column('H:H', 50)  # Error Message
-            worksheet.set_column('I:I', 50)  # Stack Trace
-            worksheet.set_column('J:J', 50)  # Screenshots
-            worksheet.set_column('K:K', 40)  # Steps to Reproduce
+            worksheet.set_column('F:F', 50)  # Error Message
+            worksheet.set_column('G:G', 50)  # Stack Trace
+            worksheet.set_column('H:H', 50)  # Screenshots
+            worksheet.set_column('I:I', 40)  # Steps to Reproduce
             
             # Apply text wrapping to all data cells
             for col in range(len(df.columns)):
@@ -213,12 +201,6 @@ class ExcelReporter:
             
         print(f"\nTest report generated: {report_path}")
         
-    def add_retry_info(self, nodeid: str, attempt: int, error: str):
-        """Add information about a retry attempt."""
-        if nodeid in self.current_test:
-            self.current_test['retry_details'].append(f"Attempt {attempt}: {error}")
-            
     def add_screenshot(self, nodeid: str, screenshot_path: str):
-        """Add screenshot information to the test result."""
-        if nodeid in self.current_test:
-            self.current_test['screenshots'].append(screenshot_path)
+        """Add a screenshot path to the current test"""
+        self.current_test['screenshots'].append(screenshot_path)

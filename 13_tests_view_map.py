@@ -1,11 +1,10 @@
 import pytest
 from time import sleep
+import pytest
 from locators import HomeScreen, ViewMap
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
-from retry_decorator import retry
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_view_map_filters(d):
     """
     Test the View Map filters functionality

@@ -2,7 +2,6 @@ from time import sleep
 from locators import Businesses
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
 import pytest
-from retry_decorator import retry
 
 # Initialize business names at module level
 business_name = "Higher Ground"
@@ -10,7 +9,6 @@ menu_business_name = "Big Fatty's BBQ"
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_business_card_with_event(d):
     """
     Tests the contents of a business card with event.
@@ -83,13 +81,19 @@ def test_business_card_with_event(d):
     print("\nLocating Higher Ground under Businesses section...")
     search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(business_name))
     assert search_result.exists, "Higher Ground not found under Businesses section"
-    print("Found Higher Ground, clicking...")
+    print("Found Higher Ground, attempting to click...")
+    print(f"Higher Ground element info: {search_result.info}")
+    print(f"Current screen hierarchy: {d.dump_hierarchy()}")
     search_result.click()
-    sleep(3)  # Wait for business details to load
+    sleep(5)  # Increased sleep time to ensure page loads
 
     # Verify About tab is visible
     print("\nVerifying About tab is visible...")
     about_tab = d.xpath(Businesses.BUSINESS_ABOUT_TAB)
+    print(f"About tab exists: {about_tab.exists}")
+    if about_tab.exists:
+        print(f"About tab info: {about_tab.info}")
+    print(f"Current screen hierarchy after clicking Higher Ground: {d.dump_hierarchy()}")
     assert about_tab.exists, "About tab not found on business details page"
     print("About tab is visible")
 
@@ -125,7 +129,6 @@ def test_business_card_with_event(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_business_card_with_menu(d):
     """
     Tests the contents of a business card with menu.

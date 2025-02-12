@@ -1,13 +1,9 @@
-import time
 from time import sleep
-from config import TEST_USER
-from locators import Events, DayTrips
-from utils import handle_notification_permission, sign_in_user, handle_events_popup
 import pytest
-from retry_decorator import retry
+from locators import DayTrips
+from utils import handle_notification_permission, handle_events_popup, sign_in_user
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_day_trip_card(d):
     """
     Test the Day Trip card on the Home screen

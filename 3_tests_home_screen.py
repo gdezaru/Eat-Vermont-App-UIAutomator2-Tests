@@ -3,10 +3,8 @@ from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
 from utils import get_next_day, handle_notification_permission, sign_in_user, handle_events_popup
-from retry_decorator import retry
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events(d):
     """
     Test home screen events module functionality
@@ -157,7 +155,6 @@ def test_home_screen_events(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_view_map(d):
     """
     Test home screen view map module functionality
@@ -198,7 +195,6 @@ def test_home_screen_view_map(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_videos(d):
     """
     Test home screen videos module functionality
@@ -268,7 +264,6 @@ def test_home_screen_videos(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_add_info(d):
     """
     Test home screen add info module functionality
@@ -307,7 +302,6 @@ def test_home_screen_add_info(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_day_trips(d):
     """
     Test home screen day trips module functionality
@@ -346,7 +340,6 @@ def test_home_screen_day_trips(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events_within(d):
     """
     Test home screen events within 30 minutes functionality
@@ -401,7 +394,6 @@ def test_home_screen_events_within(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events_further_than(d):
     """
     Test home screen events further than 30 minutes functionality
@@ -456,7 +448,6 @@ def test_home_screen_events_further_than(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_bottom_nav_bar(d):
     """
     Test home screen bottom navigation bar functionality

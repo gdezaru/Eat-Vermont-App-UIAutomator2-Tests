@@ -1,12 +1,9 @@
 import pytest
 from time import sleep
-from config import TEST_USER
-from locators import Events
 from utils import handle_notification_permission, sign_in_user, handle_events_popup
-from retry_decorator import retry
+
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_events(d):
     """
     Test searching for events functionality
@@ -81,7 +78,6 @@ def test_search_events(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_businesses(d):
     """
     Test searching for businesses functionality
@@ -156,7 +152,6 @@ def test_search_businesses(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_day_trips(d):
     """
     Test searching for day trips functionality
@@ -238,7 +233,6 @@ def test_search_day_trips(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_videos(d):
     """
     Test searching for videos functionality

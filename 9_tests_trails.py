@@ -2,11 +2,9 @@ from time import sleep
 from locators import HomeScreen, Trails
 from utils import sign_in_user, handle_events_popup, handle_notification_permission
 import pytest
-from retry_decorator import retry
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_trails_screen(d):
     """
     Test the Trails functionality
@@ -61,7 +59,6 @@ def test_trails_screen(d):
 
 
 @pytest.mark.smoke
-@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_trails_details(d):
     """
     Test the Trails details screen

@@ -3,11 +3,12 @@ Utility functions for test automation
 """
 from datetime import datetime
 import os
-import random
-import string
+from time import sleep
 import time
 from config import TEST_USER
-from locators import Events, PlansPopup
+import random
+import string
+from locators import Events, PlansPopup, LoginPage
 
 
 def ensure_screenshots_dir():
@@ -211,6 +212,19 @@ def sign_in_user(d):
     """
     handle_notification_permission(d)
 
+    # Wait for initial screen to load
+    print("\nWaiting for initial screen to load...")
+    time.sleep(5)  # Add initial wait for app to fully load
+    
+    # Debug: Dump current screen hierarchy
+    print("\nCurrent screen hierarchy:")
+    print(d.dump_hierarchy())
+    
+    # First check if we're already logged in by looking for bottom navigation elements
+    if d(description="Search").exists(timeout=2) or d(text="Search").exists(timeout=2):
+        print("Already logged in, skipping sign in process")
+        return
+    
     # Find and click Sign In button
     sign_in = None
     if d(description="Sign In").exists(timeout=5):

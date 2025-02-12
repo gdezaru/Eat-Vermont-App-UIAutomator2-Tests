@@ -33,14 +33,15 @@ class HomeScreen:
     VIDEOS_SEE_ALL = ('//android.widget.ScrollView/android.view.ViewGroup[1]/'
                       'android.view.ViewGroup[6]/android.widget.TextView[1]')
     VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Videos" and ./parent::android.view.ViewGroup]'
-    DAY_TRIPS_SEE_ALL = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
-                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                         '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                         '/android.view.ViewGroup[1]/android.widget.ScrollView[1]/android.view.ViewGroup[1]'
-                         '/android.view.ViewGroup[2]/android.view.ViewGroup[1]')
+    DAY_TRIPS_SEE_ALL = (
+        '//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+        '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[1]/android.widget.ScrollView[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[2]/android.view.ViewGroup[1]')
     EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::'
                                 '*//android.widget.TextView[@text="See All"]')
     EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'
@@ -53,6 +54,8 @@ class HomeScreen:
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
     TRAILS_BUTTON = '//android.view.ViewGroup[@content-desc="Trail"]'
+
+
 #    LOCATION_PICKER_HOME_SCREEN = *need button id because other locators don't work*'
 
 
@@ -157,7 +160,7 @@ class Businesses:
     BUSINESSES_SECTION = '//android.widget.TextView[@text="Businesses"]'
     BUSINESS_UNDER_BUSINESSES = ('//android.widget.TextView[@text="Businesses"]/'
                                  'following::android.widget.TextView[@text="{}"]')
-    BUSINESS_ABOUT_TAB = '//android.view.ViewGroup[contains(@content-desc, "About")]'
+    BUSINESS_ABOUT_TAB = '//*[@content-desc="About"]/android.widget.TextView[1]'
     BUSINESS_ABOUT_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
                                    '[descendant::android.view.ViewGroup[contains(@content-desc,'
                                    ' "About")]]]')
@@ -165,10 +168,9 @@ class Businesses:
     BUSINESS_MENU_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
                                   '[descendant::android.view.ViewGroup[contains(@content-desc,'
                                   ' "Menu")]]]')
-    BUSINESS_FYI_TAB = '//android.view.ViewGroup[contains(@content-desc, "FYI")]'
+    BUSINESS_FYI_TAB = '//*[@text="FYI 🎉"]'
     BUSINESS_FYI_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
-                                 '[descendant::android.view.ViewGroup[contains(@content-desc,'
-                                 ' "FYI")]]]')
+                                 '[descendant::android.view.ViewGroup[@text="FYI 🎉"]]]')
     BUSINESS_NAME_EVENT_CARD = ('//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/'
                                 'android.widget.ScrollView/android.view.ViewGroup'
                                 '/android.view.ViewGroup[5]')
@@ -258,7 +260,7 @@ class VisitHistory:
 class GuestMode:
     """Locators for Guest Mode module"""
     CONTINUE_AS_GUEST_BUTTON = '//android.widget.TextView[@text="Continue as a guest."]'
-#    GUEST_MODE_SIGN_IN_BUTTON = *need button id because other locators don't work*'
+    #    GUEST_MODE_SIGN_IN_BUTTON = *need button id because other locators don't work*'
     EVENTS_LIMITED_RESULTS = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_HOME_SCREEN_PROMPT = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS = ('//android.widget.HorizontalScrollView'
