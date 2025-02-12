@@ -2,3 +2,10 @@ uiautomator2>=2.16.0
 pytest>=8.3.4
 adbutils>=1.2.2
 pillow>=10.2.0  # For screenshot support
+pytest-html==4.1.1
+pytest-metadata==3.1.1
+pytest-xdist==3.3.1
+pytest-rerunfailures==15.0
+pandas==2.2.0
+xlsxwriter==3.1.9
+openpyxl==3.1.2

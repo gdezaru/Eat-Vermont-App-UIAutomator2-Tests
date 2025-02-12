@@ -6,6 +6,7 @@ This project contains automated tests for the Eat Vermont mobile application usi
 
 - **Framework**: Python + pytest + UIAutomator2
 - **Retry Mechanism**: Automatic retry for flaky tests
+- **Excel Reporting**: Detailed test results with failure analysis
 - **Modular Structure**: Organized by functionality
 - **Utilities**: Common functions and helpers
 - **Locators**: Centralized XPath definitions
@@ -109,6 +110,53 @@ The framework includes an automatic retry mechanism for handling flaky tests:
 @retry(retries=3, delay=2, backoff=2, exceptions=(AssertionError, TimeoutError))
 def test_flaky_feature():
     # Test code here
+```
+
+## Test Reports
+
+The framework automatically generates detailed Excel reports after each test run. Reports include:
+
+### Report Location
+- Reports are saved in the `reports` directory
+- Format: `test_report_YYYYMMDD_HHMMSS.xlsx`
+
+### Report Contents
+1. **Test Information**
+   - Test name and status
+   - Start and end times
+   - Test duration
+
+2. **Failure Analysis**
+   - Error messages
+   - Stack traces
+   - Steps to reproduce
+   - Screenshot locations
+
+3. **Retry Information**
+   - Number of retry attempts
+   - Failure reason for each attempt
+   - Final test status
+
+### Viewing Reports
+The Excel report includes:
+- Color-coded test status (Green for pass, Red for fail)
+- Filterable columns
+- Detailed error information
+- Links to failure screenshots
+
+### Screenshots
+- Automatically captured on test failure
+- Saved in the `screenshots` directory
+- Named with test name and timestamp
+- Referenced in the Excel report
+
+### Example Usage
+```bash
+# Run tests and generate report
+pytest
+
+# Report will be generated at:
+# reports/test_report_YYYYMMDD_HHMMSS.xlsx
 ```
 
 ## Key Components

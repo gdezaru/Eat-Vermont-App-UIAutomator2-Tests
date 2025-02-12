@@ -18,14 +18,27 @@ import subprocess
 import uiautomator2 as u2
 from datetime import datetime
 from retry_decorator import retry
+from test_reporter import ExcelReporter
 
-# Configure retry for flaky tests
+# Initialize test items list
+pytest.test_items = []
+
+def pytest_collection_modifyitems(items):
+    """Store test items for later use in reporting"""
+    pytest.test_items = items
+
+# Create a single instance of the reporter
+reporter = ExcelReporter()
+
 def pytest_configure(config):
-    """Configure pytest with retry settings."""
+    """Configure pytest with retry settings and register the Excel reporter."""
     config.addinivalue_line(
         "markers",
-        "flaky: mark test as flaky to enable retries"
+        "flaky: mark test to be automatically retried on failure",
     )
+    
+    # Register the reporter as a plugin
+    config.pluginmanager.register(reporter)
 
 def pytest_addoption(parser):
     """Add retry-related command line options."""
@@ -206,53 +219,50 @@ def d():
     print("\nCleaning up after test...")
     run_adb_command("shell am force-stop com.eatvermont")
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+@pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # Execute all other hooks to obtain the report object
+    """
+    Extends test reporting to include screenshots and retry information.
+    """
     outcome = yield
-    rep = outcome.get_result()
-
-    # We only look at actual test calls, not setup/teardown
-    if rep.when == "call" and rep.failed:
+    report = outcome.get_result()
+    
+    test_fn = item.function.__name__
+    
+    # Add retry information
+    if hasattr(call, 'excinfo') and call.excinfo is not None:
+        reporter.add_retry_info(
+            item.nodeid,
+            getattr(item, '_retry_count', 0),
+            str(call.excinfo.value)
+        )
+    
+    # Take screenshot on failure
+    if report.when == "call" and report.failed:
         try:
-            if "d" in item.funcargs:  # Check if test has the 'd' fixture
-                driver = item.funcargs["d"]
-                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                
-                # Get the test name from the item
-                test_module = item.module.__name__  # Gets the module name (e.g., test_login)
-                test_name = item.name  # Gets the test function name
-                
-                # Extract step number from the test function's docstring or code
-                step_num = "unknown_step"
-                if hasattr(item.function, '__doc__') and item.function.__doc__:
-                    doc = item.function.__doc__
-                    # Look for step number in docstring (format: Step X:)
-                    import re
-                    step_match = re.search(r'Step (\d+):', doc)
-                    if step_match:
-                        step_num = step_match.group(1)
-                
-                # Format: failure_[module]_[test_name]_step[X]_[timestamp].png
-                screenshot_name = f"failure_{test_module}_{test_name}_step{step_num}_{timestamp}.png"
-                screenshot_dir = "screenshots/failures"
-                
-                # Create failures directory if it doesn't exist
-                if not os.path.exists(screenshot_dir):
-                    os.makedirs(screenshot_dir)
-                
-                screenshot_path = os.path.join(screenshot_dir, screenshot_name)
-                driver.screenshot(screenshot_path)
-                print(f"\nTest failed! Screenshot saved: {screenshot_path}")
-                
-                # Also capture device logs with the same naming convention
-                device_id = 'b0ba3ece'  # This is already defined in the fixture
-                logs = run_adb_command(f"-s {device_id} logcat -d")
-                if logs:
-                    log_name = f"failure_{test_module}_{test_name}_step{step_num}_{timestamp}.log"
-                    log_path = os.path.join(screenshot_dir, log_name)
-                    with open(log_path, 'w') as f:
-                        f.write(logs)
-                    print(f"Device logs saved: {log_path}")
+            driver = item.funcargs['d']  # Get the driver fixture
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
+            os.makedirs(screenshot_dir, exist_ok=True)
+            
+            screenshot_path = os.path.join(
+                screenshot_dir,
+                f"fail_{test_fn}_{timestamp}.png"
+            )
+            
+            # Take screenshot using UIAutomator2
+            driver.screenshot(screenshot_path)
+            
+            # Add screenshot to the report
+            reporter.add_screenshot(item.nodeid, screenshot_path)
+            
         except Exception as e:
-            print(f"Failed to capture failure screenshot: {str(e)}")
+            print(f"Failed to capture screenshot: {e}")
+    
+    # Collect steps to reproduce
+    if report.when == "call":
+        # Get docstring as steps if available
+        if item.function.__doc__:
+            steps = [step.strip() for step in item.function.__doc__.split('\n') if step.strip()]
+            for step in steps:
+                reporter.add_step(item.nodeid, step)
