@@ -34,25 +34,33 @@ class ExcelReporter:
 
     def _extract_steps_from_docstring(self, docstring: str) -> List[str]:
         """Extract steps from docstring in a clean format."""
+        print(f"\nExtracting steps from docstring:\n{docstring}")  # Debug print
         if not docstring:
             return []
             
         steps = []
-        lines = docstring.split('\n')
+        lines = [line.strip() for line in docstring.split('\n')]
         in_steps_section = False
         
         for line in lines:
-            line = line.strip()
-            if line.lower().startswith('steps:'):
+            print(f"Processing line: '{line}'")  # Debug print
+            
+            # Start collecting steps when we see "Steps:"
+            if 'steps:' in line.lower():
+                print("Found steps section")  # Debug print
                 in_steps_section = True
                 continue
-            elif in_steps_section and line.startswith(('1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.', '9.')):
-                # Remove the number and clean up the step
-                step = line.split('.', 1)[1].strip()
-                steps.append(step)
-            elif in_steps_section and not line:  # Empty line after steps section
-                break
                 
+            # If we're in steps section and line starts with a number
+            if in_steps_section and line and line[0].isdigit():
+                print(f"Found step: {line}")  # Debug print
+                steps.append(line)
+            
+            # Stop when we hit an empty line after collecting steps
+            elif in_steps_section and not line and steps:
+                break
+        
+        print(f"Extracted steps: {steps}")  # Debug print
         return steps
 
     def pytest_runtest_logstart(self, nodeid: str, location: tuple):
@@ -63,8 +71,7 @@ class ExcelReporter:
             'status': 'running',
             'error_message': '',
             'traceback': '',
-            'screenshots': [],
-            'steps_to_reproduce': ''  # Initialize as empty string
+            'steps': ''
         }
 
     def add_step(self, nodeid: str, step: str):
@@ -75,37 +82,49 @@ class ExcelReporter:
 
     def pytest_runtest_logreport(self, report: TestReport):
         """Called for test setup, call, and teardown."""
-        if report.when == "call" and report.nodeid not in self.processed_tests:
-            self.processed_tests.add(report.nodeid)  # Mark this test as processed
-            
-            if report.passed:
-                self.current_test['status'] = 'passed'
-            elif report.failed:
-                self.current_test['status'] = 'failed'
-                if hasattr(report, 'longrepr'):
-                    self.current_test['error_message'] = str(report.longrepr)
-                    if hasattr(report.longrepr, 'traceback'):
-                        self.current_test['traceback'] = ''.join(traceback.format_tb(report.longrepr.traceback[-1].frame.tb))
-            elif report.skipped:
-                self.current_test['status'] = 'skipped'
+        if report.when == "call":  # Only process during the call phase
+            if report.nodeid not in self.processed_tests:
+                self.processed_tests.add(report.nodeid)  # Mark this test as processed
                 
-            # Get test function from the report item directly
-            test_function = getattr(report, 'item', None)
-            if test_function:
-                test_function = test_function.function
-            
-            # Extract steps from docstring for all tests
-            if test_function and test_function.__doc__:
-                steps = self._extract_steps_from_docstring(test_function.__doc__)
-                if steps:
-                    self.current_test['steps_to_reproduce'] = '\n'.join([f"{i+1}. {step}" for i, step in enumerate(steps)])
+                if report.passed:
+                    self.current_test['status'] = 'passed'
+                elif report.failed:
+                    self.current_test['status'] = 'failed'
+                    if hasattr(report, 'longrepr'):
+                        self.current_test['error_message'] = str(report.longrepr)
+                        if hasattr(report.longrepr, 'traceback'):
+                            self.current_test['traceback'] = ''.join(traceback.format_tb(report.longrepr.traceback[-1].frame.tb))
+                elif report.skipped:
+                    self.current_test['status'] = 'skipped'
+                    
+                # Get test function docstring
+                try:
+                    # Get the test function using the nodeid
+                    module_name, test_name = report.nodeid.split("::")
+                    module = __import__(module_name.replace("/", ".").replace(".py", ""))
+                    test_function = getattr(module, test_name)
+                    
+                    print(f"\nProcessing test: {test_function.__name__}")  # Debug print
+                    if test_function.__doc__:
+                        # Extract and format steps
+                        steps = self._extract_steps_from_docstring(test_function.__doc__)
+                        if steps:
+                            self.current_test['steps'] = '\n'.join(steps)
+                            print(f"Set steps in current_test: {self.current_test['steps']}")  # Debug print
+                        else:
+                            print("No steps were extracted")  # Debug print
+                    else:
+                        print("No docstring found")  # Debug print
+                except Exception as e:
+                    print(f"Error getting test function: {e}")  # Debug print
+                    
+                self.current_test['end_time'] = datetime.now()
+                self.current_test['duration'] = (self.current_test['end_time'] - self.current_test['start_time']).total_seconds()
                 
-            self.current_test['end_time'] = datetime.now()
-            self.current_test['duration'] = (self.current_test['end_time'] - self.current_test['start_time']).total_seconds()
-            
-            # Add the test result to our collection
-            self.results.append(self.current_test.copy())
-            
+                # Add the test result to our collection
+                self.results.append(self.current_test.copy())
+                print(f"Added test result with steps: {self.current_test['steps']}")  # Debug print
+
     def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int):
         """Called after whole test run finished, right before returning the exit status to the system."""
         # Move screenshots from root screenshots folder to test run folder
@@ -156,8 +175,7 @@ class ExcelReporter:
             'duration',
             'error_message',
             'traceback',
-            'screenshots',
-            'steps_to_reproduce'
+            'steps'
         ]
         
         for col in required_columns:
@@ -180,35 +198,63 @@ class ExcelReporter:
             # Add column auto-filter
             worksheet.autofilter(0, 0, len(df), len(df.columns) - 1)
             
-            # Define formats
+            # Define formats with enforced text wrapping
             header_format = workbook.add_format({
                 'bold': True,
                 'text_wrap': True,
-                'valign': 'top',
+                'valign': 'vcenter',
+                'align': 'center',
                 'fg_color': '#D7E4BC',
                 'border': 1
             })
             
+            # Base format for all cells
+            base_format = workbook.add_format({
+                'text_wrap': True,
+                'valign': 'vcenter',
+                'align': 'center',
+                'border': 1  # Add light borders to all cells
+            })
+            
             pass_format = workbook.add_format({
+                'text_wrap': True,
+                'valign': 'vcenter',
+                'align': 'center',
                 'fg_color': '#C6EFCE',
-                'font_color': '#006100'
+                'font_color': '#006100',
+                'border': 1
             })
             
             fail_format = workbook.add_format({
+                'text_wrap': True,
+                'valign': 'vcenter',
+                'align': 'center',
                 'fg_color': '#FFC7CE',
-                'font_color': '#9C0006'
+                'font_color': '#9C0006',
+                'border': 1
             })
 
-            # Add text wrapping format for steps
+            # Steps format with center alignment
             steps_format = workbook.add_format({
                 'text_wrap': True,
-                'valign': 'top',
-                'align': 'left'
+                'valign': 'vcenter',
+                'align': 'center',
+                'border': 1
             })
             
             # Write headers with format
             for col_num, value in enumerate(df.columns.values):
                 worksheet.write(0, col_num, value, header_format)
+            
+            # Write all data with base format first
+            for row_num in range(1, len(df) + 1):
+                for col_num, value in enumerate(df.iloc[row_num - 1]):
+                    # Skip status column as it will be handled separately
+                    if df.columns[col_num] != 'status':
+                        if pd.isna(value):
+                            value = ''
+                        # Ensure string values for proper wrapping
+                        worksheet.write(row_num, col_num, str(value), base_format)
             
             # Format the status column
             status_col = df.columns.get_loc('status')
@@ -218,22 +264,30 @@ class ExcelReporter:
                 elif status == 'failed':
                     worksheet.write(row_num, status_col, status, fail_format)
                 else:
-                    worksheet.write(row_num, status_col, status)
+                    worksheet.write(row_num, status_col, status, base_format)
 
-            # Format the steps column with text wrapping
-            steps_col = df.columns.get_loc('steps_to_reproduce')
-            for row_num, steps in enumerate(df['steps_to_reproduce'], start=1):
+            # Format the steps column
+            steps_col = df.columns.get_loc('steps')
+            for row_num, steps in enumerate(df['steps'], start=1):
+                # Replace empty steps with empty string to avoid 'nan'
+                if pd.isna(steps):
+                    steps = ''
                 worksheet.write(row_num, steps_col, steps, steps_format)
             
-            # Set column widths
-            worksheet.set_column('A:A', 50)  # test_name
-            worksheet.set_column('B:B', 10)  # status
-            worksheet.set_column('C:D', 20)  # start_time, end_time
-            worksheet.set_column('E:E', 10)  # duration
-            worksheet.set_column('F:F', 50)  # error_message
-            worksheet.set_column('G:G', 50)  # traceback
-            worksheet.set_column('H:H', 30)  # screenshots
-            worksheet.set_column('I:I', 50)  # steps_to_reproduce
+            # Adjust column widths for better readability with wrapped text
+            worksheet.set_column('A:A', 35)  # test_name - slightly narrower
+            worksheet.set_column('B:B', 12)  # status - slightly wider
+            worksheet.set_column('C:D', 18)  # start_time, end_time - slightly narrower
+            worksheet.set_column('E:E', 12)  # duration - slightly wider
+            worksheet.set_column('F:F', 40)  # error_message - slightly narrower
+            worksheet.set_column('G:G', 40)  # traceback - slightly narrower
+            worksheet.set_column('H:H', 40)  # steps - slightly narrower
 
-            # Set row height to accommodate wrapped text
-            worksheet.set_default_row(30)
+            # Increase row height for wrapped text
+            worksheet.set_default_row(60)  # Increased height for better text wrapping
+            
+            # Set first row (header) slightly shorter
+            worksheet.set_row(0, 40)
+            
+            # Enable text wrapping for the entire worksheet
+            worksheet.set_column('A:H', None, None, {'text_wrap': True})
