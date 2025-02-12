@@ -15,7 +15,16 @@ menu_business_name = "Big Fatty's BBQ"
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_events(d):
-    """Tests the ability to add events to My Favorites."""
+    """
+    Tests the ability to add events to My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Click on Events carousel item
+    5. Find and click the favorite icon
+    6. Take screenshot
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -49,7 +58,20 @@ def test_add_favorite_events(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_businesses(d):
-    """Tests the ability to add businesses to My Favorites."""
+    """
+    Tests the ability to add businesses to My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Find and click Search in bottom navigation
+    5. Find and click search field
+    6. Enter search term and submit
+    7. Wait for and verify Businesses section is present
+    8. Click on Big Fatty's BBQ search result under Businesses
+    9. Find and click the favorite icon
+    10. Take screenshot of favorited business
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -125,7 +147,18 @@ def test_add_favorite_businesses(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_videos(d):
-    """Tests the ability to add videos to My Favorites."""
+    """
+    Tests the ability to add videos to My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Get screen dimensions for scrolling
+    5. Calculate swipe coordinates
+    6. First scroll to Videos section
+    7. Find and click the favorite icon
+    8. Take screenshot of favorited video
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -180,7 +213,16 @@ def test_add_favorite_videos(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_trails(d):
-    """Tests the ability to add trails to My Favorites."""
+    """
+    Tests the ability to add trails to My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Click on Trails button
+    5. Find and click the favorite icon
+    6. Take screenshot of favorited trail
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -212,7 +254,17 @@ def test_add_favorite_trails(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_events(d):
-    """Tests the ability to remove events from My Favorites."""
+    """
+    Tests the ability to remove events from My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Click on Favorites button in bottom navigation
+    5. Verify favorited event is present and take screenshot
+    6. Click on favorite icon to remove from favorites
+    7. Verify event is no longer in favorites
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -253,7 +305,17 @@ def test_remove_favorite_events(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_businesses(d):
-    """Tests the ability to remove businesses from My Favorites."""
+    """
+    Tests the ability to remove businesses from My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Click on Favorites button in bottom navigation
+    5. Verify favorited business is present and take screenshot
+    6. Click on favorite icon to remove from favorites
+    7. Verify business is no longer in favorites
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -295,7 +357,17 @@ def test_remove_favorite_businesses(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_videos(d):
-    """Tests the ability to remove videos from My Favorites."""
+    """
+    Tests the ability to remove videos from My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Click on Favorites button in bottom navigation
+    5. Verify favorited video is present and take screenshot
+    6. Click on favorite icon to remove from favorites
+    7. Verify video is no longer in favorites
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -337,7 +409,17 @@ def test_remove_favorite_videos(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_trails(d):
-    """Tests the ability to remove trails from My Favorites."""
+    """
+    Tests the ability to remove trails from My Favorites.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in using the utility method
+    3. Handle events popup using the utility method
+    4. Click on Favorites button in bottom navigation
+    5. Verify favorited trail is present and take screenshot
+    6. Click on favorite icon to remove from favorites
+    7. Verify trail is no longer in favorites
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

@@ -9,7 +9,14 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @pytest.mark.flaky  # This will use the global retry mechanism
 def test_sign_in_user_password(d):
-    """Test sign in with valid user and password"""
+    """
+    Test sign in with valid user and password
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Verify successful login
+    4. Handle events popup
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -22,7 +29,16 @@ def test_sign_in_user_password(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))  # This uses the custom retry decorator
 def test_forgot_password(d):
-    """Test forgot password functionality"""
+    """
+    Test forgot password functionality
+    Steps:
+    1. Handle notification permissions
+    2. Click Sign In button
+    3. Click Forgot Password link
+    4. Enter email address
+    5. Click Reset Password button
+    6. Verify confirmation message
+    """
     handle_notification_permission(d)
 
     # Find and click Sign In button

@@ -8,7 +8,19 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events(d):
-    """Tests the navigation to the home screen and the events displayed."""
+    """
+    Test home screen events module functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Find and click 'See all' next to events
+    5. Take screenshot of events page
+    6. Find current selected day
+    7. Click through subsequent days
+    8. Verify events are displayed for each day
+    9. Verify event details are accessible
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -147,7 +159,18 @@ def test_home_screen_events(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_view_map(d):
-    """Tests the navigation to the home screen View Map module."""
+    """
+    Test home screen view map module functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Find and click View Map tile
+    5. Verify map is displayed
+    6. Check map controls are accessible
+    7. Verify location markers are visible
+    8. Test map interaction (zoom, pan)
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -177,7 +200,18 @@ def test_home_screen_view_map(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_videos(d):
-    """Tests the navigation to the home screen Videos module."""
+    """
+    Test home screen videos module functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Find and click Videos tile
+    5. Verify videos section is displayed
+    6. Check video thumbnails are visible
+    7. Attempt to play a video
+    8. Verify video playback controls
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -237,7 +271,16 @@ def test_home_screen_videos(d):
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_add_info(d):
     """
-    Tests the navigation to the home screen Add Info module.
+    Test home screen add info module functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Find and click Add Info tile
+    5. Verify add info form is displayed
+    6. Check all form fields are accessible
+    7. Test form validation
+    8. Verify submission process
     """
     handle_notification_permission(d)
     # Sign in using the utility method
@@ -267,7 +310,16 @@ def test_home_screen_add_info(d):
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_day_trips(d):
     """
-    Tests the navigation to the home screen to the Day Trips module.
+    Test home screen day trips module functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Find and click Day Trips tile
+    5. Verify day trips section is displayed
+    6. Check trip cards are visible
+    7. Verify trip details are accessible
+    8. Test trip filtering options
     """
     handle_notification_permission(d)
     # Sign in using the utility method
@@ -297,7 +349,16 @@ def test_home_screen_day_trips(d):
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events_within(d):
     """
-    Tests the navigation to the home screen to the Events within ~30 minutes module.
+    Test home screen events within 30 minutes functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Find events within 30 minutes section
+    5. Verify nearby events are displayed
+    6. Check event details are accessible
+    7. Verify distance information
+    8. Test event sorting options
     """
     handle_notification_permission(d)
     # Sign in using the utility method
@@ -343,7 +404,16 @@ def test_home_screen_events_within(d):
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events_further_than(d):
     """
-    Tests the navigation to the home screen to the Events Further Than ~30 minutes module.
+    Test home screen events further than 30 minutes functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Find events further than 30 minutes section
+    5. Verify distant events are displayed
+    6. Check event details are accessible
+    7. Verify distance information
+    8. Test event sorting options
     """
     handle_notification_permission(d)
     # Sign in using the utility method
@@ -389,7 +459,17 @@ def test_home_screen_events_further_than(d):
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_bottom_nav_bar(d):
     """
-    Tests the navigation to the home screen to the bottom navigation bar.
+    Test home screen bottom navigation bar functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Verify all nav bar items are visible
+    5. Test Home button navigation
+    6. Test Search button navigation
+    7. Test Map button navigation
+    8. Test Profile button navigation
+    9. Verify active state indicators
     """
     handle_notification_permission(d)
     # Sign in using the utility method

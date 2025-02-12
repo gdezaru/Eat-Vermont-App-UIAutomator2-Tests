@@ -8,7 +8,14 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_events_popup(d):
-    """Tests the contents of the events popup."""
+    """
+    Tests the contents of the events popup.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Verify popup contents
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -21,7 +28,22 @@ def test_events_popup(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_events_card(d):
-    """Tests the contents of an events card."""
+    """
+    Tests the contents of an events card.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Events section
+    5. Select an event from the list
+    6. Verify event title is displayed
+    7. Check event date and time
+    8. Verify location information
+    9. Check event description
+    10. Verify organizer details
+    11. Test sharing functionality
+    12. Check ticket/RSVP options
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

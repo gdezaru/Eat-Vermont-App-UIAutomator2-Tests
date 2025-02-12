@@ -9,7 +9,19 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_day_trip_card(d):
-    """Test the Day Trip card on the Home screen"""
+    """
+    Test the Day Trip card on the Home screen
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Scroll to center the Day Trip section
+    5. Verify Day Trip text is displayed
+    6. Scroll to find Read More button
+    7. Verify Read More button is displayed
+    8. Click Read More button
+    9. Verify day trip details screen
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

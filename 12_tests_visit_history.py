@@ -10,6 +10,17 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_visit_history_screen(d):
+    """
+    Test visit history screen functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Favorites section
+    5. Open Visit History tab
+    6. Verify Visit History screen loads
+    7. Take confirmation screenshot
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

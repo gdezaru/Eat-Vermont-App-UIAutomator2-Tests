@@ -7,7 +7,20 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_button(d):
-    """Test the Guest Mode Home screen"""
+    """
+    Test the Guest Mode Home screen
+    Steps:
+    1. Launch app
+    2. Handle notification permissions
+    3. Click Continue as Guest
+    4. Verify guest mode UI
+    5. Check available features
+    6. Verify restricted features
+    7. Test navigation limits
+    8. Check sign-in prompts
+    9. Verify data persistence
+    10. Test guest session expiry
+    """
     handle_notification_permission(d)
 
     # Find and click Guest Mode button
@@ -34,7 +47,20 @@ def test_guest_mode_button(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_events(d):
-    """Test the Guest Mode events screen"""
+    """
+    Test the Guest Mode events screen
+    Steps:
+    1. Launch app
+    2. Continue as Guest
+    3. Navigate to Events
+    4. Verify events list
+    5. Check event details
+    6. Test event filtering
+    7. Verify event limits
+    8. Check sign-in prompts
+    9. Verify data persistence
+    10. Test guest session expiry
+    """
     handle_notification_permission(d)
 
     # Find and click Guest Mode button
@@ -75,7 +101,20 @@ def test_guest_mode_events(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_videos(d):
-    """Test the Guest Mode videos screen"""
+    """
+    Test the Guest Mode videos screen
+    Steps:
+    1. Launch app
+    2. Continue as Guest
+    3. Navigate to Videos
+    4. Verify video list
+    5. Check video playback
+    6. Test video filtering
+    7. Verify video limits
+    8. Check sign-in prompts
+    9. Verify data persistence
+    10. Test guest session expiry
+    """
     handle_notification_permission(d)
 
     # Find and click Guest Mode button
@@ -177,7 +216,20 @@ def test_guest_mode_videos(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_search(d):
-    """Test the Guest Mode search screen"""
+    """
+    Test the Guest Mode search screen
+    Steps:
+    1. Launch app
+    2. Continue as Guest
+    3. Navigate to Search
+    4. Enter search term
+    5. Verify search results
+    6. Test filter options
+    7. Check result details
+    8. Verify location-based
+    9. Test search history
+    10. Check sign-in prompts
+    """
     handle_notification_permission(d)
 
     # Find and click Guest Mode button
@@ -245,7 +297,20 @@ def test_guest_mode_search(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_favorites(d):
-    """Test the Guest Mode favorites screen"""
+    """
+    Test the Guest Mode favorites screen
+    Steps:
+    1. Launch app
+    2. Continue as Guest
+    3. Navigate to Favorites
+    4. Verify favorites list
+    5. Check favorite details
+    6. Test favorite filtering
+    7. Verify favorite limits
+    8. Check sign-in prompts
+    9. Verify data persistence
+    10. Test guest session expiry
+    """
     handle_notification_permission(d)
 
     # Find and click Guest Mode button
@@ -313,7 +378,20 @@ def test_guest_mode_favorites(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_prompt_end_screen(d):
-    """Test the Guest Mode prompt from the bottom of the screen"""
+    """
+    Test the Guest Mode prompt from the bottom of the screen
+    Steps:
+    1. Launch app
+    2. Continue as Guest
+    3. Scroll to the end of the screen
+    4. Verify guest mode prompt
+    5. Check sign-in prompts
+    6. Verify data persistence
+    7. Test guest session expiry
+    8. Check navigation limits
+    9. Verify restricted features
+    10. Test guest mode UI
+    """
     handle_notification_permission(d)
 
     # Find and click Guest Mode button

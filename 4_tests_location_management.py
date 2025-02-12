@@ -3,14 +3,31 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, HomeScreenTiles, BottomNavBar, LocationManagement
-from utils import get_next_day
+from utils import get_next_day, handle_notification_permission, sign_in_user
 from retry_decorator import retry
 
 
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_location_picker(d):
+    "
     Test that the location picker button on the Home Screen works
+    Steps:
+    1. Handle notification permission if it appears
+    2. Find and click Sign In button
+    3. Enter email
+    4. Enter password
+    5. Click Log in and verify
+    6. Click location picker button
+    7. Take screenshot
+    8. Click search input and enter location
+    9. Type "Burlington" and press enter
+    10. Take screenshot of search results
+    11. Click on Burlington search result
+    12. Take screenshot after location selection
+    13. Assert that Burlington is present on screen
+    14. Take final screenshot
+    "
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
@@ -126,6 +143,14 @@ def test_home_screen_location_picker(d):
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_use_current_location(d):
     Test that the 'Use Current Location' button on the Home Screen works
+    Steps:
+    1. Handle notification permission if it appears
+    2. Find and click Sign In button
+    3. Enter email
+    4. Enter password
+    5. Click Log in and verify
+    6. Click location picker button
+    7. Take screenshot
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
@@ -205,6 +230,4 @@ def test_home_screen_use_current_location(d):
 
         # Take screenshot
         d.screenshot("4_2_1_location_picker_home_screen.png")
-
-
 """

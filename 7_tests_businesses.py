@@ -12,7 +12,22 @@ menu_business_name = "Big Fatty's BBQ"
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_business_card_with_event(d):
-    """Tests the contents of a business card with event."""
+    """
+    Tests the contents of a business card with event.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Search in bottom navigation
+    5. Enter search term and submit
+    6. Wait for and verify Businesses section is present
+    7. Click on Higher Ground search result under Businesses
+    8. Verify About tab is visible
+    9. Verify About tab contents are present
+    10. Take screenshot of business details with About tab
+    11. Click on FYI tab and verify contents
+    12. Take screenshot of FYI tab contents
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -112,7 +127,24 @@ def test_business_card_with_event(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_business_card_with_menu(d):
-    """Tests the contents of a business card with menu."""
+    """
+    Tests the contents of a business card with menu.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Search in bottom navigation
+    5. Enter search term and submit
+    6. Wait for and verify Businesses section is present
+    7. Click on Big Fatty's BBQ search result under Businesses
+    8. Verify About tab is visible
+    9. Verify About tab contents are present
+    10. Take screenshot of business details with About tab
+    11. Verify Menu tab is visible
+    12. Click on Menu tab
+    13. Verify Menu tab contents are present
+    14. Take screenshot of business details with Menu tab
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

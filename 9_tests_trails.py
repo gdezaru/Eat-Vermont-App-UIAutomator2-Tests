@@ -8,7 +8,17 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_trails_screen(d):
-    """Test the Trails functionality"""
+    """
+    Test the Trails functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Trails section
+    5. Find and verify any trail name
+    6. Verify trail status
+    7. Take screenshot of trails main screen
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -53,7 +63,20 @@ def test_trails_screen(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_trails_details(d):
-    """Test the Trails details screen"""
+    """
+    Test the Trails details screen
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Trails section
+    5. Click Read More button
+    6. Verify percentage progress
+    7. Verify visits completed text and number
+    8. Take screenshot of trail details
+    9. Scroll using swipe
+    10. Take screenshot of trail details visits
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

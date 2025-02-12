@@ -10,7 +10,16 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_settings_contents(d):
-    """Tests the contents of the settings screen."""
+    """
+    Tests the contents of the settings screen.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Settings
+    5. Verify all settings options are visible
+    6. Take screenshot of settings screen
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -45,7 +54,22 @@ def test_settings_contents(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_settings_screen_navigation(d):
-    """Tests the navigation within the settings screen."""
+    """
+    Tests the navigation within the settings screen.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Settings
+    5. Click on Edit Profile
+    6. Take screenshot of Edit Profile screen
+    7. Go back to Settings
+    8. Click on Location Toggle
+    9. Handle location permission dialog if it appears
+    10. Take screenshot of Settings screen with toggled location
+    11. Click on Log Out
+    12. Take screenshot of welcome screen
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -103,7 +127,23 @@ def test_settings_screen_navigation(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_settings_screen_edit_profile(d):
-    """Tests the edit profile section within the settings screen."""
+    """
+    Tests the edit profile section within the settings screen.
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Settings
+    5. Click on Edit Profile
+    6. Clear the name field and enter a new random name
+    7. Verify the new name was successfully inputted
+    8. Clear the username field and enter a new random username
+    9. Verify the new username was successfully inputted
+    10. Scroll to bottom of screen to ensure save button is visible
+    11. Click save button and verify we return to settings screen
+    12. Verify the updated name is visible on the settings screen
+    13. Take screenshot of settings screen after saving changes
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

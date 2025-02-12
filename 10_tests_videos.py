@@ -11,7 +11,16 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_videos_screen(d):
-    """Test the Videos screen"""
+    """
+    Test the Videos screen
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Videos section
+    5. Verify video tiles are present
+    6. Take a screenshot of the Videos screen
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -76,7 +85,17 @@ def test_videos_screen(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_video_details_card(d):
-    """Test the Videos screen"""
+    """
+    Test the video details card
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to Videos section
+    5. Select a video from the list
+    6. Verify video details card is displayed
+    7. Take a screenshot of the video details
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

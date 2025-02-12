@@ -8,7 +8,19 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_events(d):
-    """Test searching for events"""
+    """
+    Test searching for events functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Click Search in bottom navigation
+    5. Click search field
+    6. Enter search term 'Burlington'
+    7. Submit search
+    8. Verify search results are displayed
+    9. Verify results contain events
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -71,7 +83,19 @@ def test_search_events(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_businesses(d):
-    """Test searching for businesses"""
+    """
+    Test searching for businesses functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Click Search in bottom navigation
+    5. Click search field
+    6. Enter search term 'Big Fatty BBQ'
+    7. Submit search
+    8. Verify search results are displayed
+    9. Verify results contain businesses
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -134,7 +158,19 @@ def test_search_businesses(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_day_trips(d):
-    """Test searching for day trips"""
+    """
+    Test searching for day trips functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Click Search in bottom navigation
+    5. Click search field
+    6. Enter search term 'Day Trip'
+    7. Submit search
+    8. Verify search results are displayed
+    9. Verify results contain day trips
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
@@ -204,7 +240,19 @@ def test_search_day_trips(d):
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_search_videos(d):
-    """Test searching for videos"""
+    """
+    Test searching for videos functionality
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Click Search in bottom navigation
+    5. Click search field
+    6. Enter search term 'Rocket'
+    7. Submit search
+    8. Verify search results are displayed
+    9. Verify results contain videos
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)

@@ -7,7 +7,23 @@ from retry_decorator import retry
 @pytest.mark.smoke
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_view_map_filters(d):
-    """Test the View Map filters"""
+    """
+    Test the View Map filters
+    Steps:
+    1. Handle notification permissions
+    2. Sign in with valid credentials
+    3. Handle events popup
+    4. Navigate to View Map section
+    5. Verify Events filter is visible
+    6. Verify Food & Drinks filter is visible
+    7. Verify Farms filter is visible
+    8. Verify Food Pantries filter is visible
+    9. Take screenshot of all filters
+    10. Click Events filter and take screenshot
+    11. Click Food & Drinks filter and take screenshot
+    12. Click Farms filter and take screenshot
+    13. Click Food Pantries filter and take screenshot
+    """
     handle_notification_permission(d)
     # Sign in using the utility method
     sign_in_user(d)
