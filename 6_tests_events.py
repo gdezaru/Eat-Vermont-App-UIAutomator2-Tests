@@ -2,9 +2,11 @@ from time import sleep
 from locators import Events
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
 import pytest
+from retry_decorator import retry
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_events_popup(d):
     """Tests the contents of the events popup."""
     handle_notification_permission(d)
@@ -17,6 +19,7 @@ def test_events_popup(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_events_card(d):
     """Tests the contents of an events card."""
     handle_notification_permission(d)

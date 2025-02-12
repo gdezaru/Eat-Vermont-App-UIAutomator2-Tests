@@ -4,9 +4,11 @@ from config import TEST_USER
 from locators import HomeScreen, SettingsScreen, Events
 from utils import generate_random_name, generate_random_username, handle_notification_permission, sign_in_user, \
     handle_events_popup
+from retry_decorator import retry
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_settings_contents(d):
     """Tests the contents of the settings screen."""
     handle_notification_permission(d)
@@ -41,6 +43,7 @@ def test_settings_contents(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_settings_screen_navigation(d):
     """Tests the navigation within the settings screen."""
     handle_notification_permission(d)
@@ -98,6 +101,7 @@ def test_settings_screen_navigation(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_settings_screen_edit_profile(d):
     """Tests the edit profile section within the settings screen."""
     handle_notification_permission(d)

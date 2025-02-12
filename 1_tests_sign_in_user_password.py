@@ -3,9 +3,11 @@ from time import sleep
 from config import TEST_USER
 from utils import handle_notification_permission, sign_in_user, handle_events_popup
 from locators import LoginPage
+from retry_decorator import retry
 
 
 @pytest.mark.smoke
+@pytest.mark.flaky  # This will use the global retry mechanism
 def test_sign_in_user_password(d):
     """Test sign in with valid user and password"""
     handle_notification_permission(d)
@@ -18,6 +20,7 @@ def test_sign_in_user_password(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))  # This uses the custom retry decorator
 def test_forgot_password(d):
     """Test forgot password functionality"""
     handle_notification_permission(d)

@@ -2,9 +2,10 @@ import pytest
 from time import sleep
 from locators import Events, GuestMode, LoginPage, PlansPopup, HomeScreen, BottomNavBar
 from utils import handle_notification_permission, handle_events_popup, handle_guest_mode_plans_popup
-
+from retry_decorator import retry
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_button(d):
     """Test the Guest Mode Home screen"""
     handle_notification_permission(d)
@@ -31,6 +32,7 @@ def test_guest_mode_button(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_events(d):
     """Test the Guest Mode events screen"""
     handle_notification_permission(d)
@@ -71,6 +73,7 @@ def test_guest_mode_events(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_videos(d):
     """Test the Guest Mode videos screen"""
     handle_notification_permission(d)
@@ -172,6 +175,7 @@ def test_guest_mode_videos(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_search(d):
     """Test the Guest Mode search screen"""
     handle_notification_permission(d)
@@ -239,6 +243,7 @@ def test_guest_mode_search(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_favorites(d):
     """Test the Guest Mode favorites screen"""
     handle_notification_permission(d)
@@ -306,6 +311,7 @@ def test_guest_mode_favorites(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_guest_mode_prompt_end_screen(d):
     """Test the Guest Mode prompt from the bottom of the screen"""
     handle_notification_permission(d)

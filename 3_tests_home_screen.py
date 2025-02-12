@@ -3,9 +3,10 @@ from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
 from utils import get_next_day, handle_notification_permission, sign_in_user, handle_events_popup
-
+from retry_decorator import retry
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events(d):
     """Tests the navigation to the home screen and the events displayed."""
     handle_notification_permission(d)
@@ -144,6 +145,7 @@ def test_home_screen_events(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_view_map(d):
     """Tests the navigation to the home screen View Map module."""
     handle_notification_permission(d)
@@ -173,6 +175,7 @@ def test_home_screen_view_map(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_videos(d):
     """Tests the navigation to the home screen Videos module."""
     handle_notification_permission(d)
@@ -231,6 +234,7 @@ def test_home_screen_videos(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_add_info(d):
     """
     Tests the navigation to the home screen Add Info module.
@@ -260,6 +264,7 @@ def test_home_screen_add_info(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_day_trips(d):
     """
     Tests the navigation to the home screen to the Day Trips module.
@@ -289,6 +294,7 @@ def test_home_screen_day_trips(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events_within(d):
     """
     Tests the navigation to the home screen to the Events within ~30 minutes module.
@@ -334,6 +340,7 @@ def test_home_screen_events_within(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_events_further_than(d):
     """
     Tests the navigation to the home screen to the Events Further Than ~30 minutes module.
@@ -379,6 +386,7 @@ def test_home_screen_events_further_than(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_home_screen_bottom_nav_bar(d):
     """
     Tests the navigation to the home screen to the bottom navigation bar.

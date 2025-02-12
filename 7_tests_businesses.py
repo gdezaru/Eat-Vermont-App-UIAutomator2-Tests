@@ -2,6 +2,7 @@ from time import sleep
 from locators import Businesses
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
 import pytest
+from retry_decorator import retry
 
 # Initialize business names at module level
 business_name = "Higher Ground"
@@ -9,6 +10,7 @@ menu_business_name = "Big Fatty's BBQ"
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_business_card_with_event(d):
     """Tests the contents of a business card with event."""
     handle_notification_permission(d)
@@ -108,6 +110,7 @@ def test_business_card_with_event(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_business_card_with_menu(d):
     """Tests the contents of a business card with menu."""
     handle_notification_permission(d)

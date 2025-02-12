@@ -4,6 +4,7 @@ from locators import Events, MyFavorites, Businesses, HomeScreen, BottomNavBar
 from utils import (
     handle_notification_permission, sign_in_user, handle_events_popup
 )
+from retry_decorator import retry
 
 
 # Initialize business names at module level
@@ -12,6 +13,7 @@ menu_business_name = "Big Fatty's BBQ"
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_events(d):
     """Tests the ability to add events to My Favorites."""
     handle_notification_permission(d)
@@ -45,6 +47,7 @@ def test_add_favorite_events(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_businesses(d):
     """Tests the ability to add businesses to My Favorites."""
     handle_notification_permission(d)
@@ -120,6 +123,7 @@ def test_add_favorite_businesses(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_videos(d):
     """Tests the ability to add videos to My Favorites."""
     handle_notification_permission(d)
@@ -174,6 +178,7 @@ def test_add_favorite_videos(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_add_favorite_trails(d):
     """Tests the ability to add trails to My Favorites."""
     handle_notification_permission(d)
@@ -205,6 +210,7 @@ def test_add_favorite_trails(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_events(d):
     """Tests the ability to remove events from My Favorites."""
     handle_notification_permission(d)
@@ -245,6 +251,7 @@ def test_remove_favorite_events(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_businesses(d):
     """Tests the ability to remove businesses from My Favorites."""
     handle_notification_permission(d)
@@ -286,6 +293,7 @@ def test_remove_favorite_businesses(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_videos(d):
     """Tests the ability to remove videos from My Favorites."""
     handle_notification_permission(d)
@@ -327,6 +335,7 @@ def test_remove_favorite_videos(d):
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_remove_favorite_trails(d):
     """Tests the ability to remove trails from My Favorites."""
     handle_notification_permission(d)

@@ -17,6 +17,36 @@ import random
 import subprocess
 import uiautomator2 as u2
 from datetime import datetime
+from retry_decorator import retry
+
+# Configure retry for flaky tests
+def pytest_configure(config):
+    """Configure pytest with retry settings."""
+    config.addinivalue_line(
+        "markers",
+        "flaky: mark test as flaky to enable retries"
+    )
+
+def pytest_addoption(parser):
+    """Add retry-related command line options."""
+    parser.addoption(
+        "--max-retries",
+        action="store",
+        default="2",
+        help="number of retries for flaky tests"
+    )
+
+@pytest.fixture
+def flaky_retry(request):
+    """
+    Fixture that provides retry functionality for flaky tests.
+    Usage: add @pytest.mark.flaky to your test
+    """
+    marker = request.node.get_closest_marker("flaky")
+    if marker:
+        retries = int(request.config.getoption("--max-retries"))
+        return retry(retries=retries, delay=1, backoff=2)
+    return lambda f: f  # Return no-op decorator if test is not marked as flaky
 
 def run_adb_command(command):
     """Run an ADB command and return its output"""

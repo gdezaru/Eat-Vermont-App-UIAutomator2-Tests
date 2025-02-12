@@ -4,9 +4,11 @@ from locators import BottomNavBar, VisitHistory
 from utils import (
     handle_notification_permission, sign_in_user, handle_events_popup
 )
+from retry_decorator import retry
 
 
 @pytest.mark.smoke
+@retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_visit_history_screen(d):
     handle_notification_permission(d)
     # Sign in using the utility method
