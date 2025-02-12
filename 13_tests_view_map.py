@@ -8,7 +8,7 @@ from retry_decorator import retry
 @retry(retries=2, delay=1, exceptions=(AssertionError, TimeoutError))
 def test_view_map_filters(d):
     """
-    Test the View Map filters
+    Test the View Map filters functionality
     Steps:
     1. Handle notification permissions
     2. Sign in with valid credentials
@@ -19,10 +19,11 @@ def test_view_map_filters(d):
     7. Verify Farms filter is visible
     8. Verify Food Pantries filter is visible
     9. Take screenshot of all filters
-    10. Click Events filter and take screenshot
-    11. Click Food & Drinks filter and take screenshot
-    12. Click Farms filter and take screenshot
-    13. Click Food Pantries filter and take screenshot
+    10. Click Events filter and verify
+    11. Click Food & Drinks filter and verify
+    12. Click Farms filter and verify
+    13. Click Food Pantries filter and verify
+    14. Document each filter state with screenshots
     """
     handle_notification_permission(d)
     # Sign in using the utility method
