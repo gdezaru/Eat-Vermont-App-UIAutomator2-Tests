@@ -4,6 +4,7 @@ from locators import Events, MyFavorites, Businesses, HomeScreen, BottomNavBar
 from utils import (
     handle_notification_permission, sign_in_user, handle_events_popup
 )
+import os
 
 
 # Initialize business names at module level
@@ -12,7 +13,7 @@ menu_business_name = "Big Fatty's BBQ"
 
 
 @pytest.mark.smoke
-def test_add_favorite_events(d):
+def test_add_favorite_events(d, screenshots_dir):
     """
     Tests the ability to add events to My Favorites.
     Steps:
@@ -48,13 +49,13 @@ def test_add_favorite_events(d):
     sleep(2)  # Wait for favorite action to complete
 
     # Take screenshot
-    screenshot_path = "11_1_1_event_favorited.png"
+    screenshot_path = os.path.join(screenshots_dir, "11_1_1_event_favorited.png")
     d.screenshot(screenshot_path)
     print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
-def test_add_favorite_businesses(d):
+def test_add_favorite_businesses(d, screenshots_dir):
     """
     Tests the ability to add businesses to My Favorites.
     Steps:
@@ -137,12 +138,13 @@ def test_add_favorite_businesses(d):
     sleep(2)
 
     # Take screenshot of favorited business
-    print("\nTook screenshot: 11_2_1_business_favorited.png")
-    d.screenshot("11_2_1_business_favorited.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_2_1_business_favorited.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
-def test_add_favorite_videos(d):
+def test_add_favorite_videos(d, screenshots_dir):
     """
     Tests the ability to add videos to My Favorites.
     Steps:
@@ -202,12 +204,13 @@ def test_add_favorite_videos(d):
     sleep(2)
 
     # Take screenshot of favorited video
-    print("\nTook screenshot: 11_3_1_video_favorited.png")
-    d.screenshot("11_3_1_video_favorited.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_3_1_video_favorited.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
-def test_add_favorite_trails(d):
+def test_add_favorite_trails(d, screenshots_dir):
     """
     Tests the ability to add trails to My Favorites.
     Steps:
@@ -242,12 +245,13 @@ def test_add_favorite_trails(d):
     sleep(2)
 
     # Take screenshot of favorited trail
-    print("\nTook screenshot: 11_4_1_trail_favorited.png")
-    d.screenshot("11_4_1_trail_favorited.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_4_1_trail_favorited.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
-def test_remove_favorite_events(d):
+def test_remove_favorite_events(d, screenshots_dir):
     """
     Tests the ability to remove events from My Favorites.
     Steps:
@@ -280,8 +284,9 @@ def test_remove_favorite_events(d):
     favorite_event = d.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
     assert favorite_event.exists, "Could not find favorited event"
     print("Found favorited event")
-    print("\nTook screenshot: 11_5_1_favorited_event_before_removal.png")
-    d.screenshot("11_5_1_favorited_event_before_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_5_1_favorited_event_before_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
     # Click on favorite icon to remove from favorites
     print("\nRemoving event from favorites...")
@@ -292,12 +297,13 @@ def test_remove_favorite_events(d):
     print("\nVerifying event was removed from favorites...")
     assert not favorite_event.exists, "Event is still present in favorites"
     print("Event successfully removed from favorites")
-    print("\nTook screenshot: 11_5_2_favorites_after_removal.png")
-    d.screenshot("11_5_2_favorites_after_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_5_2_favorites_after_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
-def test_remove_favorite_businesses(d):
+def test_remove_favorite_businesses(d, screenshots_dir):
     """
     Tests the ability to remove businesses from My Favorites.
     Steps:
@@ -330,8 +336,9 @@ def test_remove_favorite_businesses(d):
     favorite_business = d.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
     assert favorite_business.exists, "Could not find favorited business"
     print("Found favorited business")
-    print("\nTook screenshot: 11_6_1_favorited_business_before_removal.png")
-    d.screenshot("11_6_1_favorited_business_before_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_6_1_favorited_business_before_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
     # Click on favorite icon to remove from favorites
     print("\nRemoving business from favorites...")
@@ -343,12 +350,13 @@ def test_remove_favorite_businesses(d):
     assert not favorite_business.exists, "Business is still present in favorites"
     print("Business successfully removed from favorites")
     sleep(3)  # Wait for UI to update
-    print("\nTook screenshot: 11_6_2_favorites_after_removal.png")
-    d.screenshot("11_6_2_favorites_after_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_6_2_favorites_after_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
-def test_remove_favorite_videos(d):
+def test_remove_favorite_videos(d, screenshots_dir):
     """
     Tests the ability to remove videos from My Favorites.
     Steps:
@@ -381,8 +389,9 @@ def test_remove_favorite_videos(d):
     favorite_video = d.xpath(MyFavorites.ADDED_FAVORITE_VIDEO)
     assert favorite_video.exists, "Could not find favorited video"
     print("Found favorited video")
-    print("\nTook screenshot: 11_7_1_favorited_video_before_removal.png")
-    d.screenshot("11_9_1_favorited_video_before_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_7_1_favorited_video_before_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
     # Click on favorite icon to remove from favorites
     print("\nRemoving video from favorites...")
@@ -394,12 +403,13 @@ def test_remove_favorite_videos(d):
     assert not favorite_video.exists, "Video is still present in favorites"
     print("Video successfully removed from favorites")
     sleep(5)  # Wait for UI to update
-    print("\nTook screenshot: 11_7_2_favorites_after_removal.png")
-    d.screenshot("11_9_2_favorites_after_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_7_2_favorites_after_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
-def test_remove_favorite_trails(d):
+def test_remove_favorite_trails(d, screenshots_dir):
     """
     Tests the ability to remove trails from My Favorites.
     Steps:
@@ -432,8 +442,9 @@ def test_remove_favorite_trails(d):
     favorite_trail = d.xpath(MyFavorites.ADDED_FAVORITE_TRAIL)
     assert favorite_trail.exists, "Could not find favorited trail"
     print("Found favorited trail")
-    print("\nTook screenshot: 11_8_1_favorited_trail_before_removal.png")
-    d.screenshot("11_7_1_favorited_trail_before_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_8_1_favorited_trail_before_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")
 
     # Click on favorite icon to remove from favorites
     print("\nRemoving trail from favorites...")
@@ -445,5 +456,6 @@ def test_remove_favorite_trails(d):
     assert not favorite_trail.exists, "Trail is still present in favorites"
     print("Trail successfully removed from favorites")
     sleep(5)  # Wait for UI to update
-    print("\nTook screenshot: 11_8_2_favorites_after_removal.png")
-    d.screenshot("11_7_2_favorites_after_removal.png")
+    screenshot_path = os.path.join(screenshots_dir, "11_8_2_favorites_after_removal.png")
+    d.screenshot(screenshot_path)
+    print(f"\nTook screenshot: {screenshot_path}")

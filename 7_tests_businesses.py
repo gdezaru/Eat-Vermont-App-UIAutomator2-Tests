@@ -2,6 +2,7 @@ from time import sleep
 from locators import Businesses
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
 import pytest
+import os
 
 # Initialize business names at module level
 business_name = "Higher Ground"
@@ -9,7 +10,7 @@ menu_business_name = "Big Fatty's BBQ"
 
 
 @pytest.mark.smoke
-def test_business_card_with_event(d):
+def test_business_card_with_event(d, screenshots_dir):
     """
     Tests the contents of a business card with event.
     Steps:
@@ -105,7 +106,8 @@ def test_business_card_with_event(d):
 
     # Take screenshot of business details with About tab
     print("\nTaking screenshot of business details with About tab...")
-    d.screenshot("7_1_1_business_card_with_event_about_tab.png")
+    screenshot_path = os.path.join(screenshots_dir, "7_1_1_business_card_with_event_about_tab.png")
+    d.screenshot(screenshot_path)
     print("Screenshot saved as 7_1_1_business_card_with_event_about_tab.png")
 
     # Click on FYI tab and verify contents
@@ -124,12 +126,13 @@ def test_business_card_with_event(d):
 
     # Take screenshot of FYI tab contents
     print("\nTaking screenshot of FYI tab contents...")
-    d.screenshot("7_1_2_business_card_with_event_fyi_tab.png")
+    screenshot_path = os.path.join(screenshots_dir, "7_1_2_business_card_with_event_fyi_tab.png")
+    d.screenshot(screenshot_path)
     print("Screenshot saved as 7_1_2_business_card_with_event_fyi_tab.png")
 
 
 @pytest.mark.smoke
-def test_business_card_with_menu(d):
+def test_business_card_with_menu(d, screenshots_dir):
     """
     Tests the contents of a business card with menu.
     Steps:
@@ -221,7 +224,8 @@ def test_business_card_with_menu(d):
 
     # Take screenshot of business details with About tab
     print("\nTaking screenshot of business details with About tab...")
-    d.screenshot("7_2_1_business_card_with_menu_about_tab.png")
+    screenshot_path = os.path.join(screenshots_dir, "7_2_1_business_card_with_menu_about_tab.png")
+    d.screenshot(screenshot_path)
     print("Screenshot saved as 7_2_1_business_card_with_menu_about_tab.png")
 
     # Verify Menu tab is visible
@@ -242,5 +246,6 @@ def test_business_card_with_menu(d):
 
     # Take screenshot of business details with Menu tab
     print("\nTaking screenshot of business details with Menu tab...")
-    d.screenshot("7_2_1_business_card_with_menu_tab.png")
+    screenshot_path = os.path.join(screenshots_dir, "7_2_2_business_card_with_menu_tab.png")
+    d.screenshot(screenshot_path)
     print("Screenshot saved as 7_2_2_business_card_with_menu_tab.png")

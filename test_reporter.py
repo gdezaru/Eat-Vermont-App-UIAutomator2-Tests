@@ -8,6 +8,7 @@ from _pytest.reports import TestReport
 from _pytest.runner import CallInfo
 import traceback
 import inspect
+import shutil
 
 
 class ExcelReporter:
@@ -15,8 +16,22 @@ class ExcelReporter:
         self.results = []
         self.current_test = {}
         self.screenshots = {}
-        self.steps = {}  # Add steps dictionary back
-        
+        self.steps = {}
+        self.processed_tests = set()
+        self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        # Create the base reports directory if it doesn't exist
+        self.base_report_dir = os.path.join(os.getcwd(), 'reports')
+        os.makedirs(self.base_report_dir, exist_ok=True)
+        # Create a dedicated folder for this test run
+        self.run_folder = os.path.join(
+            self.base_report_dir,
+            f'Eat_Vermont_Test_Run_{self.timestamp}'
+        )
+        os.makedirs(self.run_folder, exist_ok=True)
+        # Create a screenshots subfolder
+        self.screenshots_folder = os.path.join(self.run_folder, 'screenshots')
+        os.makedirs(self.screenshots_folder, exist_ok=True)
+
     def _extract_steps_from_docstring(self, docstring: str) -> List[str]:
         """Extract steps from docstring in a clean format."""
         if not docstring:
@@ -35,9 +50,11 @@ class ExcelReporter:
                 # Remove the number and clean up the step
                 step = line.split('.', 1)[1].strip()
                 steps.append(step)
+            elif in_steps_section and not line:  # Empty line after steps section
+                break
                 
         return steps
-        
+
     def pytest_runtest_logstart(self, nodeid: str, location: tuple):
         """Called at the start of running the runtest protocol for a single test item."""
         self.current_test = {
@@ -49,16 +66,18 @@ class ExcelReporter:
             'screenshots': [],
             'steps_to_reproduce': ''  # Initialize as empty string
         }
-        
+
     def add_step(self, nodeid: str, step: str):
         """Add a step to the current test"""
         if nodeid not in self.steps:
             self.steps[nodeid] = []
         self.steps[nodeid].append(step)
-        
+
     def pytest_runtest_logreport(self, report: TestReport):
         """Called for test setup, call, and teardown."""
-        if report.when == "call":
+        if report.when == "call" and report.nodeid not in self.processed_tests:
+            self.processed_tests.add(report.nodeid)  # Mark this test as processed
+            
             if report.passed:
                 self.current_test['status'] = 'passed'
             elif report.failed:
@@ -70,12 +89,10 @@ class ExcelReporter:
             elif report.skipped:
                 self.current_test['status'] = 'skipped'
                 
-            # Get test function and extract steps for all tests
-            test_function = None
-            for item in pytest.test_items:
-                if item.nodeid == self.current_test['test_name']:
-                    test_function = item.function
-                    break
+            # Get test function from the report item directly
+            test_function = getattr(report, 'item', None)
+            if test_function:
+                test_function = test_function.function
             
             # Extract steps from docstring for all tests
             if test_function and test_function.__doc__:
@@ -91,116 +108,121 @@ class ExcelReporter:
             
     def pytest_sessionfinish(self, session: pytest.Session, exitstatus: int):
         """Called after whole test run finished, right before returning the exit status to the system."""
-        # Create the report directory if it doesn't exist
-        report_dir = os.path.join(os.getcwd(), 'reports')
-        os.makedirs(report_dir, exist_ok=True)
-        
-        # Create the Excel report
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        report_path = os.path.join(report_dir, f'test_report_{timestamp}.xlsx')
-        
-        # Convert results to DataFrame
+        # Move screenshots from root screenshots folder to test run folder
+        root_screenshots_dir = os.path.join(os.getcwd(), 'screenshots')
+        if os.path.exists(root_screenshots_dir):
+            for screenshot in os.listdir(root_screenshots_dir):
+                src = os.path.join(root_screenshots_dir, screenshot)
+                dst = os.path.join(self.screenshots_folder, screenshot)
+                shutil.move(src, dst)
+                print(f"Moved screenshot {screenshot} to test run folder")
+
+        # Create summary file
+        summary_file = os.path.join(self.run_folder, 'test_run_summary.txt')
+        with open(summary_file, 'w') as f:
+            f.write("Test Run Summary\n")
+            f.write("===============\n\n")
+            f.write(f"Run Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            
+            # Count test results
+            total_tests = len(self.results)
+            passed_tests = len([r for r in self.results if r['status'] == 'passed'])
+            failed_tests = len([r for r in self.results if r['status'] == 'failed'])
+            skipped_tests = len([r for r in self.results if r['status'] == 'skipped'])
+            
+            f.write(f"Total Tests: {total_tests}\n")
+            f.write(f"Passed: {passed_tests}\n")
+            f.write(f"Failed: {failed_tests}\n")
+            f.write(f"Skipped: {skipped_tests}\n\n")
+            
+            # Add report file info
+            report_file = f"test_report_{self.timestamp}.xlsx"
+            f.write(f"Test Report: {report_file}\n")
+            
+            # Add screenshots info
+            screenshots = os.listdir(self.screenshots_folder)
+            f.write(f"Screenshots: {len(screenshots)} files in screenshots/\n")
+
+        # Create Excel report
         df = pd.DataFrame(self.results)
+        excel_file = os.path.join(self.run_folder, f"test_report_{self.timestamp}.xlsx")
         
         # Ensure all columns exist with default values
         required_columns = [
-            'test_name', 'status', 'start_time', 'end_time', 'duration', 
-            'error_message', 'traceback', 'screenshots', 'steps_to_reproduce'
+            'test_name',
+            'status',
+            'start_time',
+            'end_time',
+            'duration',
+            'error_message',
+            'traceback',
+            'screenshots',
+            'steps_to_reproduce'
         ]
         
         for col in required_columns:
             if col not in df.columns:
                 df[col] = ''
                 
-        # Reorder and rename columns for better readability
-        columns = {
-            'test_name': 'Test Name',
-            'status': 'Status',
-            'start_time': 'Start Time',
-            'end_time': 'End Time',
-            'duration': 'Duration (s)',
-            'error_message': 'Error Message',
-            'traceback': 'Stack Trace',
-            'screenshots': 'Screenshots',
-            'steps_to_reproduce': 'Steps to Reproduce'
-        }
-        
-        df = df.rename(columns=columns)
-        
-        # Convert all columns to string type to avoid Excel formatting issues
+        # Convert all columns to string to avoid Excel formatting issues
         for col in df.columns:
             df[col] = df[col].astype(str)
             
         # Create Excel writer object
-        with pd.ExcelWriter(report_path, engine='xlsxwriter') as writer:
+        with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
             # Write the main results sheet
             df.to_excel(writer, sheet_name='Test Results', index=False)
             
-            # Get workbook and worksheet objects
+            # Get the xlsxwriter workbook and worksheet objects
             workbook = writer.book
             worksheet = writer.sheets['Test Results']
+            
+            # Add column auto-filter
+            worksheet.autofilter(0, 0, len(df), len(df.columns) - 1)
             
             # Define formats
             header_format = workbook.add_format({
                 'bold': True,
-                'bg_color': '#D8E4BC',
-                'border': 1,
                 'text_wrap': True,
-                'valign': 'vcenter'
+                'valign': 'top',
+                'fg_color': '#D7E4BC',
+                'border': 1
             })
             
             pass_format = workbook.add_format({
-                'bg_color': '#C6EFCE',
-                'font_color': '#006100',
-                'text_wrap': True
+                'fg_color': '#C6EFCE',
+                'font_color': '#006100'
             })
             
             fail_format = workbook.add_format({
-                'bg_color': '#FFC7CE',
-                'font_color': '#9C0006',
-                'text_wrap': True
+                'fg_color': '#FFC7CE',
+                'font_color': '#9C0006'
             })
             
-            wrap_format = workbook.add_format({
-                'text_wrap': True,
-                'valign': 'top'
-            })
-            
-            # Apply formats
+            # Write the column headers with the header format
             for col_num, value in enumerate(df.columns.values):
                 worksheet.write(0, col_num, value, header_format)
                 
             # Set column widths
-            worksheet.set_column('A:A', 50)  # Test Name
-            worksheet.set_column('B:B', 15)  # Status
-            worksheet.set_column('C:D', 20)  # Start/End Time
-            worksheet.set_column('E:E', 15)  # Duration
-            worksheet.set_column('F:F', 50)  # Error Message
-            worksheet.set_column('G:G', 50)  # Stack Trace
-            worksheet.set_column('H:H', 50)  # Screenshots
-            worksheet.set_column('I:I', 40)  # Steps to Reproduce
+            worksheet.set_column('A:A', 50)  # test_name
+            worksheet.set_column('B:B', 15)  # status
+            worksheet.set_column('C:D', 20)  # start_time, end_time
+            worksheet.set_column('E:E', 10)  # duration
+            worksheet.set_column('F:G', 50)  # error_message, traceback
+            worksheet.set_column('H:H', 30)  # screenshots
+            worksheet.set_column('I:I', 50)  # steps_to_reproduce
             
-            # Apply text wrapping to all data cells
-            for col in range(len(df.columns)):
-                worksheet.set_column(col, col, None, wrap_format)
-            
-            # Apply conditional formatting for status column
+            # Add conditional formatting for status column
             worksheet.conditional_format('B2:B1048576', {
-                'type': 'cell',
-                'criteria': 'equal to',
+                'type': 'text',
+                'criteria': 'containing',
                 'value': '"passed"',
                 'format': pass_format
             })
             
             worksheet.conditional_format('B2:B1048576', {
-                'type': 'cell',
-                'criteria': 'equal to',
+                'type': 'text',
+                'criteria': 'containing',
                 'value': '"failed"',
                 'format': fail_format
             })
-            
-        print(f"\nTest report generated: {report_path}")
-        
-    def add_screenshot(self, nodeid: str, screenshot_path: str):
-        """Add a screenshot path to the current test"""
-        self.current_test['screenshots'].append(screenshot_path)

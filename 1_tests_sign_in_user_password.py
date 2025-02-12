@@ -1,4 +1,5 @@
 import pytest
+import os
 from time import sleep
 from config import TEST_USER
 from utils import handle_notification_permission, sign_in_user, handle_events_popup
@@ -6,7 +7,7 @@ from locators import LoginPage
 
 
 @pytest.mark.smoke
-def test_sign_in_user_password(d):
+def test_sign_in_user_password(d, screenshots_dir):
     """
     Test sign in with valid user and password
     Steps:
@@ -24,11 +25,12 @@ def test_sign_in_user_password(d):
     sleep(10)
 
     # Check for success message
-    d.screenshot("1_1_1_successful_sign_in_user_password.png")
+    screenshot_path = os.path.join(screenshots_dir, "1_1_1_successful_sign_in_user_password.png")
+    d.screenshot(screenshot_path)
 
 
 @pytest.mark.smoke
-def test_forgot_password(d):
+def test_forgot_password(d, screenshots_dir):
     """
     Test forgot password functionality
     Steps:
@@ -74,4 +76,5 @@ def test_forgot_password(d):
     # Check for success message
     success_message = d.xpath(LoginPage.VERIFY_EMAIL_MESSAGE)
     assert success_message.wait(timeout=5), "Success message not found"
-    d.screenshot("1_2_1_forgot_password.png")
+    screenshot_path = os.path.join(screenshots_dir, "1_2_1_forgot_password.png")
+    d.screenshot(screenshot_path)

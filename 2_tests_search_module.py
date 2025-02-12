@@ -1,10 +1,11 @@
 import pytest
+import os
 from time import sleep
 from utils import handle_notification_permission, sign_in_user, handle_events_popup
 
 
 @pytest.mark.smoke
-def test_search_events(d):
+def test_search_events(d, screenshots_dir):
     """
     Test searching for events functionality
     Steps:
@@ -70,7 +71,8 @@ def test_search_events(d):
                 d(textContains="Results").exists(timeout=5) or
                 d(textContains="Event").exists(timeout=5)):
             sleep(10)
-            d.screenshot("2_1_search_events.png")
+            screenshot_path = os.path.join(screenshots_dir, "2_1_search_events.png")
+            d.screenshot(screenshot_path)
             return
         sleep(10)
 
@@ -78,7 +80,7 @@ def test_search_events(d):
 
 
 @pytest.mark.smoke
-def test_search_businesses(d):
+def test_search_businesses(d, screenshots_dir):
     """
     Test searching for businesses functionality
     Steps:
@@ -144,7 +146,8 @@ def test_search_businesses(d):
                 d(textContains="Results").exists(timeout=5) or
                 d(textContains="Big Fatty BBQ").exists(timeout=5)):
             sleep(10)
-            d.screenshot("2_2_search_business.png")
+            screenshot_path = os.path.join(screenshots_dir, "2_2_search_business.png")
+            d.screenshot(screenshot_path)
             return
         sleep(10)
 
@@ -152,7 +155,7 @@ def test_search_businesses(d):
 
 
 @pytest.mark.smoke
-def test_search_day_trips(d):
+def test_search_day_trips(d, screenshots_dir):
     """
     Test searching for day trips functionality
     Steps:
@@ -225,7 +228,8 @@ def test_search_day_trips(d):
                         duration=0.5)
                 sleep(2)  # Wait for content to load
             sleep(10)
-            d.screenshot("2_3_search_day_trips.png")
+            screenshot_path = os.path.join(screenshots_dir, "2_3_search_day_trips.png")
+            d.screenshot(screenshot_path)
             return
         sleep(10)
 
@@ -233,7 +237,7 @@ def test_search_day_trips(d):
 
 
 @pytest.mark.smoke
-def test_search_videos(d):
+def test_search_videos(d, screenshots_dir):
     """
     Test searching for videos functionality
     Steps:
@@ -306,7 +310,8 @@ def test_search_videos(d):
                         duration=0.5)
                 sleep(2)  # Wait for content to load
             sleep(10)
-            d.screenshot("2_4_search_videos.png")
+            screenshot_path = os.path.join(screenshots_dir, "2_4_search_videos.png")
+            d.screenshot(screenshot_path)
             return
         sleep(10)
 

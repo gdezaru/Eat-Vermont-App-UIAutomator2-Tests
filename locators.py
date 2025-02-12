@@ -170,7 +170,7 @@ class Businesses:
                                   ' "Menu")]]]')
     BUSINESS_FYI_TAB = '//*[@text="FYI 🎉"]'
     BUSINESS_FYI_TAB_CONTENTS = ('//android.widget.TextView[ancestor::android.view.ViewGroup'
-                                 '[descendant::android.view.ViewGroup[@text="FYI 🎉"]]]')
+                                 '[descendant::*[@text="FYI 🎉"]]]')
     BUSINESS_NAME_EVENT_CARD = ('//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/'
                                 'android.widget.ScrollView/android.view.ViewGroup'
                                 '/android.view.ViewGroup[5]')

@@ -3,9 +3,10 @@ from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
 from utils import get_next_day, handle_notification_permission, sign_in_user, handle_events_popup
+import os
 
 @pytest.mark.smoke
-def test_home_screen_events(d):
+def test_home_screen_events(d, screenshots_dir):
     """
     Test home screen events module functionality
     Steps:
@@ -34,7 +35,8 @@ def test_home_screen_events(d):
     sleep(15)
     
     # Take screenshot of events page
-    d.screenshot("3_1_1_home_screen_events.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_1_1_home_screen_events.png")
+    d.screenshot(screenshot_path)
     
     # Find the current selected day
     days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -107,7 +109,8 @@ def test_home_screen_events(d):
         print(f"\nNo events found for {next_day}")
     
     # Take screenshot of the successful day's events
-    d.screenshot(f"3_1_2_home_screen_events_{next_day.lower()}.png")
+    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_events_{next_day.lower()}.png")
+    d.screenshot(screenshot_path)
     
     # If no event was found initially, scroll to try to find one
     if not first_event.exists and not no_events_message.exists:
@@ -126,7 +129,8 @@ def test_home_screen_events(d):
                 print(f"\nFound an event after {scroll_attempt + 1} scroll(s)")
                 found_event = True
                 # Take a screenshot after finding the event
-                d.screenshot(f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
+                screenshot_path = os.path.join(screenshots_dir, f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
+                d.screenshot(screenshot_path)
                 break
         
         if not found_event:
@@ -150,12 +154,13 @@ def test_home_screen_events(d):
         
         print("\nSuccessfully opened event details")
         # Take screenshot of the event details
-        d.screenshot(f"3_1_4_home_screen_event_details_{next_day.lower()}.png")
+        screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{next_day.lower()}.png")
+        d.screenshot(screenshot_path)
         print("\nEvent details page loaded and screenshot taken")
 
 
 @pytest.mark.smoke
-def test_home_screen_view_map(d):
+def test_home_screen_view_map(d, screenshots_dir):
     """
     Test home screen view map module functionality
     Steps:
@@ -191,11 +196,12 @@ def test_home_screen_view_map(d):
     assert events_filter.exists, "Events filter is not visible on the map screen"
 
     # Take screenshot of the map screen with filters
-    d.screenshot("3_2_1_home_screen_view_map_opened.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_2_1_home_screen_view_map_opened.png")
+    d.screenshot(screenshot_path)
 
 
 @pytest.mark.smoke
-def test_home_screen_videos(d):
+def test_home_screen_videos(d, screenshots_dir):
     """
     Test home screen videos module functionality
     Steps:
@@ -260,11 +266,12 @@ def test_home_screen_videos(d):
     sleep(5)  # Wait for videos page to load
 
     # Take screenshot of the videos page
-    d.screenshot("3_3_1_home_screen_videos_opened.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_3_1_home_screen_videos_opened.png")
+    d.screenshot(screenshot_path)
 
 
 @pytest.mark.smoke
-def test_home_screen_add_info(d):
+def test_home_screen_add_info(d, screenshots_dir):
     """
     Test home screen add info module functionality
     Steps:
@@ -297,12 +304,13 @@ def test_home_screen_add_info(d):
     sleep(5)
 
     # Take screenshot of the Add Info page
-    d.screenshot("3_4_1_home_screen_add_info_opened.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_4_1_home_screen_add_info_opened.png")
+    d.screenshot(screenshot_path)
     print("\nAdd Info page loaded and screenshot taken")
 
 
 @pytest.mark.smoke
-def test_home_screen_day_trips(d):
+def test_home_screen_day_trips(d, screenshots_dir):
     """
     Test home screen day trips module functionality
     Steps:
@@ -335,12 +343,13 @@ def test_home_screen_day_trips(d):
     sleep(2)
 
     # Take screenshot of the Day Trips page
-    d.screenshot("3_5_1_home_screen_day_trips_opened.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_5_1_home_screen_day_trips_opened.png")
+    d.screenshot(screenshot_path)
     print("\nDay Trips page loaded and screenshot taken")
 
 
 @pytest.mark.smoke
-def test_home_screen_events_within(d):
+def test_home_screen_events_within(d, screenshots_dir):
     """
     Test home screen events within 30 minutes functionality
     Steps:
@@ -379,7 +388,8 @@ def test_home_screen_events_within(d):
     sleep(1)
 
     # Take screenshot of the Events within 30 minutes section
-    d.screenshot("3_6_1_home_screen_events_within.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_6_1_home_screen_events_within.png")
+    d.screenshot(screenshot_path)
     sleep(1)
 
     # Click See All for Events within 30 minutes
@@ -389,12 +399,13 @@ def test_home_screen_events_within(d):
     sleep(2)  # Extra time for page transition
 
     # Take screenshot of the Events within 30 minutes list view
-    d.screenshot("3_6_2_home_screen_events_within_list.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_6_2_home_screen_events_within_list.png")
+    d.screenshot(screenshot_path)
     sleep(1)
 
 
 @pytest.mark.smoke
-def test_home_screen_events_further_than(d):
+def test_home_screen_events_further_than(d, screenshots_dir):
     """
     Test home screen events further than 30 minutes functionality
     Steps:
@@ -433,7 +444,8 @@ def test_home_screen_events_further_than(d):
     sleep(1)
 
     # Take screenshot of the Events within 30 minutes section
-    d.screenshot("3_7_1_home_screen_events_further_than.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_7_1_home_screen_events_further_than.png")
+    d.screenshot(screenshot_path)
     sleep(1)
 
     # Click See All for Events within 30 minutes
@@ -443,12 +455,13 @@ def test_home_screen_events_further_than(d):
     sleep(2)  # Extra time for page transition
 
     # Take screenshot of the Events within 30 minutes list view
-    d.screenshot("3_7_2_home_screen_events_more_than_list.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_7_2_home_screen_events_more_than_list.png")
+    d.screenshot(screenshot_path)
     sleep(1)
 
 
 @pytest.mark.smoke
-def test_home_screen_bottom_nav_bar(d):
+def test_home_screen_bottom_nav_bar(d, screenshots_dir):
     """
     Test home screen bottom navigation bar functionality
     Steps:
@@ -480,7 +493,8 @@ def test_home_screen_bottom_nav_bar(d):
     assert d(text="Favorites").exists, "Favorites text not found on screen"
 
     # Take screenshot
-    d.screenshot("3_8_1_bottom_nav_favorites_screen.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_8_1_bottom_nav_favorites_screen.png")
+    d.screenshot(screenshot_path)
 
     # Click Events button
     events_button = d.xpath(BottomNavBar.EVENTS)
@@ -492,7 +506,8 @@ def test_home_screen_bottom_nav_bar(d):
     assert d(text="Events").exists, "Events text not found on screen"
 
     # Take screenshot
-    d.screenshot("3_8_2_bottom_nav_events_screen.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_8_2_bottom_nav_events_screen.png")
+    d.screenshot(screenshot_path)
 
     # Click Home button
     home_button = d.xpath(BottomNavBar.NAV_HOME_BUTTON)
@@ -504,4 +519,5 @@ def test_home_screen_bottom_nav_bar(d):
     assert d(text="Events").exists, "Events text not found on home screen"
 
     # Take screenshot
-    d.screenshot("3_8_3_bottom_nav_home_screen.png")
+    screenshot_path = os.path.join(screenshots_dir, "3_8_3_bottom_nav_home_screen.png")
+    d.screenshot(screenshot_path)

@@ -2,9 +2,10 @@ import pytest
 from time import sleep
 from locators import Events, GuestMode, LoginPage, PlansPopup, HomeScreen, BottomNavBar
 from utils import handle_notification_permission, handle_events_popup, handle_guest_mode_plans_popup
+import os
 
 @pytest.mark.smoke
-def test_guest_mode_button(d):
+def test_guest_mode_button(d, screenshots_dir):
     """
     Test the Guest Mode Home screen
     Steps:
@@ -39,11 +40,13 @@ def test_guest_mode_button(d):
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
-    d.screenshot("14_1_1_guest_mode_button.png")
+    screenshot_path = os.path.join(screenshots_dir, "14_1_1_guest_mode_button.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_1_1_guest_mode_button.png")
 
 
 @pytest.mark.smoke
-def test_guest_mode_events(d):
+def test_guest_mode_events(d, screenshots_dir):
     """
     Test the Guest Mode events screen
     Steps:
@@ -92,11 +95,13 @@ def test_guest_mode_events(d):
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
-    d.screenshot("14_2_1_guest_mode_events.png")
+    screenshot_path = os.path.join(screenshots_dir, "14_2_1_guest_mode_events.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_2_1_guest_mode_events.png")
 
 
 @pytest.mark.smoke
-def test_guest_mode_videos(d):
+def test_guest_mode_videos(d, screenshots_dir):
     """
     Test the Guest Mode videos screen
     Steps:
@@ -191,7 +196,9 @@ def test_guest_mode_videos(d):
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
-    d.screenshot("14_3_1_guest_mode_videos.png")
+    screenshot_path = os.path.join(screenshots_dir, "14_3_1_guest_mode_videos.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_3_1_guest_mode_videos.png")
 
     # Click on locked videos
     print("\nClicking on locked videos...")
@@ -206,11 +213,13 @@ def test_guest_mode_videos(d):
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
-    d.screenshot("14_3_2_guest_mode_videos_triggered_plans_popup.png")
+    screenshot_path = os.path.join(screenshots_dir, "14_3_2_guest_mode_videos_triggered_plans_popup.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_3_2_guest_mode_videos_triggered_plans_popup.png")
 
 
 @pytest.mark.smoke
-def test_guest_mode_search(d):
+def test_guest_mode_search(d, screenshots_dir):
     """
     Test the Guest Mode search screen
     Steps:
@@ -286,11 +295,13 @@ def test_guest_mode_search(d):
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
-    d.screenshot("14_4_1_guest_mode_search_triggered_plans_popup.png")
+    screenshot_path = os.path.join(screenshots_dir, "14_4_1_guest_mode_search_triggered_plans_popup.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_4_1_guest_mode_search_triggered_plans_popup.png")
 
 
 @pytest.mark.smoke
-def test_guest_mode_favorites(d):
+def test_guest_mode_favorites(d, screenshots_dir):
     """
     Test the Guest Mode favorites screen
     Steps:
@@ -366,11 +377,13 @@ def test_guest_mode_favorites(d):
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
-    d.screenshot("14_5_1_guest_mode_search_triggered_plans_popup.png")
+    screenshot_path = os.path.join(screenshots_dir, "14_5_1_guest_mode_search_triggered_plans_popup.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_5_1_guest_mode_search_triggered_plans_popup.png")
 
 
 @pytest.mark.smoke
-def test_guest_mode_prompt_end_screen(d):
+def test_guest_mode_prompt_end_screen(d, screenshots_dir):
     """
     Test the Guest Mode prompt from the bottom of the screen
     Steps:
@@ -458,4 +471,6 @@ def test_guest_mode_prompt_end_screen(d):
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
-    d.screenshot("14_6_1_guest_mode_prompt_end_screen.png")
+    screenshot_path = os.path.join(screenshots_dir, "14_6_1_guest_mode_prompt_end_screen.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_6_1_guest_mode_prompt_end_screen.png")

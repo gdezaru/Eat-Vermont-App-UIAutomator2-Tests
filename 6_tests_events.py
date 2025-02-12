@@ -2,10 +2,11 @@ from time import sleep
 from locators import Events
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
 import pytest
+import os
 
 
 @pytest.mark.smoke
-def test_events_popup(d):
+def test_events_popup(d, screenshots_dir):
     """
     Tests the contents of the events popup.
     Steps:
@@ -24,7 +25,7 @@ def test_events_popup(d):
 
 
 @pytest.mark.smoke
-def test_events_card(d):
+def test_events_card(d, screenshots_dir):
     """
     Tests the contents of an events card.
     Steps:
@@ -73,7 +74,8 @@ def test_events_card(d):
 
     # Take a screenshot of the event details
     print("\nTaking screenshot of event details...")
-    d.screenshot("6_2_1_events_details.png")
+    screenshot_path = os.path.join(screenshots_dir, "6_2_1_events_details.png")
+    d.screenshot(screenshot_path)
     print("Screenshot saved as 6_2_1_events_details.png")
 
     # Check for More Info tab
@@ -101,7 +103,8 @@ def test_events_card(d):
 
         # Take screenshot of More Info contents
         print("\nTaking screenshot of More Info contents...")
-        d.screenshot("6_2_2_more_info_contents.png")
+        screenshot_path = os.path.join(screenshots_dir, "6_2_2_more_info_contents.png")
+        d.screenshot(screenshot_path)
         print("Screenshot saved as 6_2_2_more_info_contents.png")
     else:
         print("More Info tab not found, test complete")
@@ -117,7 +120,8 @@ def test_events_card(d):
     add_to_calendar.click()
     sleep(2)  # Wait for calendar dialog to appear
     print("\nTaking screenshot of calendar dialog...")
-    d.screenshot("6_2_3_add_to_calendar.png")
+    screenshot_path = os.path.join(screenshots_dir, "6_2_3_add_to_calendar.png")
+    d.screenshot(screenshot_path)
     print("Screenshot saved as 6_2_3_add_to_calendar_button_working.png")
 
     sleep(10)

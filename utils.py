@@ -11,18 +11,25 @@ import string
 from locators import Events, PlansPopup, LoginPage
 
 
-def ensure_screenshots_dir():
-    """Ensure screenshots directory exists"""
-    if not os.path.exists("screenshots"):
-        os.makedirs("screenshots")
+def get_screenshots_dir():
+    """Get the screenshots directory for the current test run"""
+    # Get the current test run folder from the reporter
+    import pytest
+    reporter = next((plugin for plugin in pytest.get_platform().pluginmanager.get_plugins() if hasattr(plugin, 'screenshots_folder')), None)
+    if reporter:
+        return reporter.screenshots_folder
+    return None  # Return None if no reporter found
 
 
 def take_screenshot(device, name):
     """Take a screenshot and save it with timestamp"""
-    ensure_screenshots_dir()
+    screenshots_dir = get_screenshots_dir()
+    if screenshots_dir is None:
+        screenshots_dir = "screenshots"
+        os.makedirs(screenshots_dir, exist_ok=True)
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     screenshot_name = f"{name}_{timestamp}.png"
-    screenshot_path = os.path.join("screenshots", screenshot_name)
+    screenshot_path = os.path.join(screenshots_dir, screenshot_name)
     device.screenshot(screenshot_path)
     print(f"Screenshot saved: {screenshot_path}")
 
@@ -332,3 +339,26 @@ def handle_guest_mode_plans_popup(d):
     else:
         print("\nNo plans popup found, continuing with test...")
         time.sleep(5)
+
+
+def save_screenshot(device, filename: str, request) -> str:
+    """
+    Save a screenshot to the current test run's screenshots folder.
+    
+    Args:
+        device: The UI Automator device instance
+        filename: The desired filename for the screenshot
+        request: The pytest request fixture
+    
+    Returns:
+        str: The path where the screenshot was saved
+    """
+    # Get the current test run folder from the reporter
+    reporter = request.config.pluginmanager.get_plugin('excel_reporter')
+    if not reporter:
+        # Fallback to saving in the current directory if reporter not found
+        return device.screenshot(filename)
+        
+    # Save screenshot in the test run's screenshots folder
+    screenshot_path = os.path.join(reporter.screenshots_folder, filename)
+    return device.screenshot(screenshot_path)

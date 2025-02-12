@@ -4,10 +4,11 @@ from config import TEST_USER
 from locators import HomeScreen, SettingsScreen, Events
 from utils import generate_random_name, generate_random_username, handle_notification_permission, sign_in_user, \
     handle_events_popup
+import os
 
 
 @pytest.mark.smoke
-def test_settings_contents(d):
+def test_settings_contents(d, screenshots_dir):
     """
     Tests the contents of the settings screen.
     Steps:
@@ -46,11 +47,14 @@ def test_settings_contents(d):
     assert log_out.exists, "Log out option not found"
 
     # Take screenshot of settings screen
-    d.screenshot("5_1_1_settings_screen_contents.png")
+    print("\nTaking screenshot of settings screen...")
+    screenshot_path = os.path.join(screenshots_dir, "5_1_1_settings_screen_contents.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 5_1_1_settings_screen_contents.png")
 
 
 @pytest.mark.smoke
-def test_settings_screen_navigation(d):
+def test_settings_screen_navigation(d, screenshots_dir):
     """
     Tests the navigation within the settings screen.
     Steps:
@@ -88,7 +92,10 @@ def test_settings_screen_navigation(d):
     sleep(2)  # Wait for Edit Profile screen to load
 
     # Take screenshot of Edit Profile screen
-    d.screenshot("5_2_1_edit_profile_screen.png")
+    print("\nTaking screenshot of Edit Profile screen...")
+    screenshot_path = os.path.join(screenshots_dir, "5_2_1_edit_profile_screen.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 5_2_1_edit_profile_screen.png")
 
     # Go back to Settings
     back_button = d.xpath(SettingsScreen.BACK_BUTTON_SETTINGS)
@@ -109,7 +116,10 @@ def test_settings_screen_navigation(d):
         sleep(1)  # Wait for permission dialog to dismiss
 
     # Take screenshot of Settings screen with toggled location
-    d.screenshot("5_2_2_settings_location_toggled.png")
+    print("\nTaking screenshot of Settings screen with toggled location...")
+    screenshot_path = os.path.join(screenshots_dir, "5_2_2_settings_location_toggled.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 5_2_2_settings_location_toggled.png")
 
     # Click on Log Out
     log_out = d.xpath(SettingsScreen.LOG_OUT)
@@ -118,11 +128,14 @@ def test_settings_screen_navigation(d):
     sleep(2)  # Wait for logout to complete
 
     # Take screenshot of welcome screen
-    d.screenshot("5_2_3_welcome_screen_after_logout.png")
+    print("\nTaking screenshot of welcome screen...")
+    screenshot_path = os.path.join(screenshots_dir, "5_2_3_welcome_screen_after_logout.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 5_2_3_welcome_screen_after_logout.png")
 
 
 @pytest.mark.smoke
-def test_settings_screen_edit_profile(d):
+def test_settings_screen_edit_profile(d, screenshots_dir):
     """
     Tests the edit profile section within the settings screen.
     Steps:
@@ -177,7 +190,10 @@ def test_settings_screen_edit_profile(d):
     assert save_button.exists, "Save button is not present after editing name"
 
     # Take screenshot of the edited profile name
-    d.screenshot("5_3_1_edited_profile_name_save_button_active.png")
+    print("\nTaking screenshot of the edited profile name...")
+    screenshot_path = os.path.join(screenshots_dir, "5_3_1_edited_profile_name_save_button_active.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 5_3_1_edited_profile_name_save_button_active.png")
 
     # Clear the username field and enter a new random username
     edit_username = d.xpath(SettingsScreen.EDIT_USERNAME)
@@ -192,7 +208,10 @@ def test_settings_screen_edit_profile(d):
     assert edit_username.get_text() == new_username, f"Username was not updated correctly. Expected: {new_username}, Got: {edit_username.get_text()}"
 
     # Take screenshot of the edited profile username
-    d.screenshot("5_3_2_edited_profile_username_save_button_active.png")
+    print("\nTaking screenshot of the edited profile username...")
+    screenshot_path = os.path.join(screenshots_dir, "5_3_2_edited_profile_username_save_button_active.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 5_3_2_edited_profile_username_save_button_active.png")
 
     # Scroll to bottom of screen to ensure save button is visible
     d.swipe_ext("up", scale=0.8)
@@ -208,4 +227,7 @@ def test_settings_screen_edit_profile(d):
     assert name_text.exists(timeout=5), f"Updated name '{new_name}' is not visible after saving changes"
 
     # Take screenshot of settings screen after saving changes
-    d.screenshot("5_3_3_settings_screen_after_save.png")
+    print("\nTaking screenshot of settings screen after saving changes...")
+    screenshot_path = os.path.join(screenshots_dir, "5_3_3_settings_screen_after_save.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 5_3_3_settings_screen_after_save.png")

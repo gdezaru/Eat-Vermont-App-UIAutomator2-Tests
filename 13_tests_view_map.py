@@ -3,9 +3,10 @@ from time import sleep
 import pytest
 from locators import HomeScreen, ViewMap
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
+import os
 
 @pytest.mark.smoke
-def test_view_map_filters(d):
+def test_view_map_filters(d, screenshots_dir):
     """
     Test the View Map filters functionality
     Steps:
@@ -59,33 +60,43 @@ def test_view_map_filters(d):
     assert food_pantries_filter.exists, "Food Pantries filter is not visible on the map screen"
 
     # Take screenshot of all filters
-    print("\nTook screenshot: 13_1_1_map_filters_present.png")
-    d.screenshot("13_1_1_map_filters_present.png")
+    screenshot_path = os.path.join(screenshots_dir, "13_1_1_map_filters_present.png")
+    print("\nTaking screenshot of all filters...")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 13_1_1_map_filters_present.png")
 
     # Click Events filter and take screenshot
     print("\nClicking Events filter...")
     events_filter.click()
     sleep(2)
-    print("\nTook screenshot: 13_1_2_events_filter_active.png")
-    d.screenshot("13_1_2_events_filter_active.png")
+    screenshot_path = os.path.join(screenshots_dir, "13_1_2_events_filter_active.png")
+    print("\nTaking screenshot of Events filter...")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 13_1_2_events_filter_active.png")
 
     # Click Food & Drinks filter and take screenshot
     print("\nClicking Food & Drinks filter...")
     food_drinks_filter.click()
     sleep(2)
-    print("\nTook screenshot: 13_1_3_food_drinks_filter_active.png")
-    d.screenshot("13_1_3_food_drinks_filter_active.png")
+    screenshot_path = os.path.join(screenshots_dir, "13_1_3_food_drinks_filter_active.png")
+    print("\nTaking screenshot of Food & Drinks filter...")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 13_1_3_food_drinks_filter_active.png")
 
     # Click Farms filter and take screenshot
     print("\nClicking Farms filter...")
     farms_filter.click()
     sleep(2)
-    print("\nTook screenshot: 13_1_4_farms_filter_active.png")
-    d.screenshot("13_1_4_farms_filter_active.png")
+    screenshot_path = os.path.join(screenshots_dir, "13_1_4_farms_filter_active.png")
+    print("\nTaking screenshot of Farms filter...")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 13_1_4_farms_filter_active.png")
 
     # Click Food Pantries filter and take screenshot
     print("\nClicking Food Pantries filter...")
     food_pantries_filter.click()
     sleep(2)
-    print("\nTook screenshot: 13_1_5_food_pantries_filter_active.png")
-    d.screenshot("13_1_5_food_pantries_filter_active.png")
+    screenshot_path = os.path.join(screenshots_dir, "13_1_5_food_pantries_filter_active.png")
+    print("\nTaking screenshot of Food Pantries filter...")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 13_1_5_food_pantries_filter_active.png")

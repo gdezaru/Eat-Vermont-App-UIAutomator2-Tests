@@ -2,9 +2,10 @@ from time import sleep
 import pytest
 from locators import DayTrips
 from utils import handle_notification_permission, handle_events_popup, sign_in_user
+import os
 
 @pytest.mark.smoke
-def test_day_trip_card(d):
+def test_day_trip_card(d, screenshots_dir):
     """
     Test the Day Trip card on the Home screen
     Steps:
@@ -56,4 +57,5 @@ def test_day_trip_card(d):
     assert read_more_button.exists, "Read More button not found on Day Trip tile"
     read_more_button.click()
     sleep(5)
-    d.screenshot("8_1_1_day_trip_details.png")
+    screenshot_path = os.path.join(screenshots_dir, "8_1_1_day_trip_details.png")
+    d.screenshot(screenshot_path)

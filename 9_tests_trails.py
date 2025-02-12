@@ -2,10 +2,11 @@ from time import sleep
 from locators import HomeScreen, Trails
 from utils import sign_in_user, handle_events_popup, handle_notification_permission
 import pytest
+import os
 
 
 @pytest.mark.smoke
-def test_trails_screen(d):
+def test_trails_screen(d, screenshots_dir):
     """
     Test the Trails functionality
     Steps:
@@ -54,12 +55,14 @@ def test_trails_screen(d):
 
     # Take screenshot of trails main screen
     print("\nTaking screenshot of trails main screen...")
-    d.screenshot("9_1_1_trails_main_screen.png")
+    screenshot_path = os.path.join(screenshots_dir, "9_1_1_trails_main_screen.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 9_1_1_trails_main_screen.png")
     sleep(1)
 
 
 @pytest.mark.smoke
-def test_trails_details(d):
+def test_trails_details(d, screenshots_dir):
     """
     Test the Trails details screen
     Steps:
@@ -115,7 +118,9 @@ def test_trails_details(d):
 
     # Take screenshot of trail details
     print("\nTaking screenshot of trail details...")
-    d.screenshot("9_2_1_trail_details.png")
+    screenshot_path = os.path.join(screenshots_dir, "9_2_1_trail_details.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 9_2_1_trail_details.png")
     sleep(1)
 
     # Scroll using swipe
@@ -130,5 +135,7 @@ def test_trails_details(d):
         sleep(1)
 
     print("\nTaking screenshot of trail details visits...")
-    d.screenshot("9_2_2_trail_details_visits.png")
+    screenshot_path = os.path.join(screenshots_dir, "9_2_2_trail_details_visits.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 9_2_2_trail_details_visits.png")
     sleep(1)

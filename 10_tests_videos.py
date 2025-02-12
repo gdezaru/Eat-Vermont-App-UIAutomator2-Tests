@@ -1,4 +1,5 @@
 import pytest
+import os
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, HomeScreenTiles, Events, Videos
@@ -7,7 +8,7 @@ from utils import (
 )
 
 @pytest.mark.smoke
-def test_videos_screen(d):
+def test_videos_screen(d, screenshots_dir):
     """
     Test the Videos screen
     Steps:
@@ -74,13 +75,15 @@ def test_videos_screen(d):
     video_tiles = d.xpath(Videos.VIDEO_TILE)
     assert video_tiles.exists, "No video tiles found on the Videos screen"
     
-    # Take screenshot of the videos screen
-    d.screenshot("10_1_1_videos_screen.png")
-    print("Found video tiles successfully")
+    # Take screenshot of videos screen
+    print("\nTaking screenshot of videos screen...")
+    screenshot_path = os.path.join(screenshots_dir, "10_1_1_videos_screen.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 10_1_1_videos_screen.png")
 
 
 @pytest.mark.smoke
-def test_video_details_card(d):
+def test_video_details_card(d, screenshots_dir):
     """
     Test the video details card
     Steps:
@@ -148,4 +151,7 @@ def test_video_details_card(d):
         assert video_tile.exists, "Failed to find video tile"
     
     # Take a screenshot of the video details
-    d.screenshot("10_2_1_video_details.png")
+    print("\nTaking screenshot of video details...")
+    screenshot_path = os.path.join(screenshots_dir, "10_2_1_video_details.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 10_2_1_video_details.png")

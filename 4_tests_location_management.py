@@ -4,11 +4,12 @@ from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, HomeScreenTiles, BottomNavBar, LocationManagement
 from utils import get_next_day, handle_notification_permission, sign_in_user
+import os
 
 
 @pytest.mark.smoke
-def test_home_screen_location_picker(d):
-    "
+def test_home_screen_location_picker(d, screenshots_dir):
+
     Test that the location picker button on the Home Screen works
     Steps:
     1. Handle notification permission if it appears
@@ -25,7 +26,7 @@ def test_home_screen_location_picker(d):
     12. Take screenshot after location selection
     13. Assert that Burlington is present on screen
     14. Take final screenshot
-    "
+
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
@@ -104,7 +105,8 @@ def test_home_screen_location_picker(d):
     sleep(2)  # Wait for location picker to appear
 
     # Take screenshot
-    d.screenshot("4_1_1_location_picker_home_screen.png")
+    screenshot_path = os.path.join(screenshots_dir, "4_1_1_location_picker_home_screen.png")
+    d.screenshot(screenshot_path)
 
     # Click search input and enter location
     search_input = d.xpath(LocationManagement.LOCATION_SEARCH_INPUT)
@@ -119,7 +121,8 @@ def test_home_screen_location_picker(d):
     sleep(5)  # Wait for search results
 
     # Take screenshot of search results
-    d.screenshot("4_1_2_location_search_results.png")
+    screenshot_path = os.path.join(screenshots_dir, "4_1_2_location_search_results.png")
+    d.screenshot(screenshot_path)
 
     # Click on Burlington search result
     burlington_result = d.xpath(LocationManagement.LOCATION_SEARCH_RESULT.format("Burlington"))
@@ -128,17 +131,20 @@ def test_home_screen_location_picker(d):
     sleep(5)  # Wait for location to be selected
 
     # Take screenshot after location selection
-    d.screenshot("4_1_3_location_selected.png")
+    screenshot_path = os.path.join(screenshots_dir, "4_1_3_location_selected.png")
+    d.screenshot(screenshot_path)
 
     # Assert that Burlington is present on screen
     assert d(text="Burlington").exists, "Burlington text not found on screen after selection"
 
     # Take final screenshot
-    d.screenshot("4_1_4_location_confirmed.png")
+    screenshot_path = os.path.join(screenshots_dir, "4_1_4_location_confirmed.png")
+    d.screenshot(screenshot_path)
 
 
 @pytest.mark.smoke
-def test_home_screen_use_current_location(d):
+def test_home_screen_use_current_location(d, screenshots_dir):
+
     Test that the 'Use Current Location' button on the Home Screen works
     Steps:
     1. Handle notification permission if it appears
@@ -148,6 +154,7 @@ def test_home_screen_use_current_location(d):
     5. Click Log in and verify
     6. Click location picker button
     7. Take screenshot
+
     # Handle notification permission if it appears
     if d(text="Allow").exists:
         d(text="Allow").click()
@@ -226,5 +233,6 @@ def test_home_screen_use_current_location(d):
         sleep(2)  # Wait for location picker to appear
 
         # Take screenshot
-        d.screenshot("4_2_1_location_picker_home_screen.png")
-"""
+        screenshot_path = os.path.join(screenshots_dir, "4_2_1_location_picker_home_screen.png")
+        d.screenshot(screenshot_path)
+    """

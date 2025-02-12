@@ -1,5 +1,6 @@
 from time import sleep
 import pytest
+import os
 from locators import BottomNavBar, VisitHistory
 from utils import (
     handle_notification_permission, sign_in_user, handle_events_popup
@@ -7,7 +8,7 @@ from utils import (
 
 
 @pytest.mark.smoke
-def test_visit_history_screen(d):
+def test_visit_history_screen(d, screenshots_dir):
     """
     Test visit history screen functionality
     Steps:
@@ -43,6 +44,8 @@ def test_visit_history_screen(d):
     visit_history_tab.click()
     sleep(2)
 
-    # Take confirmation screenshot
-    print("\nTook screenshot: 12_1_visit_history_screen.png")
-    d.screenshot("12_1_1_visit_history_screen.png")
+    # Take screenshot of visit history screen
+    print("\nTaking screenshot of visit history screen...")
+    screenshot_path = os.path.join(screenshots_dir, "12_1_1_visit_history_screen.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 12_1_1_visit_history_screen.png")

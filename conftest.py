@@ -122,6 +122,13 @@ def d():
     device.app_stop("com.eatvermont")
     run_adb_command(f"-s {device_id} shell am force-stop com.eatvermont")
 
+@pytest.fixture
+def screenshots_dir():
+    """Get the screenshots directory for saving test screenshots"""
+    screenshots_dir = os.path.join(os.getcwd(), 'screenshots')
+    os.makedirs(screenshots_dir, exist_ok=True)
+    return screenshots_dir
+
 def run_adb_command(command):
     """Run an ADB command and return its output"""
     try:
