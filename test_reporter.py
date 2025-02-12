@@ -198,14 +198,31 @@ class ExcelReporter:
             # Add column auto-filter
             worksheet.autofilter(0, 0, len(df), len(df.columns) - 1)
             
-            # Define formats with enforced text wrapping
+            # Adjust column widths to match screenshot
+            worksheet.set_column('A:A', 25)  # test_name - narrower
+            worksheet.set_column('B:B', 15)  # start_time
+            worksheet.set_column('C:C', 8)   # status - very narrow
+            worksheet.set_column('D:D', 15)  # error_message
+            worksheet.set_column('E:E', 15)  # traceback
+            worksheet.set_column('F:F', 35)  # steps - wider for readability
+            worksheet.set_column('G:G', 15)  # end_time
+            worksheet.set_column('H:H', 8)   # duration - very narrow
+
+            # Set uniform row height for all rows
+            worksheet.set_default_row(20)  # Much shorter rows
+            
+            # Set header row height
+            worksheet.set_row(0, 20)  # Same height as other rows
+            
+            # Format header
             header_format = workbook.add_format({
                 'bold': True,
                 'text_wrap': True,
                 'valign': 'vcenter',
                 'align': 'center',
-                'fg_color': '#D7E4BC',
-                'border': 1
+                'fg_color': '#E2EFDA',  # Lighter green to match screenshot
+                'border': 1,
+                'border_color': '#D4D4D4'  # Lighter border color
             })
             
             # Base format for all cells
@@ -213,33 +230,35 @@ class ExcelReporter:
                 'text_wrap': True,
                 'valign': 'vcenter',
                 'align': 'center',
-                'border': 1  # Add light borders to all cells
+                'border': 1,
+                'border_color': '#D4D4D4'
             })
             
             pass_format = workbook.add_format({
                 'text_wrap': True,
                 'valign': 'vcenter',
                 'align': 'center',
-                'fg_color': '#C6EFCE',
-                'font_color': '#006100',
-                'border': 1
+                'fg_color': '#C6EFCE',  # Light green
+                'border': 1,
+                'border_color': '#D4D4D4'
             })
             
             fail_format = workbook.add_format({
                 'text_wrap': True,
                 'valign': 'vcenter',
                 'align': 'center',
-                'fg_color': '#FFC7CE',
-                'font_color': '#9C0006',
-                'border': 1
+                'fg_color': '#FFC7CE',  # Light red
+                'border': 1,
+                'border_color': '#D4D4D4'
             })
 
-            # Steps format with center alignment
+            # Steps format
             steps_format = workbook.add_format({
                 'text_wrap': True,
                 'valign': 'vcenter',
-                'align': 'center',
-                'border': 1
+                'align': 'left',  # Left align steps
+                'border': 1,
+                'border_color': '#D4D4D4'
             })
             
             # Write headers with format
@@ -253,7 +272,6 @@ class ExcelReporter:
                     if df.columns[col_num] != 'status':
                         if pd.isna(value):
                             value = ''
-                        # Ensure string values for proper wrapping
                         worksheet.write(row_num, col_num, str(value), base_format)
             
             # Format the status column
@@ -269,25 +287,18 @@ class ExcelReporter:
             # Format the steps column
             steps_col = df.columns.get_loc('steps')
             for row_num, steps in enumerate(df['steps'], start=1):
-                # Replace empty steps with empty string to avoid 'nan'
                 if pd.isna(steps):
                     steps = ''
                 worksheet.write(row_num, steps_col, steps, steps_format)
             
-            # Adjust column widths for better readability with wrapped text
-            worksheet.set_column('A:A', 35)  # test_name - slightly narrower
-            worksheet.set_column('B:B', 12)  # status - slightly wider
-            worksheet.set_column('C:D', 18)  # start_time, end_time - slightly narrower
-            worksheet.set_column('E:E', 12)  # duration - slightly wider
-            worksheet.set_column('F:F', 40)  # error_message - slightly narrower
-            worksheet.set_column('G:G', 40)  # traceback - slightly narrower
-            worksheet.set_column('H:H', 40)  # steps - slightly narrower
-
-            # Increase row height for wrapped text
-            worksheet.set_default_row(60)  # Increased height for better text wrapping
-            
-            # Set first row (header) slightly shorter
-            worksheet.set_row(0, 40)
-            
             # Enable text wrapping for the entire worksheet
             worksheet.set_column('A:H', None, None, {'text_wrap': True})
+            
+            # Freeze the header row
+            worksheet.freeze_panes(1, 0)
+            
+            # Set print area
+            worksheet.print_area(0, 0, len(df), len(df.columns) - 1)
+            
+            # Fit to page when printing
+            worksheet.fit_to_pages(1, 0)
