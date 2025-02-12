@@ -198,31 +198,26 @@ class ExcelReporter:
             # Add column auto-filter
             worksheet.autofilter(0, 0, len(df), len(df.columns) - 1)
             
-            # Adjust column widths to match screenshot
-            worksheet.set_column('A:A', 25)  # test_name - narrower
-            worksheet.set_column('B:B', 15)  # start_time
-            worksheet.set_column('C:C', 8)   # status - very narrow
-            worksheet.set_column('D:D', 15)  # error_message
-            worksheet.set_column('E:E', 15)  # traceback
-            worksheet.set_column('F:F', 35)  # steps - wider for readability
-            worksheet.set_column('G:G', 15)  # end_time
-            worksheet.set_column('H:H', 8)   # duration - very narrow
+            # Set column widths first
+            worksheet.set_column('A:A', 40)  # test_name
+            worksheet.set_column('B:B', 25)  # start_time
+            worksheet.set_column('C:C', 15)  # status
+            worksheet.set_column('D:D', 40)  # error_message
+            worksheet.set_column('E:E', 40)  # traceback
+            worksheet.set_column('F:F', 50)  # steps
+            worksheet.set_column('G:G', 25)  # end_time
+            worksheet.set_column('H:H', 15)  # duration
 
-            # Set uniform row height for all rows
-            worksheet.set_default_row(20)  # Much shorter rows
-            
-            # Set header row height
-            worksheet.set_row(0, 20)  # Same height as other rows
-            
             # Format header
             header_format = workbook.add_format({
                 'bold': True,
                 'text_wrap': True,
                 'valign': 'vcenter',
                 'align': 'center',
-                'fg_color': '#E2EFDA',  # Lighter green to match screenshot
+                'fg_color': '#E2EFDA',
                 'border': 1,
-                'border_color': '#D4D4D4'  # Lighter border color
+                'border_color': '#D4D4D4',
+                'font_size': 11
             })
             
             # Base format for all cells
@@ -231,65 +226,81 @@ class ExcelReporter:
                 'valign': 'vcenter',
                 'align': 'center',
                 'border': 1,
-                'border_color': '#D4D4D4'
+                'border_color': '#D4D4D4',
+                'font_size': 11
             })
             
             pass_format = workbook.add_format({
                 'text_wrap': True,
                 'valign': 'vcenter',
                 'align': 'center',
-                'fg_color': '#C6EFCE',  # Light green
+                'fg_color': '#C6EFCE',
                 'border': 1,
-                'border_color': '#D4D4D4'
+                'border_color': '#D4D4D4',
+                'font_size': 11
             })
             
             fail_format = workbook.add_format({
                 'text_wrap': True,
                 'valign': 'vcenter',
                 'align': 'center',
-                'fg_color': '#FFC7CE',  # Light red
+                'fg_color': '#FFC7CE',
                 'border': 1,
-                'border_color': '#D4D4D4'
+                'border_color': '#D4D4D4',
+                'font_size': 11
             })
 
             # Steps format
             steps_format = workbook.add_format({
                 'text_wrap': True,
                 'valign': 'vcenter',
-                'align': 'left',  # Left align steps
+                'align': 'left',
                 'border': 1,
-                'border_color': '#D4D4D4'
+                'border_color': '#D4D4D4',
+                'font_size': 11
             })
             
             # Write headers with format
             for col_num, value in enumerate(df.columns.values):
                 worksheet.write(0, col_num, value, header_format)
             
-            # Write all data with base format first
-            for row_num in range(1, len(df) + 1):
-                for col_num, value in enumerate(df.iloc[row_num - 1]):
-                    # Skip status column as it will be handled separately
-                    if df.columns[col_num] != 'status':
-                        if pd.isna(value):
-                            value = ''
-                        worksheet.write(row_num, col_num, str(value), base_format)
+            # Set default row height
+            worksheet.set_default_row(45)  # Much taller rows for better readability
             
-            # Format the status column
-            status_col = df.columns.get_loc('status')
-            for row_num, status in enumerate(df['status'], start=1):
-                if status == 'passed':
-                    worksheet.write(row_num, status_col, status, pass_format)
-                elif status == 'failed':
-                    worksheet.write(row_num, status_col, status, fail_format)
-                else:
-                    worksheet.write(row_num, status_col, status, base_format)
-
-            # Format the steps column
-            steps_col = df.columns.get_loc('steps')
-            for row_num, steps in enumerate(df['steps'], start=1):
-                if pd.isna(steps):
-                    steps = ''
-                worksheet.write(row_num, steps_col, steps, steps_format)
+            # Write data with appropriate formats
+            for row_num in range(1, len(df) + 1):
+                row_height = 45  # Default minimum height
+                
+                for col_num, value in enumerate(df.iloc[row_num - 1]):
+                    if pd.isna(value):
+                        value = ''
+                    
+                    # Convert value to string and handle newlines
+                    str_value = str(value).replace('\\n', '\n')
+                    
+                    # Calculate needed height based on content
+                    num_lines = len(str_value.split('\n'))
+                    needed_height = max(45, num_lines * 15)  # At least 45px, or more for multiline
+                    row_height = max(row_height, needed_height)
+                    
+                    # Use appropriate format based on column
+                    if df.columns[col_num] == 'status':
+                        if value == 'passed':
+                            worksheet.write(row_num, col_num, value, pass_format)
+                        elif value == 'failed':
+                            worksheet.write(row_num, col_num, value, fail_format)
+                        else:
+                            worksheet.write(row_num, col_num, value, base_format)
+                    elif df.columns[col_num] == 'steps':
+                        worksheet.write(row_num, col_num, str_value, steps_format)
+                    else:
+                        worksheet.write(row_num, col_num, str_value, base_format)
+                
+                # Set the calculated row height
+                worksheet.set_row(row_num, row_height)
+            
+            # Set header row height
+            worksheet.set_row(0, 45)  # Make header row same height
             
             # Enable text wrapping for the entire worksheet
             worksheet.set_column('A:H', None, None, {'text_wrap': True})
