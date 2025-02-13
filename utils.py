@@ -8,7 +8,7 @@ import time
 from config import TEST_USER
 import random
 import string
-from locators import Events, PlansPopup, LoginPage
+from locators import Events, PlansPopup, LoginPage, GuestMode
 
 
 def get_screenshots_dir():
@@ -210,6 +210,14 @@ def scroll_until_element_is_visible(device, locator, max_attempts=5):
     return device.xpath(locator).exists
 
 
+def sign_in_and_prepare(d):
+    """Sign in and handle initial popups"""
+    handle_notification_permission(d)
+    sign_in_user(d)
+    handle_events_popup(d)
+    sleep(10)
+
+
 def sign_in_user(d):
     """
     Sign in to the app using test user credentials.
@@ -299,14 +307,6 @@ def sign_in_user(d):
             assert False, "Login failed - Could not verify successful login"
 
 
-def sign_in_and_prepare(d):
-    """Sign in and handle initial popups"""
-    handle_notification_permission(d)
-    sign_in_user(d)
-    handle_events_popup(d)
-    sleep(10)
-
-
 def handle_events_popup(device):
     """
     Handle events popup if it appears.
@@ -347,6 +347,25 @@ def handle_guest_mode_plans_popup(d):
     else:
         print("\nNo plans popup found, continuing with test...")
         time.sleep(5)
+
+
+def enter_guest_mode_and_handle_popups(d):
+    """Enter guest mode and handle all necessary popups."""
+    handle_notification_permission(d)
+    d.xpath(LoginPage.GET_STARTED).click()
+    sleep(3)
+    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
+    assert guest_mode_button.exists, "Continue as guest button not found"
+    guest_mode_button.click()
+    sleep(5)
+    handle_plans_events_popups(d)
+
+
+def handle_plans_events_popups(d):
+    """Handle plans popup if present."""
+    handle_guest_mode_plans_popup(d)
+    handle_events_popup(d)
+    sleep(10)
 
 
 def save_screenshot(device, filename: str, request) -> str:

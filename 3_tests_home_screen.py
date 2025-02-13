@@ -123,8 +123,7 @@ def test_home_screen_events(d, screenshots_dir):
                 print(f"\nFound an event after {scroll_attempt + 1} scroll(s)")
                 found_event = True
                 # Take a screenshot after finding the event
-                screenshot_path = os.path.join(screenshots_dir,
-                                               f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
+                screenshot_path = os.path.join(screenshots_dir, f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
                 d.screenshot(screenshot_path)
                 break
 

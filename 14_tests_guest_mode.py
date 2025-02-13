@@ -1,8 +1,9 @@
 import pytest
 from time import sleep
-from locators import Events, GuestMode, LoginPage, PlansPopup, HomeScreen, BottomNavBar
-from utils import handle_notification_permission, handle_events_popup, handle_guest_mode_plans_popup
+from locators import Events, GuestMode, PlansPopup, HomeScreen, BottomNavBar, Videos
+from utils import handle_guest_mode_plans_popup, enter_guest_mode_and_handle_popups
 import os
+
 
 @pytest.mark.smoke
 def test_guest_mode_button(d, screenshots_dir):
@@ -17,23 +18,8 @@ def test_guest_mode_button(d, screenshots_dir):
     5. Verify guest mode elements are present
     6. Verify guest mode restrictions are in place
     """
-    handle_notification_permission(d)
 
-    # Find and click Guest Mode button
-    d.xpath(LoginPage.GET_STARTED).click()
-    sleep(3)
-
-    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
-    assert guest_mode_button.exists, "Continue as guest button not found"
-    guest_mode_button.click()
-    sleep(5)  # Wait longer for popup to appear
-
-    # Handle plans popup if present
-    handle_guest_mode_plans_popup(d)
-
-    # Handle events popup if present
-    handle_events_popup(d)
-    sleep(10)
+    enter_guest_mode_and_handle_popups(d)
 
     # Take a confirmation screenshot
     print("\nTaking confirmation screenshot...")
@@ -57,23 +43,8 @@ def test_guest_mode_events(d, screenshots_dir):
     7. Verify event details are accessible
     8. Verify guest mode restrictions on event interactions
     """
-    handle_notification_permission(d)
 
-    # Find and click Guest Mode button
-    d.xpath(LoginPage.GET_STARTED).click()
-    sleep(3)
-
-    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
-    assert guest_mode_button.exists, "Continue as guest button not found"
-    guest_mode_button.click()
-    sleep(5)  # Wait longer for popup to appear
-
-    # Handle plans popup if present
-    handle_guest_mode_plans_popup(d)
-
-    # Handle events popup if present
-    handle_events_popup(d)
-    sleep(10)
+    enter_guest_mode_and_handle_popups(d)
 
     # Click on Events carousel item
     print("\nLocating Events carousel item...")
@@ -112,51 +83,22 @@ def test_guest_mode_videos(d, screenshots_dir):
     8. Verify plans popup appears for restricted content
     9. Take screenshot of plans popup
     """
-    handle_notification_permission(d)
+    enter_guest_mode_and_handle_popups(d)
 
-    # Find and click Guest Mode button
-    d.xpath(LoginPage.GET_STARTED).click()
-    sleep(3)
+    # Navigate to Videos section
+    print("\nNavigating to Videos section...")
+    videos_button = d.xpath(Videos.VIDEO_TILE)
+    assert videos_button.exists, "Videos button not found"
+    videos_button.click()
+    sleep(5)
 
-    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
-    assert guest_mode_button.exists, "Continue as guest button not found"
-    guest_mode_button.click()
-    sleep(5)  # Wait longer for popup to appear
-
-    # Check for plans popup
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    if plans_popup_continue.exists:
-        print("\nPlans popup is visible, clicking continue...")
-        sleep(3)
-        plans_popup_continue.click()
-        print("Clicked continue on plans popup")
-    else:
-        print("\nNo plans popup found, continuing with test...")
-        sleep(5)
+    # Take screenshot of guest mode videos screen
+    screenshot_path = os.path.join(screenshots_dir, "14_3_1_guest_mode_videos.png")
+    d.screenshot(screenshot_path)
+    print("Screenshot saved as 14_3_1_guest_mode_videos.png")
 
     # Handle events popup if present
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    handle_guest_mode_plans_popup(d)
 
     # Get screen dimensions for scrolling
     screen_info = d.info
@@ -189,12 +131,6 @@ def test_guest_mode_videos(d, screenshots_dir):
     locked_videos = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
     assert locked_videos.exists, "Locked videos not found"
     print("Locked videos are present")
-
-    # Take a confirmation screenshot
-    print("\nTaking confirmation screenshot...")
-    screenshot_path = os.path.join(screenshots_dir, "14_3_1_guest_mode_videos.png")
-    d.screenshot(screenshot_path)
-    print("Screenshot saved as 14_3_1_guest_mode_videos.png")
 
     # Click on locked videos
     print("\nClicking on locked videos...")
@@ -230,58 +166,17 @@ def test_guest_mode_search(d, screenshots_dir):
     9. Test search history
     10. Check sign-in prompts
     """
-    handle_notification_permission(d)
+    enter_guest_mode_and_handle_popups(d)
 
-    # Find and click Guest Mode button
-    d.xpath(LoginPage.GET_STARTED).click()
-    sleep(3)
-
-    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
-    assert guest_mode_button.exists, "Continue as guest button not found"
-    guest_mode_button.click()
-    sleep(5)  # Wait longer for popup to appear
-
-    # Check for plans popup
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    if plans_popup_continue.exists:
-        print("\nPlans popup is visible, clicking continue...")
-        sleep(3)
-        plans_popup_continue.click()
-        print("Clicked continue on plans popup")
-    else:
-        print("\nNo plans popup found, continuing with test...")
-        sleep(5)
+    # Navigate to Search
+    print("\nNavigating to Search...")
+    search_button = d.xpath(BottomNavBar.SEARCH)
+    assert search_button.exists, "Search button not found"
+    search_button.click()
+    sleep(5)
 
     # Handle events popup if present
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
-
-    # Click on Search in bottom navigation
-    print("\nClicking on Search in bottom navigation...")
-    search_button = d.xpath(BottomNavBar.SEARCH)
-    assert search_button.exists, "Search button not found in bottom navigation"
-    search_button.click()
-    sleep(3)
+    handle_guest_mode_plans_popup(d)
 
     # Verify plans popup is present
     print("\nVerifying plans popup...")
@@ -312,51 +207,8 @@ def test_guest_mode_favorites(d, screenshots_dir):
     9. Verify data persistence
     10. Test guest session expiry
     """
-    handle_notification_permission(d)
 
-    # Find and click Guest Mode button
-    d.xpath(LoginPage.GET_STARTED).click()
-    sleep(3)
-
-    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
-    assert guest_mode_button.exists, "Continue as guest button not found"
-    guest_mode_button.click()
-    sleep(5)  # Wait longer for popup to appear
-
-    # Check for plans popup
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    if plans_popup_continue.exists:
-        print("\nPlans popup is visible, clicking continue...")
-        sleep(3)
-        plans_popup_continue.click()
-        print("Clicked continue on plans popup")
-    else:
-        print("\nNo plans popup found, continuing with test...")
-        sleep(5)
-
-    # Handle events popup if present
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    enter_guest_mode_and_handle_popups(d)
 
     # Click on Favorites in bottom navigation
     print("\nClicking on Favorites in bottom navigation...")
@@ -394,51 +246,8 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
     9. Verify restricted features
     10. Test guest mode UI
     """
-    handle_notification_permission(d)
 
-    # Find and click Guest Mode button
-    d.xpath(LoginPage.GET_STARTED).click()
-    sleep(3)
-
-    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
-    assert guest_mode_button.exists, "Continue as guest button not found"
-    guest_mode_button.click()
-    sleep(5)  # Wait longer for popup to appear
-
-    # Check for plans popup
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    if plans_popup_continue.exists:
-        print("\nPlans popup is visible, clicking continue...")
-        sleep(3)
-        plans_popup_continue.click()
-        print("Clicked continue on plans popup")
-    else:
-        print("\nNo plans popup found, continuing with test...")
-        sleep(5)
-
-    # Handle events popup if present
-    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-    if events_popup.exists:
-        print("\nEvents popup is visible, closing it...")
-        sleep(3)
-        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
-        print("\nChecking close button...")
-        print(f"Close button exists: {close_button.exists}")
-        if close_button.exists:
-            print(f"Close button info: {close_button.info}")
-        assert close_button.exists, "Close button not found on events popup"
-        print("\nAttempting to click close button...")
-        close_button.click()
-        print("\nClose button clicked")
-        sleep(3)
-
-        # Verify popup is closed
-        print("\nVerifying popup is closed...")
-        events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
-        assert not events_popup.exists, "Events popup is still visible after clicking close button"
-        print("Events popup successfully closed")
-    else:
-        print("\nNo events popup found, continuing with next steps...")
+    enter_guest_mode_and_handle_popups(d)
 
     # Get screen dimensions for scrolling
     screen_info = d.info

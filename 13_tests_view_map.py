@@ -97,3 +97,4 @@ def test_view_map_filters(d, screenshots_dir):
     print("\nTaking screenshot of Food Pantries filter...")
     d.screenshot(screenshot_path)
     print("Screenshot saved as 13_1_5_food_pantries_filter_active.png")
+    print("Screenshot saved as 13_1_5_food_pantries_filter_active.png")
