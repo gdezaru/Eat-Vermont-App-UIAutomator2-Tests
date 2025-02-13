@@ -1,31 +1,25 @@
 from time import sleep
 import pytest
 from locators import DayTrips
-from utils import handle_notification_permission, handle_events_popup, sign_in_user
+from utils import sign_in_and_prepare, handle_events_popup
 import os
+
 
 @pytest.mark.smoke
 def test_day_trip_card(d, screenshots_dir):
     """
     Test the Day Trip card on the Home screen
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Scroll to center the Day Trip section
-    5. Verify Day Trip text is displayed
-    6. Scroll to find Read More button
-    7. Verify Read More button is displayed
-    8. Click Read More button
-    9. Verify day trip details screen
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Day Trip section
+    4. Verify Day Trip text is displayed
+    5. Scroll to find Read More button
+    6. Verify Read More button is displayed
+    7. Click Read More button
+    8. Verify day trip details screen
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Scroll to center the Day Trip section
     print("\nScrolling to Day Trip section...")

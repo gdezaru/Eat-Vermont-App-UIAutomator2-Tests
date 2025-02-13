@@ -1,6 +1,6 @@
 from time import sleep
 from locators import Businesses
-from utils import handle_notification_permission, handle_events_popup, sign_in_user
+from utils import sign_in_and_prepare
 import pytest
 import os
 
@@ -15,23 +15,16 @@ def test_business_card_with_event(d, screenshots_dir):
     Test business card functionality with event details.
     
     Steps:
-    1. Handle notification permission if it appears
-    2. Sign in with test user credentials
-    3. Handle events popup if it appears
-    4. Navigate to the About tab
-    5. Take screenshot of About tab contents
-    6. Navigate to the FYI tab
-    7. Take screenshot of FYI tab contents
-    8. Verify all business card elements are present
-    9. Verify business card navigation works correctly
+    1. Sign in with test user credentials and prepare
+    2. Handle events popup if it appears
+    3. Navigate to the About tab
+    4. Take screenshot of About tab contents
+    5. Navigate to the FYI tab
+    6. Take screenshot of FYI tab contents
+    7. Verify all business card elements are present
+    8. Verify business card navigation works correctly
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Find and click Search in bottom navigation
     search_button = None
@@ -135,25 +128,18 @@ def test_business_card_with_menu(d, screenshots_dir):
     Test business card functionality with menu details.
     
     Steps:
-    1. Handle notification permission if it appears
-    2. Sign in with test user credentials
-    3. Handle events popup if it appears
-    4. Navigate to the Menu tab
-    5. Take screenshot of Menu tab contents
-    6. Navigate to the About tab
-    7. Take screenshot of About tab contents
-    8. Navigate to the FYI tab
-    9. Take screenshot of FYI tab contents
-    10. Verify all menu items are displayed correctly
-    11. Verify business card navigation works correctly
+    1. Sign in with test user credentials and prepare
+    2. Handle events popup if it appears
+    3. Navigate to the Menu tab
+    4. Take screenshot of Menu tab contents
+    5. Navigate to the About tab
+    6. Take screenshot of About tab contents
+    7. Navigate to the FYI tab
+    8. Take screenshot of FYI tab contents
+    9. Verify all menu items are displayed correctly
+    10. Verify business card navigation works correctly
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Find and click Search in bottom navigation
     search_button = None

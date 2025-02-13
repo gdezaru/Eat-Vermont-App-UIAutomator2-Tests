@@ -3,7 +3,7 @@ import pytest
 import os
 from locators import BottomNavBar, VisitHistory
 from utils import (
-    handle_notification_permission, sign_in_user, handle_events_popup
+    sign_in_and_prepare
 )
 
 
@@ -12,21 +12,14 @@ def test_visit_history_screen(d, screenshots_dir):
     """
     Test visit history screen functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Favorites section
-    5. Open Visit History tab
-    6. Verify Visit History screen loads
-    7. Take confirmation screenshot
+    1. Sign in and prepare
+    2. Handle events popup
+    3. Navigate to Favorites section
+    4. Open Visit History tab
+    5. Verify Visit History screen loads
+    6. Take confirmation screenshot
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
     print("\nClicking on Favorites button...")

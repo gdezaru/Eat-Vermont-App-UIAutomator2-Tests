@@ -1,81 +1,75 @@
 import pytest
+
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
-from utils import get_next_day, handle_notification_permission, sign_in_user, handle_events_popup
+from utils import get_next_day, sign_in_and_prepare
 import os
+
 
 @pytest.mark.smoke
 def test_home_screen_events(d, screenshots_dir):
     """
     Test home screen events module functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Find and click 'See all' next to events
-    5. Take screenshot of events page
-    6. Find current selected day
-    7. Click through subsequent days
-    8. Verify events are displayed for each day
-    9. Verify event details are accessible
+    1. Sign in with valid credentials and prepare
+    2. Find and click 'See all' next to events
+    3. Take screenshot of events page
+    4. Find current selected day
+    5. Click through subsequent days
+    6. Verify events are displayed for each day
+    7. Verify event details are accessible
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
+    sign_in_and_prepare(d)
 
-    # Handle events popup using the utility method
-    handle_events_popup(d)
+    # Find and click 'See all' next to events
+    see_all_events = d.xpath(HomeScreen.EVENTS_SEE_ALL)
+    assert see_all_events.exists, "Could not find 'See all' for events"
+    see_all_events.click()
     sleep(10)
 
-    # Click "See all" next to events
-    events_see_all = d.xpath(HomeScreen.EVENTS_SEE_ALL)
-    assert events_see_all.exists, "Could not find Events 'See all' button"
-    events_see_all.click()
-    sleep(15)
-    
     # Take screenshot of events page
     screenshot_path = os.path.join(screenshots_dir, "3_1_1_home_screen_events.png")
     d.screenshot(screenshot_path)
-    
+
     # Find the current selected day
     days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
     current_day = None
     for day in days:
-        day_element = d.xpath(EventsScreen.DAY_OF_WEEK.format(day, day))  
+        day_element = d.xpath(EventsScreen.DAY_OF_WEEK.format(day, day))
         if day_element.exists:
             current_day = day
-            print(f"\nFound current day: {day}")  
+            print(f"\nFound current day: {day}")
             break
-    
+
     assert current_day is not None, "Could not find any day of week element"
-    
+
     # Try clicking each subsequent day until one works
     current_try_day = current_day
     days_tried = 0
     max_days_to_try = 7  # Try all days of the week at most
-    
+
     while days_tried < max_days_to_try:
         # Get the next day to try
         next_day = get_next_day(current_try_day)
         print(f"\nTrying to click on: {next_day}")
-        
+
         # Try clicking this day multiple times
         max_attempts = 3
         click_success = False
-        
+
         for attempt in range(max_attempts):
             next_day_element = d.xpath(EventsScreen.DAY_OF_WEEK.format(next_day, next_day))
             print(f"\nAttempt {attempt + 1}: Next day element exists: {next_day_element.exists}")
-            
+
             if not next_day_element.exists:
                 print(f"\n{next_day} not found, will try next day")
                 break
-            
+
             next_day_element.click()
             print(f"\nClicked on {next_day}")
             sleep(2)  # Wait for next day's events to load
-            
+
             # Verify if we're now on this day by checking the events list
             events_for_day = d(textContains=next_day.title())  # e.g., "Mon" instead of "MON"
             if events_for_day.exists:
@@ -87,71 +81,72 @@ def test_home_screen_events(d, screenshots_dir):
                 sleep(2)  # Wait before next attempt
             else:
                 print(f"\nCould not verify events for {next_day} after {max_attempts} attempts, will try next day")
-        
+
         if click_success:
             break
-            
+
         # Move to next day if this one didn't work
         current_try_day = next_day
         days_tried += 1
 
         if days_tried == max_days_to_try:
             assert False, "Could not find any clickable day after trying all days of the week"
-    
+
     # Verify that either there's an event or "No Events" message is shown
     first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
     no_events_message = d.xpath(EventsScreen.EVENTS_SCREEN_NO_EVENTS)
-    
+
     assert first_event.exists or no_events_message.exists, "Neither events nor 'No Events' message found"
     if first_event.exists:
         print(f"\nFound at least one event for {next_day}")
     else:
         print(f"\nNo events found for {next_day}")
-    
+
     # Take screenshot of the successful day's events
     screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_events_{next_day.lower()}.png")
     d.screenshot(screenshot_path)
-    
+
     # If no event was found initially, scroll to try to find one
     if not first_event.exists and not no_events_message.exists:
         print("\nNo event visible initially, scrolling to find events...")
         max_scroll_attempts = 3
         found_event = False
-        
+
         for scroll_attempt in range(max_scroll_attempts):
             # Scroll down
             d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)  # Scroll from bottom to top
             sleep(2)  # Wait for scroll to complete
-            
+
             # Check if we can now see an event
             first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
             if first_event.exists:
                 print(f"\nFound an event after {scroll_attempt + 1} scroll(s)")
                 found_event = True
                 # Take a screenshot after finding the event
-                screenshot_path = os.path.join(screenshots_dir, f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
+                screenshot_path = os.path.join(screenshots_dir,
+                                               f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
                 d.screenshot(screenshot_path)
                 break
-        
+
         if not found_event:
             print(f"\nNo events found even after {max_scroll_attempts} scrolls")
             assert no_events_message.exists, "No events found and 'No Events' message is not displayed"
-    
+
     # Click on the first event tile if it exists
     if first_event.exists:
         print("\nClicking on the first event tile...")
         # Get the event title before clicking
         event_title = first_event.get_text()
         print(f"Event title: {event_title}")
-        
+
         # Click the event title and wait for details to load
         first_event.click()
         sleep(2)  # Wait for event details to load
-        
+
         # Verify we're in the event details view by checking for the event title
         event_title_in_details = d.xpath(EventsScreen.EVENT_TITLE.format(event_title))
         assert event_title_in_details.exists, f"Failed to open event details for '{event_title}'"
-        
+
         print("\nSuccessfully opened event details")
         # Take screenshot of the event details
         screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{next_day.lower()}.png")
@@ -164,22 +159,14 @@ def test_home_screen_view_map(d, screenshots_dir):
     """
     Test home screen view map module functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Find and click View Map tile
-    5. Verify map is displayed
-    6. Check map controls are accessible
-    7. Verify location markers are visible
-    8. Test map interaction (zoom, pan)
+    1. Sign in with valid credentials and prepare
+    2. Find and click View Map tile
+    3. Verify map is displayed
+    4. Check map controls are accessible
+    5. Verify location markers are visible
+    6. Test map interaction (zoom, pan)
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Single scroll to show View Map
     d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
@@ -205,22 +192,14 @@ def test_home_screen_videos(d, screenshots_dir):
     """
     Test home screen videos module functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Find and click Videos tile
-    5. Verify videos section is displayed
-    6. Check video thumbnails are visible
-    7. Attempt to play a video
-    8. Verify video playback controls
+    1. Sign in with valid credentials and prepare
+    2. Find and click Videos tile
+    3. Verify videos section is displayed
+    4. Check video thumbnails are visible
+    5. Attempt to play a video
+    6. Verify video playback controls
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Get screen dimensions for scrolling
     screen_info = d.info
@@ -275,22 +254,14 @@ def test_home_screen_add_info(d, screenshots_dir):
     """
     Test home screen add info module functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Find and click Add Info tile
-    5. Verify add info form is displayed
-    6. Check all form fields are accessible
-    7. Test form validation
-    8. Verify submission process
+    1. Sign in with valid credentials and prepare
+    2. Find and click Add Info tile
+    3. Verify add info form is displayed
+    4. Check all form fields are accessible
+    5. Test form validation
+    6. Verify submission process
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Scroll until Add Info button is visible
     d(scrollable=True).scroll.to(text="Add Info")
@@ -314,22 +285,14 @@ def test_home_screen_day_trips(d, screenshots_dir):
     """
     Test home screen day trips module functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Find and click Day Trips tile
-    5. Verify day trips section is displayed
-    6. Check trip cards are visible
-    7. Verify trip details are accessible
-    8. Test trip filtering options
+    1. Sign in with valid credentials and prepare
+    2. Find and click Day Trips tile
+    3. Verify day trips section is displayed
+    4. Check trip cards are visible
+    5. Verify trip details are accessible
+    6. Test trip filtering options
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Single scroll to show Day Trips
     d(scrollable=True).scroll.to(text="Day Trip")
@@ -353,22 +316,14 @@ def test_home_screen_events_within(d, screenshots_dir):
     """
     Test home screen events within 30 minutes functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Find events within 30 minutes section
-    5. Verify nearby events are displayed
-    6. Check event details are accessible
-    7. Verify distance information
-    8. Test event sorting options
+    1. Sign in with valid credentials and prepare
+    2. Find events within 30 minutes section
+    3. Verify nearby events are displayed
+    4. Check event details are accessible
+    5. Verify distance information
+    6. Test event sorting options
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Single scroll to show Events within ~30 minutes
     d(scrollable=True).scroll.to(text="Events Within ~30min")
@@ -383,7 +338,7 @@ def test_home_screen_events_within(d, screenshots_dir):
         if events_tile.exists:
             event_found = True
             break
-    
+
     assert event_found, "Could not find any events with dates in Events within 30 minutes section"
     sleep(1)
 
@@ -409,22 +364,14 @@ def test_home_screen_events_further_than(d, screenshots_dir):
     """
     Test home screen events further than 30 minutes functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Find events further than 30 minutes section
-    5. Verify distant events are displayed
-    6. Check event details are accessible
-    7. Verify distance information
-    8. Test event sorting options
+    1. Sign in with valid credentials and prepare
+    2. Find events further than 30 minutes section
+    3. Verify distant events are displayed
+    4. Check event details are accessible
+    5. Verify distance information
+    6. Test event sorting options
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Single scroll to show Events within ~30 minutes
     d(scrollable=True).scroll.to(text="Events Further Than ~30min")
@@ -465,23 +412,15 @@ def test_home_screen_bottom_nav_bar(d, screenshots_dir):
     """
     Test home screen bottom navigation bar functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Verify all nav bar items are visible
-    5. Test Home button navigation
-    6. Test Search button navigation
-    7. Test Map button navigation
-    8. Test Profile button navigation
-    9. Verify active state indicators
+    1. Sign in with valid credentials and prepare
+    2. Verify all nav bar items are visible
+    3. Test Home button navigation
+    4. Test Search button navigation
+    5. Test Map button navigation
+    6. Test Profile button navigation
+    7. Verify active state indicators
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click Favorites button
     favorites_button = d.xpath(BottomNavBar.FAVORITES)

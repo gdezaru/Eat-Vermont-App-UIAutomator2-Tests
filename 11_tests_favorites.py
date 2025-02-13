@@ -2,7 +2,7 @@ import pytest
 from time import sleep
 from locators import Events, MyFavorites, Businesses, HomeScreen, BottomNavBar
 from utils import (
-    handle_notification_permission, sign_in_user, handle_events_popup
+    sign_in_and_prepare
 )
 import os
 
@@ -17,20 +17,13 @@ def test_add_favorite_events(d, screenshots_dir):
     """
     Tests the ability to add events to My Favorites.
     Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Click on Events carousel item
-    5. Find and click the favorite icon
-    6. Take screenshot
+    1. Sign in using the utility method
+    2. Handle events popup using the utility method
+    3. Click on Events carousel item
+    4. Find and click the favorite icon
+    5. Take screenshot
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Events carousel item
     print("\nLocating Events carousel item...")
@@ -59,24 +52,17 @@ def test_add_favorite_businesses(d, screenshots_dir):
     """
     Tests the ability to add businesses to My Favorites.
     Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Find and click Search in bottom navigation
-    5. Find and click search field
-    6. Enter search term and submit
-    7. Wait for and verify Businesses section is present
-    8. Click on Big Fatty's BBQ search result under Businesses
-    9. Find and click the favorite icon
-    10. Take screenshot of favorited business
+    1. Sign in using the utility method
+    2. Handle events popup using the utility method
+    3. Find and click Search in bottom navigation
+    4. Find and click search field
+    5. Enter search term and submit
+    6. Wait for and verify Businesses section is present
+    7. Click on Big Fatty's BBQ search result under Businesses
+    8. Find and click the favorite icon
+    9. Take screenshot of favorited business
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Find and click Search in bottom navigation
     search_button = None
@@ -148,20 +134,13 @@ def test_add_favorite_trails(d, screenshots_dir):
     """
     Tests the ability to add trails to My Favorites.
     Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Click on Trails button
-    5. Find and click the favorite icon
-    6. Take screenshot of favorited trail
+    1. Sign in using the utility method
+    2. Handle events popup using the utility method
+    3. Click on Trails button
+    4. Find and click the favorite icon
+    5. Take screenshot of favorited trail
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Trails button
     print("\nClicking on Trails button...")
@@ -189,21 +168,14 @@ def test_remove_favorite_events(d, screenshots_dir):
     """
     Tests the ability to remove events from My Favorites.
     Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Click on Favorites button in bottom navigation
-    5. Verify favorited event is present and take screenshot
-    6. Click on favorite icon to remove from favorites
-    7. Verify event is no longer in favorites
+    1. Sign in using the utility method
+    2. Handle events popup using the utility method
+    3. Click on Favorites button in bottom navigation
+    4. Verify favorited event is present and take screenshot
+    5. Click on favorite icon to remove from favorites
+    6. Verify event is no longer in favorites
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
     print("\nClicking on Favorites button...")
@@ -241,21 +213,14 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     """
     Tests the ability to remove businesses from My Favorites.
     Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Click on Favorites button in bottom navigation
-    5. Verify favorited business is present and take screenshot
-    6. Click on favorite icon to remove from favorites
-    7. Verify business is no longer in favorites
+    1. Sign in using the utility method
+    2. Handle events popup using the utility method
+    3. Click on Favorites button in bottom navigation
+    4. Verify favorited business is present and take screenshot
+    5. Click on favorite icon to remove from favorites
+    6. Verify business is no longer in favorites
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
     print("\nClicking on Favorites button...")
@@ -294,21 +259,14 @@ def test_remove_favorite_trails(d, screenshots_dir):
     """
     Tests the ability to remove trails from My Favorites.
     Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Click on Favorites button in bottom navigation
-    5. Verify favorited trail is present and take screenshot
-    6. Click on favorite icon to remove from favorites
-    7. Verify trail is no longer in favorites
+    1. Sign in using the utility method
+    2. Handle events popup using the utility method
+    3. Click on Favorites button in bottom navigation
+    4. Verify favorited trail is present and take screenshot
+    5. Click on favorite icon to remove from favorites
+    6. Verify trail is no longer in favorites
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
     print("\nClicking on Favorites button...")

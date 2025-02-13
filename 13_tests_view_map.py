@@ -1,33 +1,30 @@
 import pytest
 from time import sleep
-import pytest
 from locators import HomeScreen, ViewMap
-from utils import handle_notification_permission, handle_events_popup, sign_in_user
+from utils import sign_in_and_prepare
 import os
+
 
 @pytest.mark.smoke
 def test_view_map_filters(d, screenshots_dir):
     """
     Test the View Map filters functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to View Map section
-    5. Verify Events filter is visible
-    6. Verify Food & Drinks filter is visible
-    7. Verify Farms filter is visible
-    8. Verify Food Pantries filter is visible
-    9. Take screenshot of all filters
-    10. Click Events filter and verify
-    11. Click Food & Drinks filter and verify
-    12. Click Farms filter and verify
-    13. Click Food Pantries filter and verify
-    14. Document each filter state with screenshots
+    1. Sign in with valid credentials and prepare
+    2. Handle events popup
+    3. Navigate to View Map section
+    4. Verify Events filter is visible
+    5. Verify Food & Drinks filter is visible
+    6. Verify Farms filter is visible
+    7. Verify Food Pantries filter is visible
+    8. Take screenshot of all filters
+    9. Click Events filter and verify
+    10. Click Food & Drinks filter and verify
+    11. Click Farms filter and verify
+    12. Click Food Pantries filter and verify
+    13. Document each filter state with screenshots
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
+    sign_in_and_prepare(d)
 
     # Handle events popup using the utility method
     handle_events_popup(d)

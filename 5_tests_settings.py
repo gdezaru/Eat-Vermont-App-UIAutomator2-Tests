@@ -2,8 +2,7 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, SettingsScreen, Events
-from utils import generate_random_name, generate_random_username, handle_notification_permission, sign_in_user, \
-    handle_events_popup
+from utils import generate_random_name, generate_random_username, sign_in_and_prepare
 import os
 
 
@@ -12,20 +11,13 @@ def test_settings_contents(d, screenshots_dir):
     """
     Tests the contents of the settings screen.
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Settings
-    5. Verify all settings options are visible
-    6. Take screenshot of settings screen
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Navigate to Settings
+    4. Verify all settings options are visible
+    5. Take screenshot of settings screen
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Settings button
     settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
@@ -58,26 +50,19 @@ def test_settings_screen_navigation(d, screenshots_dir):
     """
     Tests the navigation within the settings screen.
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Settings
-    5. Click on Edit Profile
-    6. Take screenshot of Edit Profile screen
-    7. Go back to Settings
-    8. Click on Location Toggle
-    9. Handle location permission dialog if it appears
-    10. Take screenshot of Settings screen with toggled location
-    11. Click on Log Out
-    12. Take screenshot of welcome screen
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Navigate to Settings
+    4. Click on Edit Profile
+    5. Take screenshot of Edit Profile screen
+    6. Go back to Settings
+    7. Click on Location Toggle
+    8. Handle location permission dialog if it appears
+    9. Take screenshot of Settings screen with toggled location
+    10. Click on Log Out
+    11. Take screenshot of welcome screen
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Settings button
     settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
@@ -139,27 +124,20 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     """
     Tests the edit profile section within the settings screen.
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Settings
-    5. Click on Edit Profile
-    6. Clear the name field and enter a new random name
-    7. Verify the new name was successfully inputted
-    8. Clear the username field and enter a new random username
-    9. Verify the new username was successfully inputted
-    10. Scroll to bottom of screen to ensure save button is visible
-    11. Click save button and verify we return to settings screen
-    12. Verify the updated name is visible on the settings screen
-    13. Take screenshot of settings screen after saving changes
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Navigate to Settings
+    4. Click on Edit Profile
+    5. Clear the name field and enter a new random name
+    6. Verify the new name was successfully inputted
+    7. Clear the username field and enter a new random username
+    8. Verify the new username was successfully inputted
+    9. Scroll to bottom of screen to ensure save button is visible
+    10. Click save button and verify we return to settings screen
+    11. Verify the updated name is visible on the settings screen
+    12. Take screenshot of settings screen after saving changes
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Settings button
     settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)

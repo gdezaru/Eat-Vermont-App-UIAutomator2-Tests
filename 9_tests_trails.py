@@ -1,6 +1,6 @@
 from time import sleep
 from locators import HomeScreen, Trails
-from utils import sign_in_user, handle_events_popup, handle_notification_permission
+from utils import sign_in_and_prepare
 import pytest
 import os
 
@@ -10,21 +10,13 @@ def test_trails_screen(d, screenshots_dir):
     """
     Test the Trails functionality
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Trails section
-    5. Find and verify any trail name
-    6. Verify trail status
-    7. Take screenshot of trails main screen
+    1. Sign in and prepare
+    2. Navigate to Trails section
+    3. Find and verify any trail name
+    4. Verify trail status
+    5. Take screenshot of trails main screen
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Trails button
     print("\nClicking on Trails button...")
@@ -66,24 +58,16 @@ def test_trails_details(d, screenshots_dir):
     """
     Test the Trails details screen
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Trails section
-    5. Click Read More button
-    6. Verify percentage progress
-    7. Verify visits completed text and number
-    8. Take screenshot of trail details
-    9. Scroll using swipe
-    10. Take screenshot of trail details visits
+    1. Sign in and prepare
+    2. Navigate to Trails section
+    3. Click Read More button
+    4. Verify percentage progress
+    5. Verify visits completed text and number
+    6. Take screenshot of trail details
+    7. Scroll using swipe
+    8. Take screenshot of trail details visits
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Click on Trails button
     print("\nClicking on Trails button...")

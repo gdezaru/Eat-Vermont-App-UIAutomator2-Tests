@@ -299,6 +299,14 @@ def sign_in_user(d):
             assert False, "Login failed - Could not verify successful login"
 
 
+def sign_in_and_prepare(d):
+    """Sign in and handle initial popups"""
+    handle_notification_permission(d)
+    sign_in_user(d)
+    handle_events_popup(d)
+    sleep(10)
+
+
 def handle_events_popup(device):
     """
     Handle events popup if it appears.

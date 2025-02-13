@@ -1,6 +1,6 @@
 from time import sleep
 from locators import Events
-from utils import handle_notification_permission, handle_events_popup, sign_in_user
+from utils import sign_in_and_prepare
 import pytest
 import os
 
@@ -10,17 +10,11 @@ def test_events_popup(d, screenshots_dir):
     """
     Tests the contents of the events popup.
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Verify popup contents
+    1. Sign in with valid credentials
+    2. Verify popup contents
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
+    sign_in_and_prepare(d)
 
-    # Handle events popup using the utility method
-    handle_events_popup(d)
     sleep(10)
 
 
@@ -29,25 +23,19 @@ def test_events_card(d, screenshots_dir):
     """
     Tests the contents of an events card.
     Steps:
-    1. Handle notification permissions
-    2. Sign in with valid credentials
-    3. Handle events popup
-    4. Navigate to Events section
-    5. Select an event from the list
-    6. Verify event title is displayed
-    7. Check event date and time
-    8. Verify location information
-    9. Check event description
-    10. Verify organizer details
-    11. Test sharing functionality
-    12. Check ticket/RSVP options
+    1. Sign in with valid credentials
+    2. Navigate to Events section
+    3. Select an event from the list
+    4. Verify event title is displayed
+    5. Check event date and time
+    6. Verify location information
+    7. Check event description
+    8. Verify organizer details
+    9. Test sharing functionality
+    10. Check ticket/RSVP options
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
+    sign_in_and_prepare(d)
 
-    # Handle events popup using the utility method
-    handle_events_popup(d)
     sleep(10)
 
     # Click on Events carousel item

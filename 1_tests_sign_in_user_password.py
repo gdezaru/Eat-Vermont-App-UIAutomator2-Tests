@@ -2,7 +2,7 @@ import pytest
 import os
 from time import sleep
 from config import TEST_USER
-from utils import handle_notification_permission, sign_in_user, handle_events_popup
+from utils import sign_in_and_prepare
 from locators import LoginPage
 
 
@@ -21,13 +21,7 @@ def test_sign_in_with_valid_credentials(d, screenshots_dir):
     7. Take screenshot of successful sign in
     8. Verify user is logged in successfully
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Check for success message
     screenshot_path = os.path.join(screenshots_dir, "1_1_1_successful_sign_in_user_password.png")
@@ -48,7 +42,7 @@ def test_forgot_password(d, screenshots_dir):
     6. Take screenshot of confirmation screen
     7. Verify success message is displayed
     """
-    handle_notification_permission(d)
+    sign_in_and_prepare(d)
 
     # Find and click Sign In button
     sign_in = None

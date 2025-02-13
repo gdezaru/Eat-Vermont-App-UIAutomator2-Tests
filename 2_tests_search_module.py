@@ -1,7 +1,7 @@
 import pytest
 import os
 from time import sleep
-from utils import handle_notification_permission, sign_in_user, handle_events_popup
+from utils import handle_notification_permission, sign_in_and_prepare
 
 
 @pytest.mark.smoke
@@ -19,13 +19,7 @@ def test_search_events(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain events
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Find and click Search in bottom navigation
     search_button = None
@@ -94,13 +88,7 @@ def test_search_businesses(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain businesses
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Find and click Search in bottom navigation
     search_button = None
@@ -169,13 +157,7 @@ def test_search_day_trips(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain day trips
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Find and click Search in bottom navigation
     search_button = None
@@ -251,13 +233,7 @@ def test_search_videos(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain videos
     """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
+    sign_in_and_prepare(d)
 
     # Find and click Search in bottom navigation
     search_button = None
