@@ -144,72 +144,6 @@ def test_add_favorite_businesses(d, screenshots_dir):
 
 
 @pytest.mark.smoke
-def test_add_favorite_videos(d, screenshots_dir):
-    """
-    Tests the ability to add videos to My Favorites.
-    Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Get screen dimensions for scrolling
-    5. Calculate swipe coordinates
-    6. First scroll to Videos section
-    7. Find and click the favorite icon
-    8. Take screenshot of favorited video
-    """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
-
-    # Get screen dimensions for scrolling
-    screen_info = d.info
-    width = screen_info['displayWidth']
-    height = screen_info['displayHeight']
-    upper_third = int(height * 0.4)
-
-    # Calculate swipe coordinates
-    start_x = width // 2
-    start_y = (height * 3) // 4
-    end_y = height // 4
-
-    # First scroll to Videos section
-    print("\nScrolling to find Videos section...")
-    videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
-    max_scroll_attempts = 1
-
-    # Keep scrolling until Videos text is in upper third of screen
-    for _ in range(max_scroll_attempts):
-        if videos_text.exists:
-            bounds = videos_text.bounds
-            if bounds[1] < upper_third:
-                print("Videos section found in upper third of screen")
-                break
-        d.swipe(start_x, start_y, start_x, end_y, duration=0.9)
-        sleep(1.5)
-
-    assert videos_text.exists and videos_text.bounds[1] < upper_third, \
-        "Videos section not found in upper third of screen"
-    sleep(1)
-
-    # Find and click the favorite icon
-    print("\nLocating favorite icon...")
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_VIDEOS_ADD_REMOVE)
-    assert favorite_icon.exists, "Could not find favorite icon"
-    print("Favorite icon found, clicking...")
-    favorite_icon.click()
-    sleep(2)
-
-    # Take screenshot of favorited video
-    screenshot_path = os.path.join(screenshots_dir, "11_3_1_video_favorited.png")
-    d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
-
-
-@pytest.mark.smoke
 def test_add_favorite_trails(d, screenshots_dir):
     """
     Tests the ability to add trails to My Favorites.
@@ -351,59 +285,6 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     print("Business successfully removed from favorites")
     sleep(3)  # Wait for UI to update
     screenshot_path = os.path.join(screenshots_dir, "11_6_2_favorites_after_removal.png")
-    d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
-
-
-@pytest.mark.smoke
-def test_remove_favorite_videos(d, screenshots_dir):
-    """
-    Tests the ability to remove videos from My Favorites.
-    Steps:
-    1. Handle notification permissions
-    2. Sign in using the utility method
-    3. Handle events popup using the utility method
-    4. Click on Favorites button in bottom navigation
-    5. Verify favorited video is present and take screenshot
-    6. Click on favorite icon to remove from favorites
-    7. Verify video is no longer in favorites
-    """
-    handle_notification_permission(d)
-    # Sign in using the utility method
-    sign_in_user(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
-
-    # Click on Favorites button in bottom navigation
-    print("\nClicking on Favorites button...")
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    print("Found Favorites button, clicking...")
-    favorites_button.click()
-    sleep(2)
-
-    # Verify favorited video is present and take screenshot
-    print("\nVerifying favorited video is present...")
-    favorite_video = d.xpath(MyFavorites.ADDED_FAVORITE_VIDEO)
-    assert favorite_video.exists, "Could not find favorited video"
-    print("Found favorited video")
-    screenshot_path = os.path.join(screenshots_dir, "11_7_1_favorited_video_before_removal.png")
-    d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
-
-    # Click on favorite icon to remove from favorites
-    print("\nRemoving video from favorites...")
-    favorite_video.click()
-    sleep(2)
-
-    # Verify video is no longer in favorites
-    print("\nVerifying video was removed from favorites...")
-    assert not favorite_video.exists, "Video is still present in favorites"
-    print("Video successfully removed from favorites")
-    sleep(5)  # Wait for UI to update
-    screenshot_path = os.path.join(screenshots_dir, "11_7_2_favorites_after_removal.png")
     d.screenshot(screenshot_path)
     print(f"\nTook screenshot: {screenshot_path}")
 

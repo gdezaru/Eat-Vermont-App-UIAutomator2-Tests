@@ -452,7 +452,7 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
 
     # Scroll to the end of screen
     print("\nScrolling to end of screen...")
-    max_scroll_attempts = 5
+    max_scroll_attempts = 6
 
     # Keep scrolling until we reach the end
     for _ in range(max_scroll_attempts):
