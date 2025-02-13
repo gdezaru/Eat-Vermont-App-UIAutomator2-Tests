@@ -450,14 +450,20 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
     start_y = (height * 3) // 4
     end_y = height // 4
 
-    # Scroll to the end of screen
-    print("\nScrolling to end of screen...")
-    max_scroll_attempts = 6
+    max_scroll_attempts = 15
 
-    # Keep scrolling until we reach the end
+    # Keep scrolling until we reach the end or find the prompt
     for _ in range(max_scroll_attempts):
-        d.swipe(start_x, start_y, start_x, end_y, duration=0.9)
+        d.swipe(start_x, start_y, start_x, end_y, duration=2.0)
         sleep(1.5)
+
+        # Check if the guest mode prompt is visible
+        guest_mode_prompt = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_PROMPT)
+        if guest_mode_prompt.exists:
+            print("Guest mode prompt is present")
+            break
+    else:
+        assert False, "Guest mode prompt not found after maximum scroll attempts"
 
     # Verify guest mode prompt is present
     print("\nVerifying guest mode prompt...")
