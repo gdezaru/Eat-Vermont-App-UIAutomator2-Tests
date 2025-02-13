@@ -199,14 +199,14 @@ class ExcelReporter:
             worksheet.autofilter(0, 0, len(df), len(df.columns) - 1)
             
             # Set column widths first
-            worksheet.set_column('A:A', 40)  # test_name
-            worksheet.set_column('B:B', 25)  # start_time
-            worksheet.set_column('C:C', 15)  # status
-            worksheet.set_column('D:D', 40)  # error_message
-            worksheet.set_column('E:E', 40)  # traceback
-            worksheet.set_column('F:F', 50)  # steps
-            worksheet.set_column('G:G', 25)  # end_time
-            worksheet.set_column('H:H', 15)  # duration
+            worksheet.set_column('A:A', 20)  # test_name
+            worksheet.set_column('B:B', 13)  # start_time
+            worksheet.set_column('C:C', 6)  # status
+            worksheet.set_column('D:D', 26)  # error_message
+            worksheet.set_column('E:E', 26)  # traceback
+            worksheet.set_column('F:F', 26)  # steps
+            worksheet.set_column('G:G', 13)  # end_time
+            worksheet.set_column('H:H', 6)  # duration
 
             # Format header
             header_format = workbook.add_format({
