@@ -8,14 +8,15 @@ import time
 from config import TEST_USER
 import random
 import string
-from locators import Events, PlansPopup, LoginPage, GuestMode
+from locators import Events, PlansPopup, LoginPage, GuestMode, Businesses, HomeScreen
 
 
 def get_screenshots_dir():
     """Get the screenshots directory for the current test run"""
     # Get the current test run folder from the reporter
     import pytest
-    reporter = next((plugin for plugin in pytest.get_platform().pluginmanager.get_plugins() if hasattr(plugin, 'screenshots_folder')), None)
+    reporter = next((plugin for plugin in pytest.get_platform().pluginmanager.get_plugins()
+                     if hasattr(plugin, 'screenshots_folder')), None)
     if reporter:
         return reporter.screenshots_folder
     return None  # Return None if no reporter found
@@ -167,9 +168,7 @@ def scroll_to_find_text(device, text, max_attempts=5):
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
 
-    start_x = width // 2
-    start_y = (height * 3) // 4
-    end_y = height // 4
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
 
     for _ in range(max_attempts):
         if device(text=text).exists:
@@ -196,9 +195,7 @@ def scroll_until_element_is_visible(device, locator, max_attempts=5):
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
 
-    start_x = width // 2
-    start_y = (height * 3) // 4
-    end_y = height // 4
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
 
     for _ in range(max_attempts):
         element = device.xpath(locator)
@@ -208,6 +205,20 @@ def scroll_until_element_is_visible(device, locator, max_attempts=5):
         time.sleep(1.5)
 
     return device.xpath(locator).exists
+
+
+def calculate_swipe_coordinates(width, height):
+    """
+    Calculates swipe coordinates for scrolling.
+    
+    :param width: Screen width.
+    :param height: Screen height.
+    :return: A tuple containing (start_x, start_y, end_y)
+    """
+    start_x = width // 2
+    start_y = (height * 3) // 4
+    end_y = height // 4
+    return start_x, start_y, end_y
 
 
 def sign_in_and_prepare(d):
@@ -389,3 +400,178 @@ def save_screenshot(device, filename: str, request) -> str:
     # Save screenshot in the test run's screenshots folder
     screenshot_path = os.path.join(reporter.screenshots_folder, filename)
     return device.screenshot(screenshot_path)
+
+
+def verify_businesses_section_present(device):
+    """
+    Verifies that the Businesses section is present on the screen.
+    """
+    print("\nVerifying Businesses section is present...")
+    businesses_section = device.xpath(Businesses.BUSINESSES_SECTION)
+    assert businesses_section.exists, "Businesses section not found in search results"
+    print("Found Businesses section")
+
+
+def interact_with_events_carousel(device):
+    """
+    Locates and interacts with the Events carousel item.
+    """
+    print("\nLocating Events carousel item...")
+    carousel_item = device.xpath(Events.CAROUSEL_ITEM)
+    assert carousel_item.exists, "Could not find Events carousel item"
+    print("Events carousel item found, clicking...")
+    carousel_item.click()
+    sleep(7)
+
+
+def click_and_verify_element(device, element_locator, description):
+    """
+    Clicks an element and verifies its presence.
+    
+    :param device: The device instance.
+    :param element_locator: The XPath locator for the element.
+    :param description: A description of the element for logging.
+    """
+    print(f"\nClicking and verifying {description}...")
+    element = device.xpath(element_locator)
+    assert element.exists, f"{description} not found"
+    element.click()
+    print(f"{description} clicked and verified.")
+
+
+def search_and_submit(device, search_term):
+    """
+    Finds the search button and field, enters a search term, and submits it.
+    
+    :param device: The device instance.
+    :param search_term: The term to search for.
+    """
+    # Find and click Search in bottom navigation
+    search_button = None
+    if device(description="Search").exists(timeout=5):
+        search_button = device(description="Search")
+    elif device(text="Search").exists(timeout=5):
+        search_button = device(text="Search")
+    elif device(resourceId="Search").exists(timeout=5):
+        search_button = device(resourceId="Search")
+
+    assert search_button is not None, "Could not find Search button"
+    search_button.click()
+    sleep(2)
+
+    # Find and click search field
+    search_field = None
+    search_selectors = [
+        lambda: device(description="Search"),
+        lambda: device(text="Search"),
+        lambda: device(resourceId="search-input"),
+        lambda: device(className="android.widget.EditText")
+    ]
+
+    for selector in search_selectors:
+        if selector().exists(timeout=3):
+            search_field = selector()
+            break
+
+    assert search_field is not None, "Could not find search field"
+    search_field.click()
+    sleep(1)
+
+    # Enter search term and submit
+    device.send_keys(search_term)
+    sleep(1)
+    device.press("enter")
+    sleep(10)
+
+
+def get_screen_dimensions(device):
+    """
+    Returns the screen width and height.
+    
+    :param device: The device instance.
+    :return: A tuple containing (width, height)
+    """
+    screen_info = device.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    return width, height
+
+
+def verify_and_screenshot(device, condition, error_message, screenshots_dir, filename):
+    """
+    Verifies a condition and takes a screenshot if successful.
+    
+    :param device: The device instance.
+    :param condition: A callable that returns a boolean.
+    :param error_message: The error message if the condition fails.
+    :param screenshots_dir: The directory to save the screenshot.
+    :param filename: The name of the screenshot file.
+    """
+    assert condition(), error_message
+    screenshot_path = os.path.join(screenshots_dir, filename)
+    device.screenshot(screenshot_path)
+    print(f"Screenshot saved as {filename}")
+
+
+def click_trails_button(device):
+    """
+    Finds and clicks the Trails button on the home screen.
+
+    :param device: The device instance.
+    """
+    print("\nClicking on Trails button...")
+    trails_button = device.xpath(HomeScreen.TRAILS_BUTTON)
+    assert trails_button.wait(timeout=5), "Trails button not found"
+    trails_button.click()
+    sleep(2)
+
+
+def click_and_fill_forgot_password(device, email):
+    """
+    Finds and clicks the Sign In button, navigates to Forgot Password,
+    and enters the email for password reset.
+
+    :param device: The device instance.
+    :param email: The email address to enter for password reset.
+    """
+    # Find and click Sign In button
+    sign_in = None
+    if device(description="Sign In").exists(timeout=5):
+        sign_in = device(description="Sign In")
+    elif device(text="Sign In").exists(timeout=5):
+        sign_in = device(text="Sign In")
+
+    assert sign_in is not None, "Could not find Sign In button"
+    sign_in.click()
+    sleep(2)
+
+    # Click Forgot Password
+    forgot_password = device.xpath(LoginPage.FORGOT_PASSWORD)
+    assert forgot_password.wait(timeout=5), "Forgot Password button not found"
+    forgot_password.click()
+    sleep(2)
+
+    # Enter email
+    email_field = device.xpath(LoginPage.RESET_PASSWORD_EMAIL_FIELD)
+    assert email_field.wait(timeout=5), "Email field not found"
+    email_field.click()
+    device.send_keys(email)
+    sleep(1)
+
+
+def scroll_to_bottom(device, scroll_times=3, duration=0.5):
+    """
+    Scrolls to the bottom of the results on the screen.
+
+    :param device: The device instance.
+    :param scroll_times: Number of times to scroll to ensure reaching the bottom.
+    :param duration: Duration of each swipe.
+    """
+    screen_size = device.window_size()
+    for _ in range(scroll_times):
+        device.swipe(
+            screen_size[0] * 0.5, screen_size[1] * 0.8,
+            screen_size[0] * 0.5, screen_size[1] * 0.2,
+            duration=duration
+        )
+        sleep(2)  # Wait for content to load

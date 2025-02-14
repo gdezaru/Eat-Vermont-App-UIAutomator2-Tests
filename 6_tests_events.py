@@ -1,6 +1,6 @@
 from time import sleep
 from locators import Events
-from utils import sign_in_and_prepare
+from utils import sign_in_and_prepare, interact_with_events_carousel
 import pytest
 import os
 
@@ -38,13 +38,8 @@ def test_events_card(d, screenshots_dir):
 
     sleep(10)
 
-    # Click on Events carousel item
-    print("\nLocating Events carousel item...")
-    carousel_item = d.xpath(Events.CAROUSEL_ITEM)
-    assert carousel_item.exists, "Could not find Events carousel item"
-    print("Events carousel item found, clicking...")
-    carousel_item.click()
-    sleep(7)
+    # Interact with Events carousel item
+    interact_with_events_carousel(d)
 
     # Scroll until event details text is visible
     print("\nScrolling to find event details...")

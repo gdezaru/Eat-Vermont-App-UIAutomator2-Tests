@@ -1,7 +1,7 @@
 from time import sleep
 import pytest
 from locators import DayTrips
-from utils import sign_in_and_prepare, handle_events_popup
+from utils import sign_in_and_prepare, handle_events_popup, get_screen_dimensions
 import os
 
 
@@ -32,10 +32,8 @@ def test_day_trip_card(d, screenshots_dir):
     max_small_scrolls = 3
     read_more_button = d.xpath(DayTrips.READ_MORE_HOME_SCREEN)
 
-    # Get screen dimensions
-    screen_info = d.info
-    width = screen_info['displayWidth']
-    height = screen_info['displayHeight']
+    # Use utility function to get screen dimensions
+    width, height = get_screen_dimensions(d)
 
     # Calculate swipe coordinates (swipe in the middle of screen to avoid buttons)
     start_x = width // 2

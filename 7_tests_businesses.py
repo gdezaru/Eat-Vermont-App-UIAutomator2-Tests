@@ -1,6 +1,6 @@
 from time import sleep
 from locators import Businesses
-from utils import sign_in_and_prepare
+from utils import sign_in_and_prepare, verify_businesses_section_present, search_and_submit
 import pytest
 import os
 
@@ -26,48 +26,11 @@ def test_business_card_with_event(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Find and click Search in bottom navigation
-    search_button = None
-    if d(description="Search").exists(timeout=5):
-        search_button = d(description="Search")
-    elif d(text="Search").exists(timeout=5):
-        search_button = d(text="Search")
-    elif d(resourceId="Search").exists(timeout=5):
-        search_button = d(resourceId="Search")
-
-    assert search_button is not None, "Could not find Search button"
-    search_button.click()
-    sleep(2)
-
-    # Find and click search field
-    search_field = None
-    search_selectors = [
-        lambda: d(description="Search"),
-        lambda: d(text="Search"),
-        lambda: d(resourceId="search-input"),
-        lambda: d(className="android.widget.EditText")
-    ]
-
-    for selector in search_selectors:
-        if selector().exists(timeout=3):
-            search_field = selector()
-            break
-
-    assert search_field is not None, "Could not find search field"
-    search_field.click()
-    sleep(1)
-
-    # Enter search term and submit
-    d.send_keys(business_name)
-    sleep(1)
-    d.press("enter")
-    sleep(10)
+    # Use utility function to search and submit
+    search_and_submit(d, business_name)
 
     # Wait for and verify Businesses section is present
-    print("\nVerifying Businesses section is present...")
-    businesses_section = d.xpath(Businesses.BUSINESSES_SECTION)
-    assert businesses_section.exists, "Businesses section not found in search results"
-    print("Found Businesses section")
+    verify_businesses_section_present(d)
 
     # Click on Higher Ground search result under Businesses
     print("\nLocating Higher Ground under Businesses section...")
@@ -141,48 +104,11 @@ def test_business_card_with_menu(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Find and click Search in bottom navigation
-    search_button = None
-    if d(description="Search").exists(timeout=5):
-        search_button = d(description="Search")
-    elif d(text="Search").exists(timeout=5):
-        search_button = d(text="Search")
-    elif d(resourceId="Search").exists(timeout=5):
-        search_button = d(resourceId="Search")
-
-    assert search_button is not None, "Could not find Search button"
-    search_button.click()
-    sleep(2)
-
-    # Find and click search field
-    search_field = None
-    search_selectors = [
-        lambda: d(description="Search"),
-        lambda: d(text="Search"),
-        lambda: d(resourceId="search-input"),
-        lambda: d(className="android.widget.EditText")
-    ]
-
-    for selector in search_selectors:
-        if selector().exists(timeout=3):
-            search_field = selector()
-            break
-
-    assert search_field is not None, "Could not find search field"
-    search_field.click()
-    sleep(1)
-
-    # Enter search term and submit
-    d.send_keys(menu_business_name)
-    sleep(1)
-    d.press("enter")
-    sleep(10)
+    # Use utility function to search and submit
+    search_and_submit(d, menu_business_name)
 
     # Wait for and verify Businesses section is present
-    print("\nVerifying Businesses section is present...")
-    businesses_section = d.xpath(Businesses.BUSINESSES_SECTION)
-    assert businesses_section.exists, "Businesses section not found in search results"
-    print("Found Businesses section")
+    verify_businesses_section_present(d)
 
     # Click on Big Fatty's BBQ search result under Businesses
     print("\nLocating Big Fatty's BBQ under Businesses section...")

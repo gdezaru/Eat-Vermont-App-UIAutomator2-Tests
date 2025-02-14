@@ -3,7 +3,7 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
-from utils import get_next_day, sign_in_and_prepare
+from utils import get_next_day, sign_in_and_prepare, get_screen_dimensions, verify_and_screenshot
 import os
 
 
@@ -200,10 +200,8 @@ def test_home_screen_videos(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Get screen dimensions for scrolling
-    screen_info = d.info
-    width = screen_info['displayWidth']
-    height = screen_info['displayHeight']
+    # Use utility function to get screen dimensions
+    width, height = get_screen_dimensions(d)
 
     # First scroll until we find Videos text using the specific locator
     print("\nScrolling to find Videos section...")

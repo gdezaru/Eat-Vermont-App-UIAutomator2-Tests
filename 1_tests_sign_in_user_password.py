@@ -2,7 +2,7 @@ import pytest
 import os
 from time import sleep
 from config import TEST_USER
-from utils import sign_in_and_prepare
+from utils import sign_in_and_prepare, handle_notification_permission, click_and_fill_forgot_password
 from locators import LoginPage
 
 
@@ -10,7 +10,7 @@ from locators import LoginPage
 def test_sign_in_with_valid_credentials(d, screenshots_dir):
     """
     Test sign in with valid user and password.
-    
+
     Steps:
     1. Handle notification permission if it appears
     2. Click Sign In button
@@ -32,7 +32,7 @@ def test_sign_in_with_valid_credentials(d, screenshots_dir):
 def test_forgot_password(d, screenshots_dir):
     """
     Test forgot password functionality.
-    
+
     Steps:
     1. Handle notification permission if it appears
     2. Click Sign In button
@@ -42,31 +42,10 @@ def test_forgot_password(d, screenshots_dir):
     6. Take screenshot of confirmation screen
     7. Verify success message is displayed
     """
-    sign_in_and_prepare(d)
+    handle_notification_permission(d)
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
-
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
-
-    # Click Forgot Password
-    forgot_password = d.xpath(LoginPage.FORGOT_PASSWORD)
-    assert forgot_password.wait(timeout=5), "Forgot Password button not found"
-    forgot_password.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d.xpath(LoginPage.RESET_PASSWORD_EMAIL_FIELD)
-    assert email_field.wait(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(TEST_USER['email'])
-    sleep(1)
+    # Use utility function to click and fill forgot password
+    click_and_fill_forgot_password(d, TEST_USER['email'])
 
     # Click Reset Password
     reset_button = d.xpath(LoginPage.RESET_PASSWORD_BUTTON)

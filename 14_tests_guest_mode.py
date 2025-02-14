@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from locators import Events, GuestMode, PlansPopup, HomeScreen, BottomNavBar, Videos
-from utils import handle_guest_mode_plans_popup, enter_guest_mode_and_handle_popups
+from utils import handle_guest_mode_plans_popup, enter_guest_mode_and_handle_popups, interact_with_events_carousel, get_screen_dimensions
 import os
 
 
@@ -46,12 +46,8 @@ def test_guest_mode_events(d, screenshots_dir):
 
     enter_guest_mode_and_handle_popups(d)
 
-    # Click on Events carousel item
-    print("\nLocating Events carousel item...")
-    carousel_item = d.xpath(Events.CAROUSEL_ITEM)
-    assert carousel_item.exists, "Could not find Events carousel item"
-    print("Events carousel item found, clicking...")
-    carousel_item.click()
+    # Interact with Events carousel item
+    interact_with_events_carousel(d)
     sleep(7)
 
     # Verify Limited Results text is present
@@ -92,18 +88,11 @@ def test_guest_mode_videos(d, screenshots_dir):
     videos_button.click()
     sleep(5)
 
-    # Take screenshot of guest mode videos screen
-    screenshot_path = os.path.join(screenshots_dir, "14_3_1_guest_mode_videos.png")
-    d.screenshot(screenshot_path)
-    print("Screenshot saved as 14_3_1_guest_mode_videos.png")
-
     # Handle events popup if present
     handle_guest_mode_plans_popup(d)
 
-    # Get screen dimensions for scrolling
-    screen_info = d.info
-    width = screen_info['displayWidth']
-    height = screen_info['displayHeight']
+    # Use utility function to get screen dimensions
+    width, height = get_screen_dimensions(d)
     upper_third = int(height * 0.4)
 
     # Calculate swipe coordinates
@@ -249,10 +238,8 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
 
     enter_guest_mode_and_handle_popups(d)
 
-    # Get screen dimensions for scrolling
-    screen_info = d.info
-    width = screen_info['displayWidth']
-    height = screen_info['displayHeight']
+    # Use utility function to get screen dimensions
+    width, height = get_screen_dimensions(d)
 
     # Calculate swipe coordinates for maximum scroll
     start_x = width // 2

@@ -1,6 +1,6 @@
 from time import sleep
 from locators import HomeScreen, Trails
-from utils import sign_in_and_prepare
+from utils import sign_in_and_prepare, click_trails_button, scroll_to_bottom
 import pytest
 import os
 
@@ -18,11 +18,8 @@ def test_trails_screen(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Trails button
-    print("\nClicking on Trails button...")
-    trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
-    assert trails_button.wait(timeout=5), "Trails button not found"
-    trails_button.click()
+    # Use utility function to click Trails button
+    click_trails_button(d)
     sleep(2)
 
     # Find and verify any trail name
@@ -69,11 +66,8 @@ def test_trails_details(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Trails button
-    print("\nClicking on Trails button...")
-    trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
-    assert trails_button.wait(timeout=5), "Trails button not found"
-    trails_button.click()
+    # Use utility function to click Trails button
+    click_trails_button(d)
     sleep(2)
 
     # Click Read More button
@@ -107,16 +101,8 @@ def test_trails_details(d, screenshots_dir):
     print("Screenshot saved as 9_2_1_trail_details.png")
     sleep(1)
 
-    # Scroll using swipe
-    print("\nScrolling using swipe...")
-    screen_size = d.window_size()
-    start_x = screen_size[0] * 0.5
-    start_y = screen_size[1] * 0.8  # Start from 80% of screen height
-    end_y = screen_size[1] * 0.2  # End at 20% of screen height
-
-    for _ in range(3):  # Do multiple swipes
-        d.swipe(start_x, start_y, start_x, end_y, duration=0.5)
-        sleep(1)
+    # Use utility function to scroll to bottom of results
+    scroll_to_bottom(d)
 
     print("\nTaking screenshot of trail details visits...")
     screenshot_path = os.path.join(screenshots_dir, "9_2_2_trail_details_visits.png")

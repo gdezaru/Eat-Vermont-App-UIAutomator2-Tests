@@ -2,7 +2,11 @@ import pytest
 from time import sleep
 from locators import Events, MyFavorites, Businesses, HomeScreen, BottomNavBar
 from utils import (
-    sign_in_and_prepare
+    sign_in_and_prepare,
+    verify_businesses_section_present,
+    interact_with_events_carousel,
+    search_and_submit,
+    click_trails_button
 )
 import os
 
@@ -19,19 +23,14 @@ def test_add_favorite_events(d, screenshots_dir):
     Steps:
     1. Sign in using the utility method
     2. Handle events popup using the utility method
-    3. Click on Events carousel item
+    3. Interact with Events carousel item
     4. Find and click the favorite icon
     5. Take screenshot
     """
     sign_in_and_prepare(d)
 
-    # Click on Events carousel item
-    print("\nLocating Events carousel item...")
-    carousel_item = d.xpath(Events.CAROUSEL_ITEM)
-    assert carousel_item.exists, "Could not find Events carousel item"
-    print("Events carousel item found, clicking...")
-    carousel_item.click()
-    sleep(7)  # Wait for event details to load
+    # Interact with Events carousel item
+    interact_with_events_carousel(d)
 
     # Find and click the favorite icon
     print("\nLocating favorite icon...")
@@ -64,48 +63,11 @@ def test_add_favorite_businesses(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Find and click Search in bottom navigation
-    search_button = None
-    if d(description="Search").exists(timeout=5):
-        search_button = d(description="Search")
-    elif d(text="Search").exists(timeout=5):
-        search_button = d(text="Search")
-    elif d(resourceId="Search").exists(timeout=5):
-        search_button = d(resourceId="Search")
-
-    assert search_button is not None, "Could not find Search button"
-    search_button.click()
-    sleep(2)
-
-    # Find and click search field
-    search_field = None
-    search_selectors = [
-        lambda: d(description="Search"),
-        lambda: d(text="Search"),
-        lambda: d(resourceId="search-input"),
-        lambda: d(className="android.widget.EditText")
-    ]
-
-    for selector in search_selectors:
-        if selector().exists(timeout=3):
-            search_field = selector()
-            break
-
-    assert search_field is not None, "Could not find search field"
-    search_field.click()
-    sleep(1)
-
-    # Enter search term and submit
-    d.send_keys(menu_business_name)
-    sleep(1)
-    d.press("enter")
-    sleep(10)
+    # Use utility function to search and submit
+    search_and_submit(d, menu_business_name)
 
     # Wait for and verify Businesses section is present
-    print("\nVerifying Businesses section is present...")
-    businesses_section = d.xpath(Businesses.BUSINESSES_SECTION)
-    assert businesses_section.exists, "Businesses section not found in search results"
-    print("Found Businesses section")
+    verify_businesses_section_present(d)
 
     # Click on Big Fatty's BBQ search result under Businesses
     print("\nLocating Big Fatty's BBQ under Businesses section...")
@@ -142,12 +104,8 @@ def test_add_favorite_trails(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Trails button
-    print("\nClicking on Trails button...")
-    trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
-    assert trails_button.wait(timeout=5), "Trails button not found"
-    trails_button.click()
-    sleep(2)
+    # Use utility function to click Trails button
+    click_trails_button(d)
 
     # Find and click the favorite icon
     print("\nLocating favorite icon...")

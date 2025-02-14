@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from locators import HomeScreen, ViewMap
-from utils import sign_in_and_prepare
+from utils import sign_in_and_prepare, click_and_verify_element
 import os
 
 
@@ -25,10 +25,6 @@ def test_view_map_filters(d, screenshots_dir):
     13. Document each filter state with screenshots
     """
     sign_in_and_prepare(d)
-
-    # Handle events popup using the utility method
-    handle_events_popup(d)
-    sleep(10)
 
     # Single scroll to show View Map
     d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
@@ -62,39 +58,30 @@ def test_view_map_filters(d, screenshots_dir):
     d.screenshot(screenshot_path)
     print("Screenshot saved as 13_1_1_map_filters_present.png")
 
-    # Click Events filter and take screenshot
-    print("\nClicking Events filter...")
-    events_filter.click()
-    sleep(2)
+    # Click and verify Events filter
+    click_and_verify_element(d, ViewMap.EVENTS_FILTER, "Events filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_2_events_filter_active.png")
     print("\nTaking screenshot of Events filter...")
     d.screenshot(screenshot_path)
     print("Screenshot saved as 13_1_2_events_filter_active.png")
 
-    # Click Food & Drinks filter and take screenshot
-    print("\nClicking Food & Drinks filter...")
-    food_drinks_filter.click()
-    sleep(2)
+    # Click and verify Food & Drinks filter
+    click_and_verify_element(d, ViewMap.FOOD_AND_DRINKS_FILTER, "Food & Drinks filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_3_food_drinks_filter_active.png")
     print("\nTaking screenshot of Food & Drinks filter...")
     d.screenshot(screenshot_path)
     print("Screenshot saved as 13_1_3_food_drinks_filter_active.png")
 
-    # Click Farms filter and take screenshot
-    print("\nClicking Farms filter...")
-    farms_filter.click()
-    sleep(2)
+    # Click and verify Farms filter
+    click_and_verify_element(d, ViewMap.FARMS_FILTER, "Farms filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_4_farms_filter_active.png")
     print("\nTaking screenshot of Farms filter...")
     d.screenshot(screenshot_path)
     print("Screenshot saved as 13_1_4_farms_filter_active.png")
 
-    # Click Food Pantries filter and take screenshot
-    print("\nClicking Food Pantries filter...")
-    food_pantries_filter.click()
-    sleep(2)
+    # Click and verify Food Pantries filter
+    click_and_verify_element(d, ViewMap.FOOD_PANTRIES_FILTER, "Food Pantries filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_5_food_pantries_filter_active.png")
     print("\nTaking screenshot of Food Pantries filter...")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 13_1_5_food_pantries_filter_active.png")
     print("Screenshot saved as 13_1_5_food_pantries_filter_active.png")
