@@ -1,10 +1,11 @@
 from time import sleep
 import pytest
 import os
-from locators import BottomNavBar, VisitHistory
+from locators import VisitHistory
 from utils import (
     sign_in_and_prepare,
-    click_favorites_button
+    click_favorites_button,
+    click_visit_history
 )
 
 
@@ -27,12 +28,7 @@ def test_visit_history_screen(d, screenshots_dir):
     sleep(2)
 
     # Click on Visit History tab
-    print("\nClicking on Visit History tab...")
-    visit_history_tab = d.xpath(VisitHistory.VISIT_HISTORY_TAB)
-    assert visit_history_tab.exists, "Could not find Visit History tab"
-    print("Found Visit History tab, clicking...")
-    visit_history_tab.click()
-    sleep(2)
+    click_visit_history(d)
 
     # Take screenshot of visit history screen
     print("\nTaking screenshot of visit history screen...")

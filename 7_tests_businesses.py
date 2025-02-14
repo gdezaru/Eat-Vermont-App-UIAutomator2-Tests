@@ -40,7 +40,7 @@ def test_business_card_with_event(d, screenshots_dir):
     print(f"Higher Ground element info: {search_result.info}")
     print(f"Current screen hierarchy: {d.dump_hierarchy()}")
     search_result.click()
-    sleep(5)  # Increased sleep time to ensure page loads
+    sleep(5)
 
     # Verify About tab is visible
     print("\nVerifying About tab is visible...")

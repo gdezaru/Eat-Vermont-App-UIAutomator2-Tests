@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from locators import HomeScreen, ViewMap
-from utils import sign_in_and_prepare, click_and_verify_element
+from utils import sign_in_and_prepare, click_and_verify_element, click_view_map
 import os
 
 
@@ -31,10 +31,7 @@ def test_view_map_filters(d, screenshots_dir):
     sleep(1)
 
     # Click "View Map" button
-    view_map = d.xpath(HomeScreen.VIEW_MAP)
-    assert view_map.exists, "Could not find View Map button"
-    view_map.click()
-    sleep(5)
+    click_view_map(d)
 
     # Assert that Events filter is visible
     events_filter = d.xpath(ViewMap.EVENTS_FILTER)

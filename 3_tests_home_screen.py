@@ -1,9 +1,8 @@
 import pytest
 
 from time import sleep
-from config import TEST_USER
-from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
-from utils import get_next_day, sign_in_and_prepare, get_screen_dimensions, verify_and_screenshot, click_favorites_button
+from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
+from utils import sign_in_and_prepare, get_screen_dimensions, click_favorites_button, try_next_day
 import os
 
 
@@ -45,52 +44,7 @@ def test_home_screen_events(d, screenshots_dir):
     assert current_day is not None, "Could not find any day of week element"
 
     # Try clicking each subsequent day until one works
-    current_try_day = current_day
-    days_tried = 0
-    max_days_to_try = 7  # Try all days of the week at most
-
-    while days_tried < max_days_to_try:
-        # Get the next day to try
-        next_day = get_next_day(current_try_day)
-        print(f"\nTrying to click on: {next_day}")
-
-        # Try clicking this day multiple times
-        max_attempts = 3
-        click_success = False
-
-        for attempt in range(max_attempts):
-            next_day_element = d.xpath(EventsScreen.DAY_OF_WEEK.format(next_day, next_day))
-            print(f"\nAttempt {attempt + 1}: Next day element exists: {next_day_element.exists}")
-
-            if not next_day_element.exists:
-                print(f"\n{next_day} not found, will try next day")
-                break
-
-            next_day_element.click()
-            print(f"\nClicked on {next_day}")
-            sleep(2)  # Wait for next day's events to load
-
-            # Verify if we're now on this day by checking the events list
-            events_for_day = d(textContains=next_day.title())  # e.g., "Mon" instead of "MON"
-            if events_for_day.exists:
-                print(f"\nSuccess! Found events for {next_day}")
-                click_success = True
-                break
-            elif attempt < max_attempts - 1:
-                print(f"\nClick might not have worked (no events found for {next_day}), trying again...")
-                sleep(2)  # Wait before next attempt
-            else:
-                print(f"\nCould not verify events for {next_day} after {max_attempts} attempts, will try next day")
-
-        if click_success:
-            break
-
-        # Move to next day if this one didn't work
-        current_try_day = next_day
-        days_tried += 1
-
-        if days_tried == max_days_to_try:
-            assert False, "Could not find any clickable day after trying all days of the week"
+    try_next_day(d, current_day)
 
     # Verify that either there's an event or "No Events" message is shown
     first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
@@ -98,12 +52,12 @@ def test_home_screen_events(d, screenshots_dir):
 
     assert first_event.exists or no_events_message.exists, "Neither events nor 'No Events' message found"
     if first_event.exists:
-        print(f"\nFound at least one event for {next_day}")
+        print(f"\nFound at least one event for {current_day}")
     else:
-        print(f"\nNo events found for {next_day}")
+        print(f"\nNo events found for {current_day}")
 
     # Take screenshot of the successful day's events
-    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_events_{next_day.lower()}.png")
+    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_events_{current_day.lower()}.png")
     d.screenshot(screenshot_path)
 
     # If no event was found initially, scroll to try to find one
@@ -123,7 +77,7 @@ def test_home_screen_events(d, screenshots_dir):
                 print(f"\nFound an event after {scroll_attempt + 1} scroll(s)")
                 found_event = True
                 # Take a screenshot after finding the event
-                screenshot_path = os.path.join(screenshots_dir, f"3_1_3_home_screen_events_{next_day.lower()}_after_scroll.png")
+                screenshot_path = os.path.join(screenshots_dir, f"3_1_3_home_screen_events_{current_day.lower()}_after_scroll.png")
                 d.screenshot(screenshot_path)
                 break
 
@@ -148,7 +102,7 @@ def test_home_screen_events(d, screenshots_dir):
 
         print("\nSuccessfully opened event details")
         # Take screenshot of the event details
-        screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{next_day.lower()}.png")
+        screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{current_day.lower()}.png")
         d.screenshot(screenshot_path)
         print("\nEvent details page loaded and screenshot taken")
 

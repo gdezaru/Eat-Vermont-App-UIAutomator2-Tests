@@ -1,6 +1,6 @@
 import pytest
 from time import sleep
-from locators import Events, MyFavorites, Businesses, HomeScreen, BottomNavBar
+from locators import MyFavorites, Businesses
 from utils import (
     sign_in_and_prepare,
     verify_businesses_section_present,
@@ -39,7 +39,7 @@ def test_add_favorite_events(d, screenshots_dir):
     assert favorite_icon.exists, "Could not find favorite icon"
     print("Favorite icon found, clicking...")
     favorite_icon.click()
-    sleep(2)  # Wait for favorite action to complete
+    sleep(2)
 
     # Take screenshot
     screenshot_path = os.path.join(screenshots_dir, "11_1_1_event_favorited.png")

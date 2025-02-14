@@ -1,7 +1,6 @@
 import pytest
 from time import sleep
-from config import TEST_USER
-from locators import HomeScreen, SettingsScreen, Events
+from locators import HomeScreen, SettingsScreen
 from utils import generate_random_name, generate_random_username, sign_in_and_prepare
 import os
 
@@ -74,7 +73,7 @@ def test_settings_screen_navigation(d, screenshots_dir):
     edit_profile = d.xpath(SettingsScreen.EDIT_PROFILE)
     assert edit_profile.exists, "Could not find Edit Profile option"
     edit_profile.click()
-    sleep(2)  # Wait for Edit Profile screen to load
+    sleep(2)
 
     # Take screenshot of Edit Profile screen
     print("\nTaking screenshot of Edit Profile screen...")
@@ -86,19 +85,19 @@ def test_settings_screen_navigation(d, screenshots_dir):
     back_button = d.xpath(SettingsScreen.BACK_BUTTON_SETTINGS)
     assert back_button.exists, "Could not find Back button"
     back_button.click()
-    sleep(2)  # Wait for settings screen to reload
+    sleep(2)
 
     # Click on Location Toggle
     location_toggle = d.xpath(SettingsScreen.LOCATION_TOGGLE)
     assert location_toggle.exists, "Could not find Location Toggle"
     location_toggle.click()
-    sleep(1)  # Wait for toggle to change state
+    sleep(1)
 
     # Handle location permission dialog if it appears
     location_allow = d.xpath(SettingsScreen.LOCATION_ALLOW)
-    if location_allow.wait(timeout=2):  # Wait up to 2 seconds for dialog
+    if location_allow.wait(timeout=2):
         location_allow.click()
-        sleep(1)  # Wait for permission dialog to dismiss
+        sleep(1)
 
     # Take screenshot of Settings screen with toggled location
     print("\nTaking screenshot of Settings screen with toggled location...")
@@ -183,7 +182,8 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     sleep(1)  # Wait for text input
 
     # Verify the new username was successfully inputted
-    assert edit_username.get_text() == new_username, f"Username was not updated correctly. Expected: {new_username}, Got: {edit_username.get_text()}"
+    assert edit_username.get_text() == new_username, (f"Username was not updated correctly. Expected: {new_username},"
+                                                      f" Got: {edit_username.get_text()}")
 
     # Take screenshot of the edited profile username
     print("\nTaking screenshot of the edited profile username...")

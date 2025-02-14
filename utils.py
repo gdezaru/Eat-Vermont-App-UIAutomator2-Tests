@@ -8,7 +8,7 @@ import time
 from config import TEST_USER
 import random
 import string
-from locators import Events, PlansPopup, LoginPage, GuestMode, Businesses, HomeScreen, BottomNavBar
+from locators import Events, PlansPopup, LoginPage, GuestMode, Businesses, HomeScreen, BottomNavBar, EventsScreen, VisitHistory
 
 
 # Utility Functions
@@ -25,6 +25,62 @@ def get_next_day(current_day):
     current_index = days.index(current_day)
     next_index = (current_index + 1) % 7
     return days[next_index]
+
+
+def try_next_day(d, current_day):
+    """
+    Attempts to find and click on the next day element in the events screen.
+
+    :param d: The UIAutomator2 device instance.
+    :param current_day: The current day to start trying from.
+    :return: None
+    """
+    current_try_day = current_day
+    days_tried = 0
+    max_days_to_try = 7  # Try all days of the week at most
+
+    while days_tried < max_days_to_try:
+        # Get the next day to try
+        next_day = get_next_day(current_try_day)
+        print(f"\nTrying to click on: {next_day}")
+
+        # Try clicking this day multiple times
+        max_attempts = 3
+        click_success = False
+
+        for attempt in range(max_attempts):
+            next_day_element = d.xpath(EventsScreen.DAY_OF_WEEK.format(next_day, next_day))
+            print(f"\nAttempt {attempt + 1}: Next day element exists: {next_day_element.exists}")
+
+            if not next_day_element.exists:
+                print(f"\n{next_day} not found, will try next day")
+                break
+
+            next_day_element.click()
+            print(f"\nClicked on {next_day}")
+            sleep(2)  # Wait for next day's events to load
+
+            # Verify if we're now on this day by checking the events list
+            events_for_day = d(textContains=next_day.title())  # e.g., "Mon" instead of "MON"
+            if events_for_day.exists:
+                print(f"\nSuccess! Found events for {next_day}")
+                click_success = True
+                break
+            elif attempt < max_attempts - 1:
+                print(f"\nClick might not have worked (no events found for {next_day}), trying again...")
+                sleep(2)  # Wait before next attempt
+            else:
+                print(f"\nCould not verify events for {next_day} after {max_attempts} attempts, will try next day")
+
+        if click_success:
+            break
+
+        # Move to next day if this one didn't work
+        current_try_day = next_day
+        days_tried += 1
+
+        if days_tried == max_days_to_try:
+            assert False, "Could not find any clickable day after trying all days of the week"
 
 
 def generate_random_name():
@@ -190,6 +246,51 @@ def click_trails_button(device):
     assert trails_button.wait(timeout=5), "Trails button not found"
     trails_button.click()
     sleep(2)
+
+
+def click_favorites_button(device):
+    """
+    Clicks the Favorites button in the bottom navigation bar.
+
+    :param device: The UIAutomator2 device instance.
+    """
+    print("\nClicking on Favorites button...")
+    favorites_button = device.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    print("Found Favorites button, clicking...")
+    favorites_button.click()
+    sleep(2)  # Wait for favorites page to load
+
+    # Verify that "Favorites" text is present
+    assert device(text="Favorites").exists, "Favorites text not found on screen"
+
+
+def click_visit_history(device):
+    """
+    Clicks the Visit History tab.
+
+    :param device: The UIAutomator2 device instance.
+    """
+    print("\nClicking on Visit History tab...")
+    visit_history_tab = device.xpath(VisitHistory.VISIT_HISTORY_TAB)
+    assert visit_history_tab.exists, "Could not find Visit History tab"
+    print("Found Visit History tab, clicking...")
+    visit_history_tab.click()
+    sleep(2)
+
+
+def click_view_map(device):
+    """
+    Clicks the View Map button.
+
+    :param device: The UIAutomator2 device instance.
+    """
+    print("\nClicking on View Map button...")
+    view_map = device.xpath(HomeScreen.VIEW_MAP)
+    assert view_map.exists, "Could not find View Map button"
+    print("Found View Map button, clicking...")
+    view_map.click()
+    sleep(5)
 
 
 def interact_with_events_carousel(device):
@@ -496,6 +597,30 @@ def search_and_submit(device, search_term):
     search_button.click()
     sleep(2)
 
+    # Find and click search field
+    search_field = None
+    search_selectors = [
+        lambda: device(description="Search"),
+        lambda: device(text="Search"),
+        lambda: device(resourceId="search-input"),
+        lambda: device(className="android.widget.EditText")
+    ]
+
+    for selector in search_selectors:
+        if selector().exists(timeout=3):
+            search_field = selector()
+            break
+
+    assert search_field is not None, "Could not find search field"
+    search_field.click()
+    sleep(1)
+
+    # Enter search term and submit
+    device.send_keys(search_term)
+    sleep(1)
+    device.press("enter")
+    sleep(5)
+
 
 def find_and_click_video(device, video_locator):
     """
@@ -520,12 +645,11 @@ def find_and_click_video(device, video_locator):
     return True
 
 
-def wait_for_video_to_load(device, timeout=5):
+def wait_for_video_to_load(timeout=5):
     """
     Wait for video to load after clicking.
 
     Args:
-        device: UIAutomator2 device instance
         timeout: How long to wait for video to load (in seconds)
     """
     print(f"\nWaiting {timeout} seconds for video to load...")
@@ -563,20 +687,3 @@ def click_and_fill_forgot_password(device, email):
     email_field.click()
     device.send_keys(email)
     sleep(1)
-
-
-def click_favorites_button(device):
-    """
-    Clicks the Favorites button in the bottom navigation bar.
-
-    :param device: The UIAutomator2 device instance.
-    """
-    print("\nClicking on Favorites button...")
-    favorites_button = device.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    print("Found Favorites button, clicking...")
-    favorites_button.click()
-    sleep(2)  # Wait for favorites page to load
-
-    # Verify that "Favorites" text is present
-    assert device(text="Favorites").exists, "Favorites text not found on screen"

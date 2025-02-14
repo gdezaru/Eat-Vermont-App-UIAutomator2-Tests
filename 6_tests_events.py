@@ -76,7 +76,7 @@ def test_events_card(d, screenshots_dir):
         last_screen = ""
         for i in range(max_swipes):
             current_screen = d.dump_hierarchy()
-            if current_screen == last_screen:  # We've reached the bottom when screen doesn't change
+            if current_screen == last_screen:
                 print(f"Reached bottom after {i + 1} swipes")
                 break
             last_screen = current_screen

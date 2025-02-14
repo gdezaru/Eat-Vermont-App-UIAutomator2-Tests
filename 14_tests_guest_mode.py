@@ -1,7 +1,8 @@
 import pytest
 from time import sleep
-from locators import Events, GuestMode, PlansPopup, HomeScreen, BottomNavBar, Videos
-from utils import handle_guest_mode_plans_popup, enter_guest_mode_and_handle_popups, interact_with_events_carousel, get_screen_dimensions
+from locators import GuestMode, PlansPopup, HomeScreen, BottomNavBar, Videos
+from utils import (handle_guest_mode_plans_popup, enter_guest_mode_and_handle_popups, interact_with_events_carousel,
+                   get_screen_dimensions)
 import os
 
 

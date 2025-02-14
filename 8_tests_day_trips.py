@@ -1,7 +1,7 @@
 from time import sleep
 import pytest
 from locators import DayTrips
-from utils import sign_in_and_prepare, handle_events_popup, get_screen_dimensions
+from utils import sign_in_and_prepare, get_screen_dimensions, calculate_swipe_coordinates
 import os
 
 
@@ -35,19 +35,18 @@ def test_day_trip_card(d, screenshots_dir):
     # Use utility function to get screen dimensions
     width, height = get_screen_dimensions(d)
 
-    # Calculate swipe coordinates (swipe in the middle of screen to avoid buttons)
-    start_x = width // 2
-    start_y = (height * 4) // 5
-    end_y = height // 2
+    # Calculate swipe coordinates using utility function
+    start_x, start_y, end_x, end_y = calculate_swipe_coordinates(width, height)
 
+    # Swipe slowly until Read More is visible
     for _ in range(max_small_scrolls):
         if read_more_button.exists:
             break
-        d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
-        sleep(1.5)
+        d.swipe(start_x, start_y, start_x, end_y, 0.2)
+        sleep(1)
 
-    assert read_more_button.exists, "Read More button not found on Day Trip tile"
+    assert read_more_button.exists, "Read More button not found"
     read_more_button.click()
-    sleep(5)
+    sleep(2)
     screenshot_path = os.path.join(screenshots_dir, "8_1_1_day_trip_details.png")
     d.screenshot(screenshot_path)
