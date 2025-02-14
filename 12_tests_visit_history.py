@@ -3,7 +3,8 @@ import pytest
 import os
 from locators import BottomNavBar, VisitHistory
 from utils import (
-    sign_in_and_prepare
+    sign_in_and_prepare,
+    click_favorites_button
 )
 
 
@@ -22,11 +23,7 @@ def test_visit_history_screen(d, screenshots_dir):
     sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
-    print("\nClicking on Favorites button...")
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    print("Found Favorites button, clicking...")
-    favorites_button.click()
+    click_favorites_button(d)
     sleep(2)
 
     # Click on Visit History tab

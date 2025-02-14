@@ -3,7 +3,7 @@ import pytest
 from time import sleep
 from config import TEST_USER
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar, Events
-from utils import get_next_day, sign_in_and_prepare, get_screen_dimensions, verify_and_screenshot
+from utils import get_next_day, sign_in_and_prepare, get_screen_dimensions, verify_and_screenshot, click_favorites_button
 import os
 
 
@@ -420,9 +420,7 @@ def test_home_screen_bottom_nav_bar(d, screenshots_dir):
     sign_in_and_prepare(d)
 
     # Click Favorites button
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    favorites_button.click()
+    click_favorites_button(d)
     sleep(2)  # Wait for favorites page to load
 
     # Assert that "Favorites" text is present

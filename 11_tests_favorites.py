@@ -6,7 +6,8 @@ from utils import (
     verify_businesses_section_present,
     interact_with_events_carousel,
     search_and_submit,
-    click_trails_button
+    click_trails_button,
+    click_favorites_button
 )
 import os
 
@@ -136,12 +137,7 @@ def test_remove_favorite_events(d, screenshots_dir):
     sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
-    print("\nClicking on Favorites button...")
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    print("Found Favorites button, clicking...")
-    favorites_button.click()
-    sleep(2)
+    click_favorites_button(d)
 
     # Verify favorited event is present and take screenshot
     print("\nVerifying favorited event is present...")
@@ -181,12 +177,7 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
-    print("\nClicking on Favorites button...")
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    print("Found Favorites button, clicking...")
-    favorites_button.click()
-    sleep(2)
+    click_favorites_button(d)
 
     # Verify favorited business is present and take screenshot
     print("\nVerifying favorited business is present...")
@@ -227,12 +218,7 @@ def test_remove_favorite_trails(d, screenshots_dir):
     sign_in_and_prepare(d)
 
     # Click on Favorites button in bottom navigation
-    print("\nClicking on Favorites button...")
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    print("Found Favorites button, clicking...")
-    favorites_button.click()
-    sleep(2)
+    click_favorites_button(d)
 
     # Verify favorited trail is present and take screenshot
     print("\nVerifying favorited trail is present...")

@@ -8,42 +8,10 @@ import time
 from config import TEST_USER
 import random
 import string
-from locators import Events, PlansPopup, LoginPage, GuestMode, Businesses, HomeScreen
+from locators import Events, PlansPopup, LoginPage, GuestMode, Businesses, HomeScreen, BottomNavBar
 
 
-def get_screenshots_dir():
-    """Get the screenshots directory for the current test run"""
-    # Get the current test run folder from the reporter
-    import pytest
-    reporter = next((plugin for plugin in pytest.get_platform().pluginmanager.get_plugins()
-                     if hasattr(plugin, 'screenshots_folder')), None)
-    if reporter:
-        return reporter.screenshots_folder
-    return None  # Return None if no reporter found
-
-
-def take_screenshot(device, name):
-    """Take a screenshot and save it with timestamp"""
-    screenshots_dir = get_screenshots_dir()
-    if screenshots_dir is None:
-        screenshots_dir = "screenshots"
-        os.makedirs(screenshots_dir, exist_ok=True)
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    screenshot_name = f"{name}_{timestamp}.png"
-    screenshot_path = os.path.join(screenshots_dir, screenshot_name)
-    device.screenshot(screenshot_path)
-    print(f"Screenshot saved: {screenshot_path}")
-
-
-def clear_app_state(device):
-    """Clear app data and restart the app"""
-    print("Clearing app state...")
-    app_id = 'com.eatvermont'
-    device.app_stop(app_id)  # Close the app
-    device.app_clear(app_id)  # Clear app data
-    device.app_start(app_id)  # Start the app fresh
-    print("App state cleared and restarted")
-
+# Utility Functions
 
 def get_next_day(current_day):
     """
@@ -55,7 +23,7 @@ def get_next_day(current_day):
     """
     days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
     current_index = days.index(current_day)
-    next_index = (current_index + 1) % 7  # Use modulo to wrap around to Sunday
+    next_index = (current_index + 1) % 7
     return days[next_index]
 
 
@@ -73,26 +41,87 @@ def generate_random_username():
     return random_chars
 
 
-def handle_notification_permission(device):
-    """Handle notification permission dialogs if they appear."""
-    # Handle first permission dialog
-    if device(text="Allow").exists:
-        device(text="Allow").click()
-        device.sleep(1)
+def get_screen_dimensions(device):
+    """
+    Returns the screen width and height.
+    
+    :param device: The device instance.
+    :return: A tuple containing (width, height)
+    """
+    screen_info = device.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    return width, height
 
-        # Handle second permission dialog if it appears
-        if device(text="Allow").exists:
-            device(text="Allow").click()
-            device.sleep(1)
+
+# Screenshot Management
+
+def get_screenshots_dir():
+    """Get the screenshots directory for the current test run"""
+    # Get the current test run folder from the reporter
+    import pytest
+    reporter = next((plugin for plugin in pytest.get_platform().pluginmanager.get_plugins()
+                     if hasattr(plugin, 'screenshots_folder')), None)
+    if reporter:
+        return reporter.screenshots_folder
+    return None
+
+
+def take_screenshot(device, name):
+    """Take a screenshot and save it with timestamp"""
+    screenshots_dir = get_screenshots_dir()
+    if screenshots_dir is None:
+        screenshots_dir = "screenshots"
+        os.makedirs(screenshots_dir, exist_ok=True)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    screenshot_name = f"{name}_{timestamp}.png"
+    screenshot_path = os.path.join(screenshots_dir, screenshot_name)
+    device.screenshot(screenshot_path)
+    print(f"Screenshot saved: {screenshot_path}")
+
+
+def save_screenshot(device, filename: str, request) -> str:
+    """
+    Save a screenshot to the current test run's screenshots folder.
+
+    Args:
+        device: The UI Automator device instance
+        filename: The desired filename for the screenshot
+        request: The pytest request fixture
+
+    Returns:
+        str: The path where the screenshot was saved
+    """
+    # Get the current test run folder from the reporter
+    reporter = request.config.pluginmanager.get_plugin('excel_reporter')
+    if not reporter:
+        # Fallback to saving in the current directory if reporter not found
+        return device.screenshot(filename)
+
+    # Save screenshot in the test run's screenshots folder
+    screenshot_path = os.path.join(reporter.screenshots_folder, filename)
+    return device.screenshot(screenshot_path)
+
+
+# UI Verification
+
+def verify_businesses_section_present(device):
+    """
+    Verifies that the Businesses section is present on the screen.
+    """
+    print("\nVerifying Businesses section is present...")
+    businesses_section = device.xpath(Businesses.BUSINESSES_SECTION)
+    assert businesses_section.exists, "Businesses section not found in search results"
+    print("Found Businesses section")
 
 
 def verify_video_playback(device):
     """
     Verify that a video is playing by checking app state and UI elements.
-    
+
     Args:
         device: UIAutomator2 device instance
-    
+
     Returns:
         bool: True if video is playing, False otherwise
     """
@@ -117,50 +146,73 @@ def verify_video_playback(device):
     return True
 
 
-def find_and_click_video(device, video_locator):
+def verify_and_screenshot(device, condition, error_message, screenshots_dir, filename):
     """
-    Find a video using the provided locator and click it.
+    Verifies a condition and takes a screenshot if successful.
     
-    Args:
-        device: UIAutomator2 device instance
-        video_locator: XPath locator for the video element
-    
-    Returns:
-        bool: True if video was found and clicked, False otherwise
+    :param device: The device instance.
+    :param condition: A callable that returns a boolean.
+    :param error_message: The error message if the condition fails.
+    :param screenshots_dir: The directory to save the screenshot.
+    :param filename: The name of the screenshot file.
     """
-    print("\nLooking for video...")
-    video = device.xpath(video_locator)
-
-    if not video.exists:
-        print("Video not found")
-        return False
-
-    print("Video found, clicking...")
-    video.click()
-    return True
+    assert condition(), error_message
+    screenshot_path = os.path.join(screenshots_dir, filename)
+    device.screenshot(screenshot_path)
+    print(f"Screenshot saved as {filename}")
 
 
-def wait_for_video_to_load(device, timeout=5):
+# Navigation
+
+def click_and_verify_element(device, element_locator, description):
     """
-    Wait for video to load after clicking.
-    
-    Args:
-        device: UIAutomator2 device instance
-        timeout: How long to wait for video to load (in seconds)
+    Clicks an element and verifies its presence.
+
+    :param device: The device instance.
+    :param element_locator: The XPath locator for the element.
+    :param description: A description of the element for logging.
     """
-    print(f"\nWaiting {timeout} seconds for video to load...")
-    device.sleep(timeout)  # Using device.sleep instead of time.sleep for consistency
+    print(f"\nClicking and verifying {description}...")
+    element = device.xpath(element_locator)
+    assert element.exists, f"{description} not found"
+    element.click()
+    print(f"{description} clicked and verified.")
+
+
+def click_trails_button(device):
+    """
+    Finds and clicks the Trails button on the home screen.
+
+    :param device: The device instance.
+    """
+    print("\nClicking on Trails button...")
+    trails_button = device.xpath(HomeScreen.TRAILS_BUTTON)
+    assert trails_button.wait(timeout=5), "Trails button not found"
+    trails_button.click()
+    sleep(2)
+
+
+def interact_with_events_carousel(device):
+    """
+    Locates and interacts with the Events carousel item.
+    """
+    print("\nLocating Events carousel item...")
+    carousel_item = device.xpath(Events.CAROUSEL_ITEM)
+    assert carousel_item.exists, "Could not find Events carousel item"
+    print("Events carousel item found, clicking...")
+    carousel_item.click()
+    sleep(7)
 
 
 def scroll_to_find_text(device, text, max_attempts=5):
     """
     Scroll the screen until text is found
-    
+
     Args:
         device: UIAutomator2 device instance
         text: Text to find
         max_attempts: Maximum number of scroll attempts
-        
+
     Returns:
         bool: True if text was found, False otherwise
     """
@@ -182,12 +234,12 @@ def scroll_to_find_text(device, text, max_attempts=5):
 def scroll_until_element_is_visible(device, locator, max_attempts=5):
     """
     Scroll the screen until the element with the given locator is visible
-    
+
     Args:
         device: UIAutomator2 device instance
         locator: XPath locator string
         max_attempts: Maximum number of scroll attempts
-        
+
     Returns:
         bool: True if element was found, False otherwise
     """
@@ -210,7 +262,7 @@ def scroll_until_element_is_visible(device, locator, max_attempts=5):
 def calculate_swipe_coordinates(width, height):
     """
     Calculates swipe coordinates for scrolling.
-    
+
     :param width: Screen width.
     :param height: Screen height.
     :return: A tuple containing (start_x, start_y, end_y)
@@ -221,18 +273,38 @@ def calculate_swipe_coordinates(width, height):
     return start_x, start_y, end_y
 
 
+def scroll_to_bottom(device, scroll_times=3, duration=0.5):
+    """
+    Scrolls to the bottom of the results on the screen.
+
+    :param device: The device instance.
+    :param scroll_times: Number of times to scroll to ensure reaching the bottom.
+    :param duration: Duration of each swipe.
+    """
+    screen_size = device.window_size()
+    for _ in range(scroll_times):
+        device.swipe(
+            screen_size[0] * 0.5, screen_size[1] * 0.8,
+            screen_size[0] * 0.5, screen_size[1] * 0.2,
+            duration=duration
+        )
+        sleep(2)
+
+
+# Authentication and User Management
+
 def sign_in_and_prepare(d):
     """Sign in and handle initial popups"""
     handle_notification_permission(d)
     sign_in_user(d)
     handle_events_popup(d)
-    sleep(10)
+    sleep(5)
 
 
 def sign_in_user(d):
     """
     Sign in to the app using test user credentials.
-    
+
     Args:
         d: UIAutomator2 device instance
     """
@@ -241,16 +313,16 @@ def sign_in_user(d):
     # Wait for initial screen to load
     print("\nWaiting for initial screen to load...")
     time.sleep(5)  # Add initial wait for app to fully load
-    
+
     # Debug: Dump current screen hierarchy
     print("\nCurrent screen hierarchy:")
     print(d.dump_hierarchy())
-    
+
     # First check if we're already logged in by looking for bottom navigation elements
     if d(description="Search").exists(timeout=2) or d(text="Search").exists(timeout=2):
         print("Already logged in, skipping sign in process")
         return
-    
+
     # Find and click Sign In button
     sign_in = None
     if d(description="Sign In").exists(timeout=5):
@@ -321,7 +393,7 @@ def sign_in_user(d):
 def handle_events_popup(device):
     """
     Handle events popup if it appears.
-    
+
     Args:
         device: UIAutomator2 device instance
     """
@@ -334,7 +406,7 @@ def handle_events_popup(device):
         close_button = device.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
         if close_button.exists:
             close_button.click()
-            time.sleep(1)
+            sleep(1)
             print("Closed events popup")
         else:
             print("No close button found on events popup")
@@ -352,12 +424,12 @@ def handle_guest_mode_plans_popup(d):
     plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
     if plans_popup_continue.exists:
         print("\nPlans popup is visible, clicking continue...")
-        time.sleep(3)
+        sleep(2)
         plans_popup_continue.click()
         print("Clicked continue on plans popup")
     else:
         print("\nNo plans popup found, continuing with test...")
-        time.sleep(5)
+        sleep(2)
 
 
 def enter_guest_mode_and_handle_popups(d):
@@ -376,73 +448,38 @@ def handle_plans_events_popups(d):
     """Handle plans popup if present."""
     handle_guest_mode_plans_popup(d)
     handle_events_popup(d)
-    sleep(10)
+    sleep(3)
 
 
-def save_screenshot(device, filename: str, request) -> str:
-    """
-    Save a screenshot to the current test run's screenshots folder.
-    
-    Args:
-        device: The UI Automator device instance
-        filename: The desired filename for the screenshot
-        request: The pytest request fixture
-    
-    Returns:
-        str: The path where the screenshot was saved
-    """
-    # Get the current test run folder from the reporter
-    reporter = request.config.pluginmanager.get_plugin('excel_reporter')
-    if not reporter:
-        # Fallback to saving in the current directory if reporter not found
-        return device.screenshot(filename)
-        
-    # Save screenshot in the test run's screenshots folder
-    screenshot_path = os.path.join(reporter.screenshots_folder, filename)
-    return device.screenshot(screenshot_path)
+# Device Interaction
+
+def clear_app_state(device):
+    """Clear app data and restart the app"""
+    print("Clearing app state...")
+    app_id = 'com.eatvermont'
+    device.app_stop(app_id)  # Close the app
+    device.app_clear(app_id)  # Clear app data
+    device.app_start(app_id)  # Start the app fresh
+    print("App state cleared and restarted")
 
 
-def verify_businesses_section_present(device):
-    """
-    Verifies that the Businesses section is present on the screen.
-    """
-    print("\nVerifying Businesses section is present...")
-    businesses_section = device.xpath(Businesses.BUSINESSES_SECTION)
-    assert businesses_section.exists, "Businesses section not found in search results"
-    print("Found Businesses section")
+def handle_notification_permission(device):
+    """Handle notification permission dialogs if they appear."""
+    # Handle first permission dialog
+    if device(text="Allow").exists:
+        device(text="Allow").click()
+        sleep(1)
 
-
-def interact_with_events_carousel(device):
-    """
-    Locates and interacts with the Events carousel item.
-    """
-    print("\nLocating Events carousel item...")
-    carousel_item = device.xpath(Events.CAROUSEL_ITEM)
-    assert carousel_item.exists, "Could not find Events carousel item"
-    print("Events carousel item found, clicking...")
-    carousel_item.click()
-    sleep(7)
-
-
-def click_and_verify_element(device, element_locator, description):
-    """
-    Clicks an element and verifies its presence.
-    
-    :param device: The device instance.
-    :param element_locator: The XPath locator for the element.
-    :param description: A description of the element for logging.
-    """
-    print(f"\nClicking and verifying {description}...")
-    element = device.xpath(element_locator)
-    assert element.exists, f"{description} not found"
-    element.click()
-    print(f"{description} clicked and verified.")
+        # Handle second permission dialog if it appears
+        if device(text="Allow").exists:
+            device(text="Allow").click()
+            sleep(1)
 
 
 def search_and_submit(device, search_term):
     """
     Finds the search button and field, enters a search term, and submits it.
-    
+
     :param device: The device instance.
     :param search_term: The term to search for.
     """
@@ -459,71 +496,40 @@ def search_and_submit(device, search_term):
     search_button.click()
     sleep(2)
 
-    # Find and click search field
-    search_field = None
-    search_selectors = [
-        lambda: device(description="Search"),
-        lambda: device(text="Search"),
-        lambda: device(resourceId="search-input"),
-        lambda: device(className="android.widget.EditText")
-    ]
 
-    for selector in search_selectors:
-        if selector().exists(timeout=3):
-            search_field = selector()
-            break
-
-    assert search_field is not None, "Could not find search field"
-    search_field.click()
-    sleep(1)
-
-    # Enter search term and submit
-    device.send_keys(search_term)
-    sleep(1)
-    device.press("enter")
-    sleep(10)
-
-
-def get_screen_dimensions(device):
+def find_and_click_video(device, video_locator):
     """
-    Returns the screen width and height.
-    
-    :param device: The device instance.
-    :return: A tuple containing (width, height)
+    Find a video using the provided locator and click it.
+
+    Args:
+        device: UIAutomator2 device instance
+        video_locator: XPath locator for the video element
+
+    Returns:
+        bool: True if video was found and clicked, False otherwise
     """
-    screen_info = device.info
-    width = screen_info['displayWidth']
-    height = screen_info['displayHeight']
-    return width, height
+    print("\nLooking for video...")
+    video = device.xpath(video_locator)
+
+    if not video.exists:
+        print("Video not found")
+        return False
+
+    print("Video found, clicking...")
+    video.click()
+    return True
 
 
-def verify_and_screenshot(device, condition, error_message, screenshots_dir, filename):
+def wait_for_video_to_load(device, timeout=5):
     """
-    Verifies a condition and takes a screenshot if successful.
-    
-    :param device: The device instance.
-    :param condition: A callable that returns a boolean.
-    :param error_message: The error message if the condition fails.
-    :param screenshots_dir: The directory to save the screenshot.
-    :param filename: The name of the screenshot file.
-    """
-    assert condition(), error_message
-    screenshot_path = os.path.join(screenshots_dir, filename)
-    device.screenshot(screenshot_path)
-    print(f"Screenshot saved as {filename}")
+    Wait for video to load after clicking.
 
-
-def click_trails_button(device):
+    Args:
+        device: UIAutomator2 device instance
+        timeout: How long to wait for video to load (in seconds)
     """
-    Finds and clicks the Trails button on the home screen.
-
-    :param device: The device instance.
-    """
-    print("\nClicking on Trails button...")
-    trails_button = device.xpath(HomeScreen.TRAILS_BUTTON)
-    assert trails_button.wait(timeout=5), "Trails button not found"
-    trails_button.click()
-    sleep(2)
+    print(f"\nWaiting {timeout} seconds for video to load...")
+    sleep(timeout)
 
 
 def click_and_fill_forgot_password(device, email):
@@ -559,19 +565,18 @@ def click_and_fill_forgot_password(device, email):
     sleep(1)
 
 
-def scroll_to_bottom(device, scroll_times=3, duration=0.5):
+def click_favorites_button(device):
     """
-    Scrolls to the bottom of the results on the screen.
+    Clicks the Favorites button in the bottom navigation bar.
 
-    :param device: The device instance.
-    :param scroll_times: Number of times to scroll to ensure reaching the bottom.
-    :param duration: Duration of each swipe.
+    :param device: The UIAutomator2 device instance.
     """
-    screen_size = device.window_size()
-    for _ in range(scroll_times):
-        device.swipe(
-            screen_size[0] * 0.5, screen_size[1] * 0.8,
-            screen_size[0] * 0.5, screen_size[1] * 0.2,
-            duration=duration
-        )
-        sleep(2)  # Wait for content to load
+    print("\nClicking on Favorites button...")
+    favorites_button = device.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Could not find Favorites button"
+    print("Found Favorites button, clicking...")
+    favorites_button.click()
+    sleep(2)  # Wait for favorites page to load
+
+    # Verify that "Favorites" text is present
+    assert device(text="Favorites").exists, "Favorites text not found on screen"
