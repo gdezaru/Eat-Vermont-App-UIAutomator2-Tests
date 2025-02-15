@@ -194,6 +194,15 @@ def scroll_to_events_within_30(d):
     sleep(1)
 
 
+def scroll_to_events_further_than_30(d):
+    """
+    Scroll to the events further than 30 minutes.
+    """
+    d(scrollable=True).scroll.to(text="Events Further Than ~30min")
+    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
+    sleep(1)
+
+
 def scroll_to_add_info(d):
     """
     Scroll to the Add Info button.

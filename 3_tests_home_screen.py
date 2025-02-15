@@ -5,12 +5,12 @@ from time import sleep
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
 from utils_authentication import sign_in_and_prepare
 from utils_scrolling import get_screen_dimensions, scroll_to_event_and_click, calculate_swipe_coordinates, \
-    scroll_to_add_info, scroll_to_events_within_30
+    scroll_to_add_info, scroll_to_events_within_30, scroll_to_events_further_than_30
 from utils_ui_navigation import click_favorites_button, click_see_all_events_home_screen, click_view_map, \
     find_and_click_see_all_videos, click_add_info_button, find_day_trips_text, click_day_trips_see_all, \
-    click_see_all_events_within_30
+    click_see_all_events_within_30, click_see_all_events_further_than_30, click_home_button, click_events_button
 from utils_ui_verification import try_next_day, find_and_click_current_day, verify_videos_text_exists, \
-    find_event_within_30
+    find_event_within_30, find_event_further_than_30
 
 
 @pytest.mark.smoke
@@ -200,33 +200,16 @@ def test_home_screen_events_further_than(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Single scroll to show Events within ~30 minutes
-    d(scrollable=True).scroll.to(text="Events Further Than ~30min")
-    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Within ~30min text not found"
-    sleep(1)
+    scroll_to_events_further_than_30(d)
 
-    # Check for content in Events within 30 minutes tile
-    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    event_found = False
-    for day in days_of_week:
-        events_tile = d.xpath(HomeScreenTiles.EVENTS_WITHIN_30_TILE.format(day))
-        if events_tile.exists:
-            event_found = True
-            break
-
-    assert event_found, "Could not find any events with dates in Events within 30 minutes section"
-    sleep(1)
+    find_event_further_than_30(d)
 
     # Take screenshot of the Events within 30 minutes section
     screenshot_path = os.path.join(screenshots_dir, "3_7_1_home_screen_events_further_than.png")
     d.screenshot(screenshot_path)
     sleep(1)
 
-    # Click See All for Events within 30 minutes
-    see_all = d(text="See All")
-    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
-    see_all.click()
-    sleep(2)  # Extra time for page transition
+    click_see_all_events_further_than_30(d)
 
     # Take screenshot of the Events within 30 minutes list view
     screenshot_path = os.path.join(screenshots_dir, "3_7_2_home_screen_events_more_than_list.png")
@@ -251,36 +234,19 @@ def test_home_screen_bottom_nav_bar(d, screenshots_dir):
 
     # Click Favorites button
     click_favorites_button(d)
-    sleep(2)  # Wait for favorites page to load
-
-    # Assert that "Favorites" text is present
-    assert d(text="Favorites").exists, "Favorites text not found on screen"
+    sleep(2)
 
     # Take screenshot
     screenshot_path = os.path.join(screenshots_dir, "3_8_1_bottom_nav_favorites_screen.png")
     d.screenshot(screenshot_path)
 
-    # Click Events button
-    events_button = d.xpath(BottomNavBar.EVENTS)
-    assert events_button.exists, "Could not find Events button"
-    events_button.click()
-    sleep(5)  # Wait for events page to load
-
-    # Assert that "Events" text is present
-    assert d(text="Events").exists, "Events text not found on screen"
+    click_events_button(d)
 
     # Take screenshot
     screenshot_path = os.path.join(screenshots_dir, "3_8_2_bottom_nav_events_screen.png")
     d.screenshot(screenshot_path)
 
-    # Click Home button
-    home_button = d.xpath(BottomNavBar.NAV_HOME_BUTTON)
-    assert home_button.exists, "Could not find Home button"
-    home_button.click()
-    sleep(5)  # Wait for home page to load
-
-    # Assert that "Events" text is present on home screen
-    assert d(text="Events").exists, "Events text not found on home screen"
+    click_home_button(d)
 
     # Take screenshot
     screenshot_path = os.path.join(screenshots_dir, "3_8_3_bottom_nav_home_screen.png")

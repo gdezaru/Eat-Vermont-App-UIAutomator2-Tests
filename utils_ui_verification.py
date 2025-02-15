@@ -49,6 +49,49 @@ def find_event_within_30(d):
     sleep(1)
 
 
+def find_event_further_than_30(d):
+    """
+    Find an event tile further than 30 minutes.
+    
+    Args:
+        d: UIAutomator2 device instance
+        
+    Raises:
+        AssertionError: If no events are found after maximum scroll attempts
+    """
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    event_found = False
+    max_scroll_attempts = 3
+    
+    print("\nSearching for events further than 30 minutes...")
+    
+    for attempt in range(max_scroll_attempts):
+        print(f"\nScroll attempt {attempt + 1}/{max_scroll_attempts}")
+        
+        for day in days_of_week:
+            events_tile = d.xpath(HomeScreenTiles.EVENTS_MORE_THAN_30_TILE.format(day))
+            if events_tile.exists:
+                event_found = True
+                event_text = events_tile.get_text()
+                print(f"\nFound event further than 30 minutes: {event_text}")
+                break
+        
+        if event_found:
+            break
+            
+        # If no event found, scroll down and try again
+        print("\nNo events found, scrolling down to check more...")
+        d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)  # Scroll from bottom to top
+        sleep(2)  # Wait for scroll animation and content load
+
+    if not event_found:
+        # Take screenshot for debugging if no events found
+        d.screenshot("debug_no_events_further_than_30.png")
+        
+    assert event_found, "Could not find any events further than 30 minutes after multiple scroll attempts"
+    sleep(1)  # Wait for UI to settle
+
+
 # UI verification functions for Businesses
 
 def get_next_day(current_day):

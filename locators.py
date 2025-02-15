@@ -61,8 +61,7 @@ class HomeScreenTiles:
     DAY_TRIPS_TILE = ('//android.view.ViewGroup[contains(@content-desc, "{}")]//android.widget.TextView'
                       '[@text="Read More"]')
     EVENTS_WITHIN_30_TILE = '//android.widget.TextView[contains(@text, "{}, ")]'
-    EVENTS_MORE_THAN_30_TILE = ('//android.widget.ScrollView[1]/android.view.ViewGroup[1]'
-                                '/android.view.ViewGroup[5]/android.view.ViewGroup[contains(@content-desc, "{}")]')
+    EVENTS_MORE_THAN_30_TILE = '//android.widget.TextView[contains(@text, "{}, ")]'
 
 
 class BottomNavBar:

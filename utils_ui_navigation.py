@@ -30,6 +30,16 @@ def click_see_all_events_within_30(d):
     sleep(2)
 
 
+def click_see_all_events_further_than_30(d):
+    """
+    Clicks the "See All" button on the Events further than 30 minutes section on the Home screen.
+    """
+    see_all = d(text="See All")
+    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
+    see_all.click()
+    sleep(2)
+
+
 def interact_with_events_carousel(d):
     """
     Locates and interacts with the Events carousel item.
@@ -221,3 +231,31 @@ def click_visit_history(d):
     assert visit_history_tab.exists, "Could not find Visit History tab"
     visit_history_tab.click()
     sleep(2)
+
+
+# UI navigation functions for Bottom Navigation Bar
+
+def click_home_button(d):
+    """
+    Clicks the Home button in the bottom navigation bar.
+
+    :param d: The UIAutomator2 device instance.
+    """
+    home_button = d.xpath(BottomNavBar.NAV_HOME_BUTTON)
+    assert home_button.exists, "Could not find Home button"
+    home_button.click()
+    sleep(5)
+    assert d(text="Events").exists, "Events text not found on home screen"
+
+
+def click_events_button(d):
+    """
+    Clicks the Events button in the bottom navigation bar.
+
+    :param d: The UIAutomator2 device instance.
+    """
+    events_button = d.xpath(BottomNavBar.EVENTS)
+    assert events_button.exists, "Could not find Events button"
+    events_button.click()
+    sleep(5)
+    assert d(text="Events").exists, "Events text not found on screen"
