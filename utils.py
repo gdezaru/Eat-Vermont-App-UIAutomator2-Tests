@@ -97,14 +97,14 @@ def generate_random_username():
     return random_chars
 
 
-def get_screen_dimensions(device):
+def get_screen_dimensions(d):
     """
     Returns the screen width and height.
     
     :param device: The device instance.
     :return: A tuple containing (width, height)
     """
-    screen_info = device.info
+    screen_info = d.info
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
     return width, height
@@ -123,7 +123,7 @@ def get_screenshots_dir():
     return None
 
 
-def take_screenshot(device, name):
+def take_screenshot(d, name):
     """Take a screenshot and save it with timestamp"""
     screenshots_dir = get_screenshots_dir()
     if screenshots_dir is None:
@@ -132,11 +132,11 @@ def take_screenshot(device, name):
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     screenshot_name = f"{name}_{timestamp}.png"
     screenshot_path = os.path.join(screenshots_dir, screenshot_name)
-    device.screenshot(screenshot_path)
+    d.screenshot(screenshot_path)
     print(f"Screenshot saved: {screenshot_path}")
 
 
-def save_screenshot(device, filename: str, request) -> str:
+def save_screenshot(d, filename: str, request) -> str:
     """
     Save a screenshot to the current test run's screenshots folder.
 
@@ -152,26 +152,26 @@ def save_screenshot(device, filename: str, request) -> str:
     reporter = request.config.pluginmanager.get_plugin('excel_reporter')
     if not reporter:
         # Fallback to saving in the current directory if reporter not found
-        return device.screenshot(filename)
+        return d.screenshot(filename)
 
     # Save screenshot in the test run's screenshots folder
     screenshot_path = os.path.join(reporter.screenshots_folder, filename)
-    return device.screenshot(screenshot_path)
+    return d.screenshot(screenshot_path)
 
 
 # UI Verification
 
-def verify_businesses_section_present(device):
+def verify_businesses_section_present(d):
     """
     Verifies that the Businesses section is present on the screen.
     """
     print("\nVerifying Businesses section is present...")
-    businesses_section = device.xpath(Businesses.BUSINESSES_SECTION)
+    businesses_section = d.xpath(Businesses.BUSINESSES_SECTION)
     assert businesses_section.exists, "Businesses section not found in search results"
     print("Found Businesses section")
 
 
-def verify_video_playback(device):
+def verify_video_playback(d):
     """
     Verify that a video is playing by checking app state and UI elements.
 
@@ -184,29 +184,29 @@ def verify_video_playback(device):
     print("\nVerifying video playback...")
 
     # Get current app info
-    app_info = device.info
+    app_info = d.info
     print(f"\nCurrent app info: {app_info}")
 
     # Get current window hierarchy
-    xml_hierarchy = device.dump_hierarchy()
+    xml_hierarchy = d.dump_hierarchy()
     print(f"\nWindow hierarchy: {xml_hierarchy}")
 
     # Check if we're still in the app
-    if not device(packageName="com.eatvermont").exists:
+    if not d(packageName="com.eatvermont").exists:
         print("App is no longer in foreground")
         return False
 
     # Take screenshot of the video playing
-    take_screenshot(device, "video_playing")
+    take_screenshot(d, "video_playing")
     print("Video state verification complete")
     return True
 
 
-def verify_and_screenshot(device, condition, error_message, screenshots_dir, filename):
+def verify_and_screenshot(d, condition, error_message, screenshots_dir, filename):
     """
     Verifies a condition and takes a screenshot if successful.
     
-    :param device: The device instance.
+    :param d: The device instance.
     :param condition: A callable that returns a boolean.
     :param error_message: The error message if the condition fails.
     :param screenshots_dir: The directory to save the screenshot.
@@ -214,98 +214,98 @@ def verify_and_screenshot(device, condition, error_message, screenshots_dir, fil
     """
     assert condition(), error_message
     screenshot_path = os.path.join(screenshots_dir, filename)
-    device.screenshot(screenshot_path)
+    d.screenshot(screenshot_path)
     print(f"Screenshot saved as {filename}")
 
 
 # Navigation
 
-def click_and_verify_element(device, element_locator, description):
+def click_and_verify_element(d, element_locator, description):
     """
     Clicks an element and verifies its presence.
 
-    :param device: The device instance.
+    :param d: The device instance.
     :param element_locator: The XPath locator for the element.
     :param description: A description of the element for logging.
     """
     print(f"\nClicking and verifying {description}...")
-    element = device.xpath(element_locator)
+    element = d.xpath(element_locator)
     assert element.exists, f"{description} not found"
     element.click()
     print(f"{description} clicked and verified.")
 
 
-def click_trails_button(device):
+def click_trails_button(d):
     """
     Finds and clicks the Trails button on the home screen.
 
-    :param device: The device instance.
+    :param d: The device instance.
     """
     print("\nClicking on Trails button...")
-    trails_button = device.xpath(HomeScreen.TRAILS_BUTTON)
+    trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
     assert trails_button.wait(timeout=5), "Trails button not found"
     trails_button.click()
     sleep(2)
 
 
-def click_favorites_button(device):
+def click_favorites_button(d):
     """
     Clicks the Favorites button in the bottom navigation bar.
 
     :param device: The UIAutomator2 device instance.
     """
     print("\nClicking on Favorites button...")
-    favorites_button = device.xpath(BottomNavBar.FAVORITES)
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
     assert favorites_button.exists, "Could not find Favorites button"
     print("Found Favorites button, clicking...")
     favorites_button.click()
     sleep(2)  # Wait for favorites page to load
 
     # Verify that "Favorites" text is present
-    assert device(text="Favorites").exists, "Favorites text not found on screen"
+    assert d(text="Favorites").exists, "Favorites text not found on screen"
 
 
-def click_visit_history(device):
+def click_visit_history(d):
     """
     Clicks the Visit History tab.
 
-    :param device: The UIAutomator2 device instance.
+    :param d: The UIAutomator2 device instance.
     """
     print("\nClicking on Visit History tab...")
-    visit_history_tab = device.xpath(VisitHistory.VISIT_HISTORY_TAB)
+    visit_history_tab = d.xpath(VisitHistory.VISIT_HISTORY_TAB)
     assert visit_history_tab.exists, "Could not find Visit History tab"
     print("Found Visit History tab, clicking...")
     visit_history_tab.click()
     sleep(2)
 
 
-def click_view_map(device):
+def click_view_map(d):
     """
     Clicks the View Map button.
 
-    :param device: The UIAutomator2 device instance.
+    :param d: The UIAutomator2 device instance.
     """
     print("\nClicking on View Map button...")
-    view_map = device.xpath(HomeScreen.VIEW_MAP)
+    view_map = d.xpath(HomeScreen.VIEW_MAP)
     assert view_map.exists, "Could not find View Map button"
     print("Found View Map button, clicking...")
     view_map.click()
     sleep(5)
 
 
-def interact_with_events_carousel(device):
+def interact_with_events_carousel(d):
     """
     Locates and interacts with the Events carousel item.
     """
     print("\nLocating Events carousel item...")
-    carousel_item = device.xpath(Events.CAROUSEL_ITEM)
+    carousel_item = d.xpath(Events.CAROUSEL_ITEM)
     assert carousel_item.exists, "Could not find Events carousel item"
     print("Events carousel item found, clicking...")
     carousel_item.click()
     sleep(7)
 
 
-def scroll_to_find_text(device, text, max_attempts=5):
+def scroll_to_find_text(d, text, max_attempts=5):
     """
     Scroll the screen until text is found
 
@@ -317,22 +317,22 @@ def scroll_to_find_text(device, text, max_attempts=5):
     Returns:
         bool: True if text was found, False otherwise
     """
-    screen_info = device.info
+    screen_info = d.info
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
 
     start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
 
     for _ in range(max_attempts):
-        if device(text=text).exists:
+        if d(text=text).exists:
             return True
-        device.swipe(start_x, start_y, start_x, end_y, duration=0.8)
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
         time.sleep(1.5)
 
-    return device(text=text).exists
+    return d(text=text).exists
 
 
-def scroll_until_element_is_visible(device, locator, max_attempts=5):
+def scroll_until_element_is_visible(d, locator, max_attempts=5):
     """
     Scroll the screen until the element with the given locator is visible
 
@@ -344,20 +344,20 @@ def scroll_until_element_is_visible(device, locator, max_attempts=5):
     Returns:
         bool: True if element was found, False otherwise
     """
-    screen_info = device.info
+    screen_info = d.info
     width = screen_info['displayWidth']
     height = screen_info['displayHeight']
 
     start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
 
     for _ in range(max_attempts):
-        element = device.xpath(locator)
+        element = d.xpath(locator)
         if element.exists:
             return True
-        device.swipe(start_x, start_y, start_x, end_y, duration=0.8)
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
         time.sleep(1.5)
 
-    return device.xpath(locator).exists
+    return d.xpath(locator).exists
 
 
 def calculate_swipe_coordinates(width, height):
@@ -374,7 +374,7 @@ def calculate_swipe_coordinates(width, height):
     return start_x, start_y, end_y
 
 
-def scroll_to_bottom(device, scroll_times=3, duration=0.5):
+def scroll_to_bottom(d, scroll_times=3, duration=0.5):
     """
     Scrolls to the bottom of the results on the screen.
 
@@ -382,9 +382,9 @@ def scroll_to_bottom(device, scroll_times=3, duration=0.5):
     :param scroll_times: Number of times to scroll to ensure reaching the bottom.
     :param duration: Duration of each swipe.
     """
-    screen_size = device.window_size()
+    screen_size = d.window_size()
     for _ in range(scroll_times):
-        device.swipe(
+        d.swipe(
             screen_size[0] * 0.5, screen_size[1] * 0.8,
             screen_size[0] * 0.5, screen_size[1] * 0.2,
             duration=duration
@@ -409,36 +409,34 @@ def sign_in_user(d):
     Args:
         d: UIAutomator2 device instance
     """
+    from config import TEST_USER
+    
     handle_notification_permission(d)
 
     # Wait for initial screen to load
-    print("\nWaiting for initial screen to load...")
-    time.sleep(5)  # Add initial wait for app to fully load
-
-    # Debug: Dump current screen hierarchy
-    print("\nCurrent screen hierarchy:")
-    print(d.dump_hierarchy())
+    time.sleep(5)
 
     # First check if we're already logged in by looking for bottom navigation elements
     if d(description="Search").exists(timeout=2) or d(text="Search").exists(timeout=2):
         print("Already logged in, skipping sign in process")
         return
 
-    # Find and click Sign In button
-    sign_in = None
-    if d(description="Sign In").exists(timeout=5):
-        sign_in = d(description="Sign In")
-    elif d(text="Sign In").exists(timeout=5):
-        sign_in = d(text="Sign In")
+    # Find and click Get Started button
+    get_started = None
+    if d(description="Get Started").exists(timeout=5):
+        get_started = d(description="Get Started")
+    elif d(text="Get Started").exists(timeout=5):
+        get_started = d(text="Get Started")
 
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
+    assert get_started is not None, "Could not find Get Started button"
+    get_started.click()
     time.sleep(2)
 
     # Enter email
     email_field = d(text="Email")
     assert email_field.exists(timeout=5), "Email field not found"
     email_field.click()
+    time.sleep(1)
     d.send_keys(TEST_USER['email'])
     time.sleep(1)
 
@@ -446,65 +444,55 @@ def sign_in_user(d):
     password_field = d(text="Password")
     assert password_field.exists(timeout=5), "Password field not found"
     password_field.click()
+    time.sleep(1)
     d.send_keys(TEST_USER['password'])
     time.sleep(1)
 
-    # Click Log in and verify
+    # Try login up to 2 times
     login_attempts = 2
     for attempt in range(login_attempts):
-        # Find and click login button
-        login_button = d(text="Log in")
-        assert login_button.exists(timeout=5), "Log in button not found"
-        login_button.click()
+        # Click Log In button
+        log_in_button = None
+        if d(description="Log in").exists(timeout=5):
+            log_in_button = d(description="Log in")
+        elif d(text="Log in").exists(timeout=5):
+            log_in_button = d(text="Log in")
+
+        assert log_in_button is not None, "Could not find Log in button"
+        log_in_button.click()
         time.sleep(5)  # Wait for login process
-
-        # Check for error messages
-        error_messages = [
-            "Invalid email or password",
-            "Login failed",
-            "Error",
-            "Something went wrong",
-            "No internet connection"
-        ]
-
-        error_found = False
-        for error_msg in error_messages:
-            if d(textContains=error_msg).exists(timeout=2):
-                error_found = True
-                break
-
-        if error_found and attempt < login_attempts - 1:
-            continue
 
         # Verify successful login by checking for common elements
         success_indicators = ["Events", "Home", "Profile", "Search"]
         for indicator in success_indicators:
             if d(text=indicator).exists(timeout=5):
-                break
-        else:
-            if attempt < login_attempts - 1:
-                # Try to go back if needed
-                if d(text="Back").exists():
-                    d(text="Back").click()
-                    time.sleep(1)
-                continue
-            assert False, "Login failed - Could not verify successful login"
+                return  # Login successful
+        
+        if attempt < login_attempts - 1:
+            # Try to go back if needed
+            if d(text="Back").exists():
+                d(text="Back").click()
+                time.sleep(1)
+            continue
+        
+        # If we get here on the last attempt, login failed
+        assert False, "Login failed - Could not verify successful login"
 
 
-def handle_events_popup(device):
+def handle_events_popup(d):
     """
     Handle events popup if it appears.
 
     Args:
-        device: UIAutomator2 device instance
+        d: UIAutomator2 device instance
     """
     # Check if events popup exists
-    events_popup = device.xpath(Events.EVENTS_POPUP_MAIN)
+    events_popup = d.xpath(Events.EVENTS_POPUP_MAIN)
     if events_popup.exists:
         print("Events popup found, handling it...")
 
         # Click close button
-        close_button = device.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        close_button = d.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
         if close_button.exists:
             close_button.click()
             sleep(1)
@@ -554,44 +542,44 @@ def handle_plans_events_popups(d):
 
 # Device Interaction
 
-def clear_app_state(device):
+def clear_app_state(d):
     """Clear app data and restart the app"""
     print("Clearing app state...")
     app_id = 'com.eatvermont'
-    device.app_stop(app_id)  # Close the app
-    device.app_clear(app_id)  # Clear app data
-    device.app_start(app_id)  # Start the app fresh
+    d.app_stop(app_id)  # Close the app
+    d.app_clear(app_id)  # Clear app data
+    d.app_start(app_id)  # Start the app fresh
     print("App state cleared and restarted")
 
 
-def handle_notification_permission(device):
+def handle_notification_permission(d):
     """Handle notification permission dialogs if they appear."""
     # Handle first permission dialog
-    if device(text="Allow").exists:
-        device(text="Allow").click()
+    if d(text="Allow").exists:
+        d(text="Allow").click()
         sleep(1)
 
         # Handle second permission dialog if it appears
-        if device(text="Allow").exists:
-            device(text="Allow").click()
+        if d(text="Allow").exists:
+            d(text="Allow").click()
             sleep(1)
 
 
-def search_and_submit(device, search_term):
+def search_and_submit(d, search_term):
     """
     Finds the search button and field, enters a search term, and submits it.
 
-    :param device: The device instance.
+    :param d: The device instance.
     :param search_term: The term to search for.
     """
     # Find and click Search in bottom navigation
     search_button = None
-    if device(description="Search").exists(timeout=5):
-        search_button = device(description="Search")
-    elif device(text="Search").exists(timeout=5):
-        search_button = device(text="Search")
-    elif device(resourceId="Search").exists(timeout=5):
-        search_button = device(resourceId="Search")
+    if d(description="Search").exists(timeout=5):
+        search_button = d(description="Search")
+    elif d(text="Search").exists(timeout=5):
+        search_button = d(text="Search")
+    elif d(resourceId="Search").exists(timeout=5):
+        search_button = d(resourceId="Search")
 
     assert search_button is not None, "Could not find Search button"
     search_button.click()
@@ -600,10 +588,10 @@ def search_and_submit(device, search_term):
     # Find and click search field
     search_field = None
     search_selectors = [
-        lambda: device(description="Search"),
-        lambda: device(text="Search"),
-        lambda: device(resourceId="search-input"),
-        lambda: device(className="android.widget.EditText")
+        lambda: d(description="Search"),
+        lambda: d(text="Search"),
+        lambda: d(resourceId="search-input"),
+        lambda: d(className="android.widget.EditText")
     ]
 
     for selector in search_selectors:
@@ -616,13 +604,13 @@ def search_and_submit(device, search_term):
     sleep(1)
 
     # Enter search term and submit
-    device.send_keys(search_term)
+    d.send_keys(search_term)
     sleep(1)
-    device.press("enter")
+    d.press("enter")
     sleep(5)
 
 
-def find_and_click_video(device, video_locator):
+def find_and_click_video(d, video_locator):
     """
     Find a video using the provided locator and click it.
 
@@ -634,7 +622,7 @@ def find_and_click_video(device, video_locator):
         bool: True if video was found and clicked, False otherwise
     """
     print("\nLooking for video...")
-    video = device.xpath(video_locator)
+    video = d.xpath(video_locator)
 
     if not video.exists:
         print("Video not found")
@@ -656,34 +644,34 @@ def wait_for_video_to_load(timeout=5):
     sleep(timeout)
 
 
-def click_and_fill_forgot_password(device, email):
+def click_and_fill_forgot_password(d, email):
     """
-    Finds and clicks the Sign In button, navigates to Forgot Password,
+    Finds and clicks the Get Started button, navigates to Forgot Password,
     and enters the email for password reset.
 
-    :param device: The device instance.
+    :param d: The device instance.
     :param email: The email address to enter for password reset.
     """
-    # Find and click Sign In button
-    sign_in = None
-    if device(description="Sign In").exists(timeout=5):
-        sign_in = device(description="Sign In")
-    elif device(text="Sign In").exists(timeout=5):
-        sign_in = device(text="Sign In")
+    # Find and click Get Started button
+    get_started = None
+    if d(description="Get Started").exists(timeout=5):
+        get_started = d(description="Get Started")
+    elif d(text="Get Started").exists(timeout=5):
+        get_started = d(text="Get Started")
 
-    assert sign_in is not None, "Could not find Sign In button"
-    sign_in.click()
-    sleep(2)
+    assert get_started is not None, "Could not find Get Started button"
+    get_started.click()
+    time.sleep(2)
 
     # Click Forgot Password
-    forgot_password = device.xpath(LoginPage.FORGOT_PASSWORD)
+    forgot_password = d.xpath(LoginPage.FORGOT_PASSWORD)
     assert forgot_password.wait(timeout=5), "Forgot Password button not found"
     forgot_password.click()
     sleep(2)
 
     # Enter email
-    email_field = device.xpath(LoginPage.RESET_PASSWORD_EMAIL_FIELD)
+    email_field = d.xpath(LoginPage.RESET_PASSWORD_EMAIL_FIELD)
     assert email_field.wait(timeout=5), "Email field not found"
     email_field.click()
-    device.send_keys(email)
+    d.send_keys(email)
     sleep(1)
