@@ -31,7 +31,5 @@ def test_visit_history_screen(d, screenshots_dir):
     click_visit_history(d)
 
     # Take screenshot of visit history screen
-    print("\nTaking screenshot of visit history screen...")
     screenshot_path = os.path.join(screenshots_dir, "12_1_1_visit_history_screen.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 12_1_1_visit_history_screen.png")

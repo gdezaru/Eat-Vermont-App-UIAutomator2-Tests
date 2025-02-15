@@ -51,34 +51,23 @@ def test_view_map_filters(d, screenshots_dir):
 
     # Take screenshot of all filters
     screenshot_path = os.path.join(screenshots_dir, "13_1_1_map_filters_present.png")
-    print("\nTaking screenshot of all filters...")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 13_1_1_map_filters_present.png")
 
     # Click and verify Events filter
     click_and_verify_element(d, ViewMap.EVENTS_FILTER, "Events filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_2_events_filter_active.png")
-    print("\nTaking screenshot of Events filter...")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 13_1_2_events_filter_active.png")
 
     # Click and verify Food & Drinks filter
     click_and_verify_element(d, ViewMap.FOOD_AND_DRINKS_FILTER, "Food & Drinks filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_3_food_drinks_filter_active.png")
-    print("\nTaking screenshot of Food & Drinks filter...")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 13_1_3_food_drinks_filter_active.png")
-
     # Click and verify Farms filter
     click_and_verify_element(d, ViewMap.FARMS_FILTER, "Farms filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_4_farms_filter_active.png")
-    print("\nTaking screenshot of Farms filter...")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 13_1_4_farms_filter_active.png")
 
     # Click and verify Food Pantries filter
     click_and_verify_element(d, ViewMap.FOOD_PANTRIES_FILTER, "Food Pantries filter")
     screenshot_path = os.path.join(screenshots_dir, "13_1_5_food_pantries_filter_active.png")
-    print("\nTaking screenshot of Food Pantries filter...")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 13_1_5_food_pantries_filter_active.png")

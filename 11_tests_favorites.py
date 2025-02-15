@@ -34,10 +34,8 @@ def test_add_favorite_events(d, screenshots_dir):
     interact_with_events_carousel(d)
 
     # Find and click the favorite icon
-    print("\nLocating favorite icon...")
     favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE)
     assert favorite_icon.exists, "Could not find favorite icon"
-    print("Favorite icon found, clicking...")
     favorite_icon.click()
     sleep(2)
 
@@ -71,25 +69,20 @@ def test_add_favorite_businesses(d, screenshots_dir):
     verify_businesses_section_present(d)
 
     # Click on Big Fatty's BBQ search result under Businesses
-    print("\nLocating Big Fatty's BBQ under Businesses section...")
     search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
     assert search_result.exists, "Big Fatty's BBQ not found under Businesses section"
-    print("Found Big Fatty's BBQ, clicking...")
     search_result.click()
     sleep(3)
 
     # Find and click the favorite icon
-    print("\nLocating favorite icon...")
     favorite_icon = d.xpath(MyFavorites.FAVORITE_BUSINESS_ADD_REMOVE)
     assert favorite_icon.exists, "Could not find favorite icon"
-    print("Favorite icon found, clicking...")
     favorite_icon.click()
     sleep(2)
 
     # Take screenshot of favorited business
     screenshot_path = os.path.join(screenshots_dir, "11_2_1_business_favorited.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke

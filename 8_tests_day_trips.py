@@ -22,13 +22,11 @@ def test_day_trip_card(d, screenshots_dir):
     sign_in_and_prepare(d)
 
     # Scroll to center the Day Trip section
-    print("\nScrolling to Day Trip section...")
-    d(scrollable=True).scroll.to(text="Day Trip")
-    assert d(text="Day Trip").exists(timeout=5), "Day Trip text not found"
+    d(scrollable=True).scroll.to(text="Day Trips")
+    assert d(text="Day Trips").exists(timeout=5), "Day Trips text not found"
     sleep(2)
 
     # Scroll very slowly until Read More is visible
-    print("\nFine-tuning scroll to find Read More button...")
     max_small_scrolls = 3
     read_more_button = d.xpath(DayTrips.READ_MORE_HOME_SCREEN)
 
@@ -36,7 +34,7 @@ def test_day_trip_card(d, screenshots_dir):
     width, height = get_screen_dimensions(d)
 
     # Calculate swipe coordinates using utility function
-    start_x, start_y, end_x, end_y = calculate_swipe_coordinates(width, height)
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
 
     # Swipe slowly until Read More is visible
     for _ in range(max_small_scrolls):
@@ -48,5 +46,5 @@ def test_day_trip_card(d, screenshots_dir):
     assert read_more_button.exists, "Read More button not found"
     read_more_button.click()
     sleep(2)
-    screenshot_path = os.path.join(screenshots_dir, "8_1_1_day_trip_details.png")
+    screenshot_path = os.path.join(screenshots_dir, "8_1_1_day_trips_details.png")
     d.screenshot(screenshot_path)
