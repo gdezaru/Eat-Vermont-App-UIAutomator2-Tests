@@ -31,7 +31,9 @@ def test_search_events(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
-        condition=lambda: d(textContains="Burlington").exists or d(textContains="Results").exists or d(textContains="Event").exists,
+        d=d,
+        condition=lambda: d(textContains="Burlington").exists or d(textContains="Results").exists
+                          or d(textContains="Event").exists,
         error_message="Search failed - Could not verify search results",
         screenshots_dir=screenshots_dir,
         filename="2_2_1_search_events.png"
@@ -62,6 +64,7 @@ def test_search_businesses(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
+        d=d,
         condition=lambda: d(textContains="Big Fatty BBQ").exists or d(textContains="Results").exists
                           or d(textContains="Big Fatty BBQ").exists,
         error_message="Search failed - Could not verify search results",
@@ -98,6 +101,7 @@ def test_search_day_trips(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
+        d=d,
         condition=lambda: d(textContains="Day Trip").exists or d(textContains="Results").exists
                           or d(textContains="Day Trip").exists,
         error_message="Search failed - Could not verify search results",
@@ -134,6 +138,7 @@ def test_search_videos(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
+        d=d,
         condition=lambda: d(textContains="Rocket").exists or d(textContains="Results").exists
                           or d(textContains="Rocket").exists,
         error_message="Search failed - Could not verify search results",
