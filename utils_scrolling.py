@@ -1,7 +1,11 @@
 """
 Utility functions for scrolling.
 """
+import os
 from time import sleep
+
+from conftest import screenshots_dir
+from locators import EventsScreen
 
 
 def get_screen_dimensions(d):
@@ -128,3 +132,54 @@ def scroll_to_bottom(d, scroll_times=3, duration=0.5):
             duration=duration
         )
         sleep(2)
+
+
+def scroll_to_event_and_click(d, screenshots_dir, current_day=None):
+    """
+    Scroll to the first event in the calendar.
+    """
+    # Verify that either there's an event or "No Events" message is shown
+    first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
+    no_events_message = d.xpath(EventsScreen.EVENTS_SCREEN_NO_EVENTS)
+
+    assert first_event.exists or no_events_message.exists, "Neither events nor 'No Events' message found"
+
+    # Take screenshot of the successful day's events
+    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_events_{current_day.lower()}.png")
+    d.screenshot(screenshot_path)
+
+    # If no event was found initially, scroll to try to find one
+    if not first_event.exists and not no_events_message.exists:
+        max_scroll_attempts = 3
+        found_event = False
+
+        for scroll_attempt in range(max_scroll_attempts):
+            # Scroll down
+            d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)  # Scroll from bottom to top
+            sleep(2)  # Wait for scroll to complete
+
+            # Check if we can now see an event
+            first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
+            if first_event.exists:
+                found_event = True
+                # Take a screenshot after finding the event
+                screenshot_path = os.path.join(screenshots_dir, f"3_1_3_home_screen_events_{current_day.lower()}"
+                                                                f"_after_scroll.png")
+                d.screenshot(screenshot_path)
+                break
+
+        if not found_event:
+            assert no_events_message.exists, "No events found and 'No Events' message is not displayed"
+
+    # Click on the first event tile if it exists
+    if first_event.exists:
+        # Get the event title before clicking
+        event_title = first_event.get_text()
+
+        # Click the event title and wait for details to load
+        first_event.click()
+        sleep(2)  # Wait for event details to load
+
+        # Verify we're in the event details view by checking for the event title
+        event_title_in_details = d.xpath(EventsScreen.EVENT_TITLE.format(event_title))
+        assert event_title_in_details.exists, f"Failed to open event details for '{event_title}'"

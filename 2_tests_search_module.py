@@ -139,8 +139,7 @@ def test_search_videos(d, screenshots_dir):
     # Verify search results and take screenshot
     verify_and_screenshot(
         d=d,
-        condition=lambda: d(textContains="Rocket").exists or d(textContains="Results").exists
-                          or d(textContains="Rocket").exists,
+        condition=lambda: d(textContains="Rocket").exists or d(textContains="Results").exists or d(textContains="Rocket").exists,
         error_message="Search failed - Could not verify search results",
         screenshots_dir=screenshots_dir,
         filename="2_2_4_search_videos.png"

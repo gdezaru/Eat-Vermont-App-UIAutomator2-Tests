@@ -8,7 +8,24 @@ from utils_screenshots import take_screenshot
 
 attempt = 1
 
+
 # UI verification functions for Events
+
+def find_and_click_current_day(d):
+    """
+    Find and click on the current day element in the events calendar screen.
+    """
+    # Find the current selected day
+    days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+    current_day = None
+    for day in days:
+        day_element = d.xpath(EventsScreen.DAY_OF_WEEK.format(day, day))
+        if day_element.exists:
+            current_day = day
+            print(f"\nFound current day: {day}")
+            break
+
+    assert current_day is not None, "Could not find any day of week element"
 
 
 # UI verification functions for Businesses

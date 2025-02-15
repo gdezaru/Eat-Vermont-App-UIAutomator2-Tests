@@ -28,8 +28,8 @@ class Permissions:
 
 class HomeScreen:
     """Locators for Home Screen UI Elements"""
-    EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events")]'
-    EVENTS_SEE_ALL = '//android.widget.ScrollView/android.view.ViewGroup[1]/android.view.ViewGroup[3]'
+    EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events Near You")]'
+    EVENTS_SEE_ALL = '//android.widget.TextView[@description="See All"]'
     VIDEOS_SEE_ALL = ('//android.widget.ScrollView/android.view.ViewGroup[1]/'
                       'android.view.ViewGroup[6]/android.widget.TextView[1]')
     VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Videos" and ./parent::android.view.ViewGroup]'

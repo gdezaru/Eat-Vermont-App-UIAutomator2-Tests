@@ -4,13 +4,13 @@ import os
 from time import sleep
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
 from utils_authentication import sign_in_and_prepare
-from utils_scrolling import get_screen_dimensions
-from utils_ui_navigation import click_favorites_button
-from utils_ui_verification import try_next_day
+from utils_scrolling import get_screen_dimensions, scroll_to_event_and_click
+from utils_ui_navigation import click_favorites_button, click_see_all_events_home_screen, click_view_map
+from utils_ui_verification import try_next_day, find_and_click_current_day
 
 
 @pytest.mark.smoke
-def test_home_screen_events(d, screenshots_dir):
+def test_home_screen_events(d, screenshots_dir, current_day=None):
     """
     Test home screen events module functionality
     Steps:
@@ -25,90 +25,24 @@ def test_home_screen_events(d, screenshots_dir):
     sign_in_and_prepare(d)
 
     # Find and click 'See all' next to events
-    see_all_events = d.xpath(HomeScreen.EVENTS_SEE_ALL)
-    assert see_all_events.exists, "Could not find 'See all' for events"
-    see_all_events.click()
-    sleep(10)
+    click_see_all_events_home_screen(d)
 
     # Take screenshot of events page
     screenshot_path = os.path.join(screenshots_dir, "3_1_1_home_screen_events.png")
     d.screenshot(screenshot_path)
 
-    # Find the current selected day
-    days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
-    current_day = None
-    for day in days:
-        day_element = d.xpath(EventsScreen.DAY_OF_WEEK.format(day, day))
-        if day_element.exists:
-            current_day = day
-            print(f"\nFound current day: {day}")
-            break
-
-    assert current_day is not None, "Could not find any day of week element"
+    # Find the current day
+    find_and_click_current_day(d)
 
     # Try clicking each subsequent day until one works
     try_next_day(d, current_day)
 
-    # Verify that either there's an event or "No Events" message is shown
-    first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
-    no_events_message = d.xpath(EventsScreen.EVENTS_SCREEN_NO_EVENTS)
+    # Scroll through events calendar, find an event, then click it
+    scroll_to_event_and_click(d, screenshots_dir, current_day)
 
-    assert first_event.exists or no_events_message.exists, "Neither events nor 'No Events' message found"
-    if first_event.exists:
-        print(f"\nFound at least one event for {current_day}")
-    else:
-        print(f"\nNo events found for {current_day}")
-
-    # Take screenshot of the successful day's events
-    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_events_{current_day.lower()}.png")
+    # Take screenshot of the event details
+    screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{current_day.lower()}.png")
     d.screenshot(screenshot_path)
-
-    # If no event was found initially, scroll to try to find one
-    if not first_event.exists and not no_events_message.exists:
-        print("\nNo event visible initially, scrolling to find events...")
-        max_scroll_attempts = 3
-        found_event = False
-
-        for scroll_attempt in range(max_scroll_attempts):
-            # Scroll down
-            d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)  # Scroll from bottom to top
-            sleep(2)  # Wait for scroll to complete
-
-            # Check if we can now see an event
-            first_event = d.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
-            if first_event.exists:
-                print(f"\nFound an event after {scroll_attempt + 1} scroll(s)")
-                found_event = True
-                # Take a screenshot after finding the event
-                screenshot_path = os.path.join(screenshots_dir, f"3_1_3_home_screen_events_{current_day.lower()}_after_scroll.png")
-                d.screenshot(screenshot_path)
-                break
-
-        if not found_event:
-            print(f"\nNo events found even after {max_scroll_attempts} scrolls")
-            assert no_events_message.exists, "No events found and 'No Events' message is not displayed"
-
-    # Click on the first event tile if it exists
-    if first_event.exists:
-        print("\nClicking on the first event tile...")
-        # Get the event title before clicking
-        event_title = first_event.get_text()
-        print(f"Event title: {event_title}")
-
-        # Click the event title and wait for details to load
-        first_event.click()
-        sleep(2)  # Wait for event details to load
-
-        # Verify we're in the event details view by checking for the event title
-        event_title_in_details = d.xpath(EventsScreen.EVENT_TITLE.format(event_title))
-        assert event_title_in_details.exists, f"Failed to open event details for '{event_title}'"
-
-        print("\nSuccessfully opened event details")
-        # Take screenshot of the event details
-        screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{current_day.lower()}.png")
-        d.screenshot(screenshot_path)
-        print("\nEvent details page loaded and screenshot taken")
-
 
 @pytest.mark.smoke
 def test_home_screen_view_map(d, screenshots_dir):
@@ -129,10 +63,7 @@ def test_home_screen_view_map(d, screenshots_dir):
     sleep(1)
 
     # Click "View Map" button
-    view_map = d.xpath(HomeScreen.VIEW_MAP)
-    assert view_map.exists, "Could not find View Map button"
-    view_map.click()
-    sleep(2)
+    click_view_map(d)
 
     # Assert that Events filter is visible
     events_filter = d.xpath(ViewMap.EVENTS_FILTER)
@@ -161,7 +92,6 @@ def test_home_screen_videos(d, screenshots_dir):
     width, height = get_screen_dimensions(d)
 
     # First scroll until we find Videos text using the specific locator
-    print("\nScrolling to find Videos section...")
     videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
     max_scroll_attempts = 5
 
@@ -180,7 +110,6 @@ def test_home_screen_videos(d, screenshots_dir):
     sleep(1)
 
     # Now do smaller scrolls to find See All
-    print("\nFine-tuning scroll to find See All button...")
     max_small_scrolls = 3
     videos_see_all = d.xpath(HomeScreen.VIDEOS_SEE_ALL)
 
@@ -231,7 +160,6 @@ def test_home_screen_add_info(d, screenshots_dir):
     # Take screenshot of the Add Info page
     screenshot_path = os.path.join(screenshots_dir, "3_4_1_home_screen_add_info_opened.png")
     d.screenshot(screenshot_path)
-    print("\nAdd Info page loaded and screenshot taken")
 
 
 @pytest.mark.smoke
@@ -262,7 +190,6 @@ def test_home_screen_day_trips(d, screenshots_dir):
     # Take screenshot of the Day Trips page
     screenshot_path = os.path.join(screenshots_dir, "3_5_1_home_screen_day_trips_opened.png")
     d.screenshot(screenshot_path)
-    print("\nDay Trips page loaded and screenshot taken")
 
 
 @pytest.mark.smoke

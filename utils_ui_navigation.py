@@ -1,18 +1,25 @@
 """
 Utility functions for UI verification.
 """
-from datetime import datetime
-import os
 from time import sleep
-import time
-from config import TEST_USER
-import random
-import string
 from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips
 from utils_scrolling import calculate_swipe_coordinates, get_screen_dimensions, get_target_position_in_first_quarter
 
 
 # UI navigation functions for Events
+
+def click_see_all_events_home_screen(d):
+    """
+    Clicks the "See All" button on the Events carousel on the Home screen.
+
+    :param d: The UIAutomator2 device instance.
+    """
+    # Find and click 'See all' next to events
+    see_all_events = d.xpath(HomeScreen.EVENTS_SEE_ALL)
+    assert see_all_events.exists, "Could not find 'See all' for events"
+    see_all_events.click()
+    sleep(10)
+
 
 def interact_with_events_carousel(d):
     """
@@ -61,10 +68,8 @@ def click_view_map(d):
 
     :param d: The UIAutomator2 device instance.
     """
-    print("\nClicking on View Map button...")
     view_map = d.xpath(HomeScreen.VIEW_MAP)
     assert view_map.exists, "Could not find View Map button"
-    print("Found View Map button, clicking...")
     view_map.click()
     sleep(5)
 
@@ -93,10 +98,8 @@ def find_day_trips_text(d):
             current_y = (bounds['top'] + bounds['bottom']) // 2
 
             if current_y <= target_y:
-                print(f"\nDay Trips text found in correct position (y={current_y})")
                 break
 
-        print(f"\nAttempt {attempt + 1}: Scrolling for Day Trips text")
         d.swipe(start_x, start_y, start_x, end_y, duration=1.0)
         sleep(2)
 
@@ -109,7 +112,6 @@ def find_day_trips_text(d):
     for i in range(max_small_scrolls):
         if read_more_button.exists:
             break
-        print(f"\nSmall scroll attempt {i + 1} for Read More button")
         d.swipe(start_x, start_y, start_x, end_y, duration=1.5)
         sleep(2)
 
@@ -122,7 +124,6 @@ def click_trails_button(d):
 
     :param d: The device instance.
     """
-    print("\nClicking on Trails button...")
     trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
     assert trails_button.wait(timeout=5), "Trails button not found"
     trails_button.click()
@@ -137,10 +138,8 @@ def click_favorites_button(d):
 
     :param d: The UIAutomator2 device instance.
     """
-    print("\nClicking on Favorites button...")
     favorites_button = d.xpath(BottomNavBar.FAVORITES)
     assert favorites_button.exists, "Could not find Favorites button"
-    print("Found Favorites button, clicking...")
     favorites_button.click()
     sleep(2)  # Wait for favorites page to load
 
@@ -154,9 +153,7 @@ def click_visit_history(d):
 
     :param d: The UIAutomator2 device instance.
     """
-    print("\nClicking on Visit History tab...")
     visit_history_tab = d.xpath(VisitHistory.VISIT_HISTORY_TAB)
     assert visit_history_tab.exists, "Could not find Visit History tab"
-    print("Found Visit History tab, clicking...")
     visit_history_tab.click()
     sleep(2)
