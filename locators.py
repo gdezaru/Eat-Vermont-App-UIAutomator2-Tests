@@ -29,19 +29,12 @@ class Permissions:
 class HomeScreen:
     """Locators for Home Screen UI Elements"""
     EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events Near You")]'
-    EVENTS_SEE_ALL = '//android.widget.TextView[@description="See All"]'
-    VIDEOS_SEE_ALL = ('//android.widget.ScrollView/android.view.ViewGroup[1]/'
-                      'android.view.ViewGroup[6]/android.widget.TextView[1]')
+    EVENTS_SEE_ALL = '//android.widget.TextView[@text="See All"]'
+    VIDEOS_SEE_ALL = ('//android.widget.TextView[@text="Videos"]/following-sibling::*'
+                      '//android.widget.TextView[@text="See All"]')
     VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Videos" and ./parent::android.view.ViewGroup]'
-    DAY_TRIPS_SEE_ALL = (
-        '//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
-        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-        '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-        '/android.view.ViewGroup[1]/android.widget.ScrollView[1]/android.view.ViewGroup[1]'
-        '/android.view.ViewGroup[2]/android.view.ViewGroup[1]')
+    DAY_TRIPS_SEE_ALL = ('//android.widget.TextView[@text="Day Trips"]/following-sibling::*'
+                         '//android.widget.TextView[@text="See All"]')
     EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::'
                                 '*//android.widget.TextView[@text="See All"]')
     EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'

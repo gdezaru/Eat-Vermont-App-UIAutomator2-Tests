@@ -7,7 +7,6 @@ from utils_scrolling import calculate_swipe_coordinates, get_screen_dimensions, 
 
 
 # UI navigation functions for Events
-
 def click_see_all_events_home_screen(d):
     """
     Clicks the "See All" button on the Events carousel on the Home screen.
@@ -19,6 +18,16 @@ def click_see_all_events_home_screen(d):
     assert see_all_events.exists, "Could not find 'See all' for events"
     see_all_events.click()
     sleep(10)
+
+
+def click_see_all_events_within_30(d):
+    """
+    Clicks the "See All" button on the Events within 30 minutes section on the Home screen.
+    """
+    see_all = d(text="See All")
+    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
+    see_all.click()
+    sleep(2)
 
 
 def interact_with_events_carousel(d):
@@ -60,7 +69,7 @@ def click_business_fyi_tab(d):
     assert fyi_contents.exists, "FYI tab contents not found"
 
 
-# UI navigation functions for View Map/Videos
+# UI navigation functions for View Map
 
 def click_view_map(d):
     """
@@ -118,6 +127,18 @@ def find_day_trips_text(d):
     return read_more_button
 
 
+def click_day_trips_see_all(d):
+    """
+    Clicks the "See All" button for the Day Trips section.
+
+    :param d: The device instance.
+    """
+    day_trips_see_all = d.xpath(HomeScreen.DAY_TRIPS_SEE_ALL.format("Day Trip"))
+    assert day_trips_see_all.exists, "Could not find Day Trip 'See all' button"
+    day_trips_see_all.click()
+    sleep(2)
+
+
 def click_trails_button(d):
     """
     Finds and clicks the Trails button on the home screen.
@@ -128,6 +149,49 @@ def click_trails_button(d):
     assert trails_button.wait(timeout=5), "Trails button not found"
     trails_button.click()
     sleep(2)
+
+
+# UI navigation functions for Add Info
+
+def click_add_info_button(d):
+    """
+    Clicks the Add Info button on the Home screen.
+
+    :param d: The UIAutomator2 device instance.
+    """
+    add_info_button = d.xpath(HomeScreen.ADD_INFO_BUTTON)
+    assert add_info_button.exists, "Could not find Add Info button"
+    add_info_button.click()
+    sleep(5)
+
+
+# UI navigation functions for Videos
+
+def find_and_click_see_all_videos(d, height, start_x):
+    """
+    Find and click the "See All" button for the Videos section.
+
+    :param d: The UIAutomator2 device instance.
+    :param height: The screen height.
+    :param start_x: The starting x-coordinate for the swipe.
+    """
+    # Now do smaller scrolls to find See All
+    max_small_scrolls = 3
+    videos_see_all = d.xpath(HomeScreen.VIDEOS_SEE_ALL)
+
+    # Smaller swipes for fine-tuning
+    fine_tune_start_y = (height * 3) // 5  # Start from 60%
+    fine_tune_end_y = (height * 2) // 5  # End at 40%
+
+    for _ in range(max_small_scrolls):
+        if videos_see_all.exists:
+            break
+        d.swipe(start_x, fine_tune_start_y, start_x, fine_tune_end_y, duration=1.0)
+        sleep(1.5)
+
+    assert videos_see_all.exists, "Could not find Videos See All button"
+    videos_see_all.click()
+    sleep(5)
 
 
 # UI navigation functions for Favorites/Visit History

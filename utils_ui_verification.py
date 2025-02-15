@@ -3,7 +3,7 @@ Utilities functions for UI verification
 """
 import os
 from time import sleep
-from locators import Businesses, EventsScreen
+from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles
 from utils_screenshots import take_screenshot
 
 attempt = 1
@@ -14,6 +14,8 @@ attempt = 1
 def find_and_click_current_day(d):
     """
     Find and click on the current day element in the events calendar screen.
+    Returns:
+        str: The current day in three-letter format (e.g., 'MON', 'TUE')
     """
     # Find the current selected day
     days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -23,9 +25,28 @@ def find_and_click_current_day(d):
         if day_element.exists:
             current_day = day
             print(f"\nFound current day: {day}")
+            day_element.click()
+            sleep(2)
             break
 
     assert current_day is not None, "Could not find any day of week element"
+    return current_day
+
+
+def find_event_within_30(d):
+    """
+    Find an event tile within 30 minutes.
+    """
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    event_found = False
+    for day in days_of_week:
+        events_tile = d.xpath(HomeScreenTiles.EVENTS_WITHIN_30_TILE.format(day))
+        if events_tile.exists:
+            event_found = True
+            break
+
+    assert event_found, "Could not find any events with dates in Events within 30 minutes section"
+    sleep(1)
 
 
 # UI verification functions for Businesses
@@ -144,6 +165,23 @@ def verify_business_fyi_tab(d):
 
 
 # UI verification functions for Videos
+
+
+def verify_videos_text_exists(d, start_x, start_y, end_y):
+    """
+    Verify that the Videos text is present on the screen.
+    """
+    videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
+    max_scroll_attempts = 9
+
+    for _ in range(max_scroll_attempts):
+        if videos_text.exists:
+            break
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.9)
+        sleep(1.5)
+
+    assert videos_text.exists, "Videos section not found"
+    sleep(1)
 
 
 def verify_video_playback(d):

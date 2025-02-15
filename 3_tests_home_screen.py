@@ -4,9 +4,13 @@ import os
 from time import sleep
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
 from utils_authentication import sign_in_and_prepare
-from utils_scrolling import get_screen_dimensions, scroll_to_event_and_click
-from utils_ui_navigation import click_favorites_button, click_see_all_events_home_screen, click_view_map
-from utils_ui_verification import try_next_day, find_and_click_current_day
+from utils_scrolling import get_screen_dimensions, scroll_to_event_and_click, calculate_swipe_coordinates, \
+    scroll_to_add_info, scroll_to_events_within_30
+from utils_ui_navigation import click_favorites_button, click_see_all_events_home_screen, click_view_map, \
+    find_and_click_see_all_videos, click_add_info_button, find_day_trips_text, click_day_trips_see_all, \
+    click_see_all_events_within_30
+from utils_ui_verification import try_next_day, find_and_click_current_day, verify_videos_text_exists, \
+    find_event_within_30
 
 
 @pytest.mark.smoke
@@ -31,8 +35,8 @@ def test_home_screen_events(d, screenshots_dir, current_day=None):
     screenshot_path = os.path.join(screenshots_dir, "3_1_1_home_screen_events.png")
     d.screenshot(screenshot_path)
 
-    # Find the current day
-    find_and_click_current_day(d)
+    # Find and click current day
+    current_day = find_and_click_current_day(d)
 
     # Try clicking each subsequent day until one works
     try_next_day(d, current_day)
@@ -43,6 +47,7 @@ def test_home_screen_events(d, screenshots_dir, current_day=None):
     # Take screenshot of the event details
     screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{current_day.lower()}.png")
     d.screenshot(screenshot_path)
+
 
 @pytest.mark.smoke
 def test_home_screen_view_map(d, screenshots_dir):
@@ -88,44 +93,16 @@ def test_home_screen_videos(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Use utility function to get screen dimensions
+    # Get screen dimensions
     width, height = get_screen_dimensions(d)
 
-    # First scroll until we find Videos text using the specific locator
-    videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
-    max_scroll_attempts = 5
-
     # Calculate swipe coordinates for finding Videos
-    start_x = width // 2
-    start_y = (height * 3) // 4  # Start from 75%
-    end_y = height // 4  # End at 25%
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
 
-    for _ in range(max_scroll_attempts):
-        if videos_text.exists:
-            break
-        d.swipe(start_x, start_y, start_x, end_y, duration=0.8)
-        sleep(1.5)
+    # First scroll until we find Videos text using the specific locator
+    verify_videos_text_exists(d, start_x, start_y, end_y)
 
-    assert videos_text.exists, "Videos section not found"
-    sleep(1)
-
-    # Now do smaller scrolls to find See All
-    max_small_scrolls = 3
-    videos_see_all = d.xpath(HomeScreen.VIDEOS_SEE_ALL)
-
-    # Smaller swipes for fine-tuning
-    fine_tune_start_y = (height * 3) // 5  # Start from 60%
-    fine_tune_end_y = (height * 2) // 5  # End at 40%
-
-    for _ in range(max_small_scrolls):
-        if videos_see_all.exists:
-            break
-        d.swipe(start_x, fine_tune_start_y, start_x, fine_tune_end_y, duration=1.0)
-        sleep(1.5)
-
-    assert videos_see_all.exists, "Could not find Videos See All button"
-    videos_see_all.click()
-    sleep(5)  # Wait for videos page to load
+    find_and_click_see_all_videos(d, height, start_x)
 
     # Take screenshot of the videos page
     screenshot_path = os.path.join(screenshots_dir, "3_3_1_home_screen_videos_opened.png")
@@ -146,16 +123,9 @@ def test_home_screen_add_info(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Scroll until Add Info button is visible
-    d(scrollable=True).scroll.to(text="Add Info")
-    assert d(text="Add Info").exists(timeout=5), "Add Info button not found"
-    sleep(1)
+    scroll_to_add_info(d)
 
-    # Click on Add Info button
-    add_info_button = d.xpath(HomeScreen.ADD_INFO_BUTTON)
-    assert add_info_button.exists, "Add Info button not found"
-    add_info_button.click()
-    sleep(5)
+    click_add_info_button(d)
 
     # Take screenshot of the Add Info page
     screenshot_path = os.path.join(screenshots_dir, "3_4_1_home_screen_add_info_opened.png")
@@ -176,16 +146,9 @@ def test_home_screen_day_trips(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Single scroll to show Day Trips
-    d(scrollable=True).scroll.to(text="Day Trip")
-    assert d(text="Day Trip").exists(timeout=5), "Day Trip text not found"
-    sleep(1)
+    find_day_trips_text(d)
 
-    # Click "See all" next to Day Trips
-    day_trips_see_all = d.xpath(HomeScreen.DAY_TRIPS_SEE_ALL.format("Day Trip"))
-    assert day_trips_see_all.exists, "Could not find Day Trip 'See all' button"
-    day_trips_see_all.click()
-    sleep(2)
+    click_day_trips_see_all(d)
 
     # Take screenshot of the Day Trips page
     screenshot_path = os.path.join(screenshots_dir, "3_5_1_home_screen_day_trips_opened.png")
@@ -206,33 +169,16 @@ def test_home_screen_events_within(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Single scroll to show Events within ~30 minutes
-    d(scrollable=True).scroll.to(text="Events Within ~30min")
-    assert d(text="Events Within ~30min").exists(timeout=5), "Events Within ~30min text not found"
-    sleep(1)
+    scroll_to_events_within_30(d)
 
-    # Check for content in Events within 30 minutes tile
-    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    event_found = False
-    for day in days_of_week:
-        events_tile = d.xpath(HomeScreenTiles.EVENTS_WITHIN_30_TILE.format(day))
-        if events_tile.exists:
-            event_found = True
-            break
-
-    assert event_found, "Could not find any events with dates in Events within 30 minutes section"
-    sleep(1)
+    find_event_within_30(d)
 
     # Take screenshot of the Events within 30 minutes section
     screenshot_path = os.path.join(screenshots_dir, "3_6_1_home_screen_events_within.png")
     d.screenshot(screenshot_path)
     sleep(1)
 
-    # Click See All for Events within 30 minutes
-    see_all = d(text="See All")
-    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
-    see_all.click()
-    sleep(2)  # Extra time for page transition
+    click_see_all_events_within_30(d)
 
     # Take screenshot of the Events within 30 minutes list view
     screenshot_path = os.path.join(screenshots_dir, "3_6_2_home_screen_events_within_list.png")

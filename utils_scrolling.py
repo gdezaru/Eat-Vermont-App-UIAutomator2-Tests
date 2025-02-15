@@ -183,3 +183,22 @@ def scroll_to_event_and_click(d, screenshots_dir, current_day=None):
         # Verify we're in the event details view by checking for the event title
         event_title_in_details = d.xpath(EventsScreen.EVENT_TITLE.format(event_title))
         assert event_title_in_details.exists, f"Failed to open event details for '{event_title}'"
+
+
+def scroll_to_events_within_30(d):
+    """
+    Scroll to the events within 30 minutes.
+    """
+    d(scrollable=True).scroll.to(text="Events Within ~30min")
+    assert d(text="Events Within ~30min").exists(timeout=5), "Events Within ~30min text not found"
+    sleep(1)
+
+
+def scroll_to_add_info(d):
+    """
+    Scroll to the Add Info button.
+    """
+    # Scroll until Add Info button is visible
+    d(scrollable=True).scroll.to(text="Add Info")
+    assert d(text="Add Info").exists(timeout=5), "Add Info button not found"
+    sleep(1)
