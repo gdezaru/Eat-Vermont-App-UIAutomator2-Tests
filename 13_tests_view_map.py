@@ -1,8 +1,10 @@
 import pytest
+import os
 from time import sleep
 from locators import ViewMap
-from utils import sign_in_and_prepare, click_and_verify_element, click_view_map
-import os
+from utils_authentication import sign_in_and_prepare
+from utils_scrolling import click_and_verify_element
+from utils_ui_navigation import click_view_map
 
 
 @pytest.mark.smoke

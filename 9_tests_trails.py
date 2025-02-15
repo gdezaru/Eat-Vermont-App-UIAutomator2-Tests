@@ -1,6 +1,6 @@
 from time import sleep
 from locators import Trails
-from utils import sign_in_and_prepare, click_trails_button, scroll_to_bottom
+from utils_device_interaction import sign_in_and_prepare, click_trails_button, scroll_to_bottom
 import pytest
 import os
 

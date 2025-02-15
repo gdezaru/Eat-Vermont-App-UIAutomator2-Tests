@@ -2,7 +2,8 @@ import pytest
 import os
 from time import sleep
 from config import TEST_USER
-from utils import sign_in_and_prepare, handle_notification_permission, click_and_fill_forgot_password
+from utils_authentication import sign_in_and_prepare
+from utils_device_interaction import handle_notification_permission, click_and_fill_forgot_password
 from locators import LoginPage
 
 

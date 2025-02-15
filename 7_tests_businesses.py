@@ -1,6 +1,6 @@
 from time import sleep
 from locators import Businesses
-from utils import sign_in_and_prepare, verify_businesses_section_present, search_and_submit
+from utils_device_interaction import sign_in_and_prepare, verify_businesses_section_present, search_and_submit
 import pytest
 import os
 
@@ -26,63 +26,42 @@ def test_business_card_with_event(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Use utility function to search and submit
     search_and_submit(d, business_name)
 
-    # Wait for and verify Businesses section is present
     verify_businesses_section_present(d)
 
     # Click on Higher Ground search result under Businesses
-    print("\nLocating Higher Ground under Businesses section...")
     search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(business_name))
     assert search_result.exists, "Higher Ground not found under Businesses section"
-    print("Found Higher Ground, attempting to click...")
-    print(f"Higher Ground element info: {search_result.info}")
-    print(f"Current screen hierarchy: {d.dump_hierarchy()}")
     search_result.click()
     sleep(5)
 
     # Verify About tab is visible
-    print("\nVerifying About tab is visible...")
     about_tab = d.xpath(Businesses.BUSINESS_ABOUT_TAB)
-    print(f"About tab exists: {about_tab.exists}")
     if about_tab.exists:
-        print(f"About tab info: {about_tab.info}")
-    print(f"Current screen hierarchy after clicking Higher Ground: {d.dump_hierarchy()}")
-    assert about_tab.exists, "About tab not found on business details page"
-    print("About tab is visible")
+        assert about_tab.exists, "About tab not found on business details page"
 
     # Verify About tab contents are present
-    print("\nVerifying About tab contents are present...")
     about_contents = d.xpath(Businesses.BUSINESS_ABOUT_TAB_CONTENTS)
     assert about_contents.exists, "About tab contents not found"
-    print("About tab contents are present")
 
     # Take screenshot of business details with About tab
-    print("\nTaking screenshot of business details with About tab...")
     screenshot_path = os.path.join(screenshots_dir, "7_1_1_business_card_with_event_about_tab.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 7_1_1_business_card_with_event_about_tab.png")
 
     # Click on FYI tab and verify contents
-    print("\nLocating and clicking FYI tab...")
     fyi_tab = d.xpath(Businesses.BUSINESS_FYI_TAB)
     assert fyi_tab.exists, "FYI tab not found"
     fyi_tab.click()
     sleep(2)  # Wait for FYI contents to load
-    print("FYI tab clicked")
 
     # Verify FYI tab contents are present
-    print("\nVerifying FYI tab contents are present...")
     fyi_contents = d.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
     assert fyi_contents.exists, "FYI tab contents not found"
-    print("FYI tab contents are present")
 
     # Take screenshot of FYI tab contents
-    print("\nTaking screenshot of FYI tab contents...")
     screenshot_path = os.path.join(screenshots_dir, "7_1_2_business_card_with_event_fyi_tab.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 7_1_2_business_card_with_event_fyi_tab.png")
 
 
 @pytest.mark.smoke

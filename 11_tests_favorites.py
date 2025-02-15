@@ -1,16 +1,12 @@
 import pytest
+import os
 from time import sleep
 from locators import MyFavorites, Businesses
-from utils import (
-    sign_in_and_prepare,
-    verify_businesses_section_present,
-    interact_with_events_carousel,
-    search_and_submit,
-    click_trails_button,
-    click_favorites_button
-)
-import os
 
+from utils_authentication import sign_in_and_prepare
+from utils_device_interaction import search_and_submit
+from utils_ui_navigation import interact_with_events_carousel, click_trails_button, click_favorites_button
+from utils_ui_verification import verify_businesses_section_present
 
 # Initialize business names at module level
 business_name = "Higher Ground"

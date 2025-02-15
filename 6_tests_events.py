@@ -1,6 +1,6 @@
 from time import sleep
 from locators import Events
-from utils import sign_in_and_prepare, interact_with_events_carousel
+from utils_device_interaction import sign_in_and_prepare, interact_with_events_carousel
 import pytest
 import os
 

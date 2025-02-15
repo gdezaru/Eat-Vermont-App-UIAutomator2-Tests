@@ -1,7 +1,7 @@
 import pytest
 import os
 from time import sleep
-from utils import handle_notification_permission, sign_in_and_prepare, search_and_submit, verify_and_screenshot, scroll_to_bottom
+from utils_device_interaction import handle_notification_permission, sign_in_and_prepare, search_and_submit, verify_and_screenshot, scroll_to_bottom
 
 
 @pytest.mark.smoke

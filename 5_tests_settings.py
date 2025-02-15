@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 from locators import HomeScreen, SettingsScreen
-from utils import generate_random_name, generate_random_username, sign_in_and_prepare
+from utils_device_interaction import generate_random_name, generate_random_username, sign_in_and_prepare
 import os
 
 
