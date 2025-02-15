@@ -1,8 +1,11 @@
 from time import sleep
-from locators import Businesses
-from utils_device_interaction import sign_in_and_prepare, verify_businesses_section_present, search_and_submit
 import pytest
 import os
+
+from locators import Businesses
+from utils_authentication import sign_in_and_prepare
+from utils_device_interaction import search_and_submit
+from utils_ui_verification import verify_businesses_section_present
 
 # Initialize business names at module level
 business_name = "Higher Ground"

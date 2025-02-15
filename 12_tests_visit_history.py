@@ -1,12 +1,9 @@
 from time import sleep
 import pytest
 import os
-from locators import VisitHistory
-from utils_device_interaction import (
-    sign_in_and_prepare,
-    click_favorites_button,
-    click_visit_history
-)
+
+from utils_authentication import sign_in_and_prepare
+from utils_ui_navigation import click_favorites_button, click_visit_history
 
 
 @pytest.mark.smoke

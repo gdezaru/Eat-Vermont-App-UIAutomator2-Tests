@@ -1,8 +1,10 @@
 from time import sleep
-from locators import Events
-from utils_device_interaction import sign_in_and_prepare, interact_with_events_carousel
 import pytest
 import os
+
+from locators import Events
+from utils_authentication import sign_in_and_prepare
+from utils_ui_navigation import interact_with_events_carousel
 
 
 @pytest.mark.smoke

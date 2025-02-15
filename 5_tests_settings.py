@@ -1,8 +1,10 @@
 import pytest
-from time import sleep
-from locators import HomeScreen, SettingsScreen
-from utils_device_interaction import generate_random_name, generate_random_username, sign_in_and_prepare
 import os
+from time import sleep
+
+from locators import HomeScreen, SettingsScreen
+from utils_authentication import sign_in_and_prepare
+from utils_settings import generate_random_name, generate_random_username
 
 
 @pytest.mark.smoke

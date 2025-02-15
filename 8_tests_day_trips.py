@@ -1,11 +1,9 @@
 from time import sleep
 import pytest
-from locators import DayTrips
-from utils_device_interaction import (
-    sign_in_and_prepare,
-    find_day_trips_text
-)
 import os
+
+from utils_authentication import sign_in_and_prepare
+from utils_ui_navigation import find_day_trips_text
 
 
 @pytest.mark.smoke

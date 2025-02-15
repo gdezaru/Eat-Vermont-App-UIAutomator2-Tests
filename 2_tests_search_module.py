@@ -1,7 +1,10 @@
 import pytest
-import os
 from time import sleep
-from utils_device_interaction import handle_notification_permission, sign_in_and_prepare, search_and_submit, verify_and_screenshot, scroll_to_bottom
+
+from utils_authentication import sign_in_and_prepare
+from utils_device_interaction import search_and_submit
+from utils_scrolling import scroll_to_bottom
+from utils_ui_verification import verify_and_screenshot
 
 
 @pytest.mark.smoke
@@ -28,7 +31,6 @@ def test_search_events(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
-        device=d,
         condition=lambda: d(textContains="Burlington").exists or d(textContains="Results").exists or d(textContains="Event").exists,
         error_message="Search failed - Could not verify search results",
         screenshots_dir=screenshots_dir,
@@ -60,8 +62,8 @@ def test_search_businesses(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
-        device=d,
-        condition=lambda: d(textContains="Big Fatty BBQ").exists or d(textContains="Results").exists or d(textContains="Big Fatty BBQ").exists,
+        condition=lambda: d(textContains="Big Fatty BBQ").exists or d(textContains="Results").exists
+                          or d(textContains="Big Fatty BBQ").exists,
         error_message="Search failed - Could not verify search results",
         screenshots_dir=screenshots_dir,
         filename="2_2_2_search_business.png"
@@ -96,8 +98,8 @@ def test_search_day_trips(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
-        device=d,
-        condition=lambda: d(textContains="Day Trip").exists or d(textContains="Results").exists or d(textContains="Day Trip").exists,
+        condition=lambda: d(textContains="Day Trip").exists or d(textContains="Results").exists
+                          or d(textContains="Day Trip").exists,
         error_message="Search failed - Could not verify search results",
         screenshots_dir=screenshots_dir,
         filename="2_2_3_search_day_trips.png"
@@ -132,8 +134,8 @@ def test_search_videos(d, screenshots_dir):
 
     # Verify search results and take screenshot
     verify_and_screenshot(
-        device=d,
-        condition=lambda: d(textContains="Rocket").exists or d(textContains="Results").exists or d(textContains="Rocket").exists,
+        condition=lambda: d(textContains="Rocket").exists or d(textContains="Results").exists
+                          or d(textContains="Rocket").exists,
         error_message="Search failed - Could not verify search results",
         screenshots_dir=screenshots_dir,
         filename="2_2_4_search_videos.png"
