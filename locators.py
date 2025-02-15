@@ -259,7 +259,7 @@ class VisitHistory:
 
 class GuestMode:
     """Locators for Guest Mode module"""
-    CONTINUE_AS_GUEST_BUTTON = '//android.widget.TextView[@text="Continue as a guest."]'
+    CONTINUE_AS_GUEST_BUTTON = '//android.widget.TextView[@text="Try for Free – Guest Access"]'
     #    GUEST_MODE_SIGN_IN_BUTTON = *need button id because other locators don't work*'
     EVENTS_LIMITED_RESULTS = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_HOME_SCREEN_PROMPT = '//android.widget.TextView[@text="Limited Results"]'
