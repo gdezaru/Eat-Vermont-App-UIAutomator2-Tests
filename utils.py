@@ -298,11 +298,28 @@ def interact_with_events_carousel(d):
     Locates and interacts with the Events carousel item.
     """
     print("\nLocating Events carousel item...")
-    carousel_item = d.xpath(Events.CAROUSEL_ITEM)
-    assert carousel_item.exists, "Could not find Events carousel item"
-    print("Events carousel item found, clicking...")
-    carousel_item.click()
-    sleep(7)
+    sleep(5)  # Wait for UI to load
+
+    # Do one scroll first
+    screen_info = d.info
+    width = screen_info['displayWidth']
+    height = screen_info['displayHeight']
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
+    d.swipe(start_x, start_y, start_x, end_y, duration=0.4)
+    sleep(1.5)
+    
+    # First find any event element
+    event_element = d.xpath('//android.view.ViewGroup[@content-desc]').get()
+    if event_element:
+        content_desc = event_element.attrib.get('content-desc')
+        if content_desc:
+            carousel_item = d.xpath(Events.CAROUSEL_ITEM.format(content_desc))
+            assert carousel_item.exists, "Could not find Events carousel item"
+            print("Events carousel item found, clicking...")
+            carousel_item.click()
+            sleep(7)
+    else:
+        assert False, "Could not find any event elements"
 
 
 def scroll_to_find_text(d, text, max_attempts=5):
@@ -510,12 +527,12 @@ def handle_guest_mode_plans_popup(d):
     Args:
         d: UIAutomator2 device instance
     """
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    if plans_popup_continue.exists:
-        print("\nPlans popup is visible, clicking continue...")
+    plans_popup_close = d.xpath(PlansPopup.PLANS_POPUP_CLOSE_BUTTON)
+    if plans_popup_close.exists:
+        print("\nPlans popup is visible, clicking close button...")
         sleep(2)
-        plans_popup_continue.click()
-        print("Clicked continue on plans popup")
+        plans_popup_close.click()
+        print("Clicked close button on plans popup")
     else:
         print("\nNo plans popup found, continuing with test...")
         sleep(2)
@@ -524,17 +541,29 @@ def handle_guest_mode_plans_popup(d):
 def enter_guest_mode_and_handle_popups(d):
     """Enter guest mode and handle all necessary popups."""
     handle_notification_permission(d)
-    d.xpath(LoginPage.GET_STARTED).click()
-    sleep(3)
-    guest_mode_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
-    assert guest_mode_button.exists, "Continue as guest button not found"
-    guest_mode_button.click()
-    sleep(5)
-    handle_plans_events_popups(d)
+    
+    # Click Get Started
+    get_started = d.xpath(LoginPage.GET_STARTED)
+    assert get_started.exists, "Get Started button not found"
+    get_started.click()
+    sleep(2)
+
+    # Click Continue as Guest
+    guest_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
+    assert guest_button.exists, "Continue as Guest button not found"
+    guest_button.click()
+    sleep(2)
+
+    # Handle events popup if it appears
+    handle_events_popup(d)
 
 
 def handle_plans_events_popups(d):
     """Handle plans popup if present."""
+    guest_button = d.xpath(GuestMode.CONTINUE_AS_GUEST_BUTTON)
+    assert guest_button.exists, "Continue as Guest button not found"
+    guest_button.click()
+    sleep(2)
     handle_guest_mode_plans_popup(d)
     handle_events_popup(d)
     sleep(3)

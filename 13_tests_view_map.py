@@ -1,6 +1,6 @@
 import pytest
 from time import sleep
-from locators import HomeScreen, ViewMap
+from locators import ViewMap
 from utils import sign_in_and_prepare, click_and_verify_element, click_view_map
 import os
 

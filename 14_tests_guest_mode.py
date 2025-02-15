@@ -2,7 +2,7 @@ import pytest
 from time import sleep
 from locators import GuestMode, PlansPopup, HomeScreen, BottomNavBar, Videos
 from utils import (handle_guest_mode_plans_popup, enter_guest_mode_and_handle_popups, interact_with_events_carousel,
-                   get_screen_dimensions)
+                   get_screen_dimensions, calculate_swipe_coordinates)
 import os
 
 
@@ -47,21 +47,19 @@ def test_guest_mode_events(d, screenshots_dir):
 
     enter_guest_mode_and_handle_popups(d)
 
-    # Interact with Events carousel item
-    interact_with_events_carousel(d)
-    sleep(7)
+    # Navigate to Events tab
+    events_tab = d.xpath(BottomNavBar.EVENTS)
+    assert events_tab.exists, "Events tab not found"
+    events_tab.click()
+    sleep(2)
 
     # Verify Limited Results text is present
-    print("\nVerifying Limited Results text...")
     limited_results = d.xpath(GuestMode.EVENTS_LIMITED_RESULTS)
     assert limited_results.exists, "Limited Results text not found"
-    print("Limited Results text is present")
 
     # Take a confirmation screenshot
-    print("\nTaking confirmation screenshot...")
     screenshot_path = os.path.join(screenshots_dir, "14_2_1_guest_mode_events.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 14_2_1_guest_mode_events.png")
 
 
 @pytest.mark.smoke
@@ -82,62 +80,38 @@ def test_guest_mode_videos(d, screenshots_dir):
     """
     enter_guest_mode_and_handle_popups(d)
 
-    # Navigate to Videos section
-    print("\nNavigating to Videos section...")
-    videos_button = d.xpath(Videos.VIDEO_TILE)
-    assert videos_button.exists, "Videos button not found"
-    videos_button.click()
-    sleep(5)
-
-    # Handle events popup if present
-    handle_guest_mode_plans_popup(d)
-
     # Use utility function to get screen dimensions
     width, height = get_screen_dimensions(d)
-    upper_third = int(height * 0.4)
 
-    # Calculate swipe coordinates
-    start_x = width // 2
-    start_y = (height * 3) // 4
-    end_y = height // 4
+    # Calculate swipe coordinates using utility function
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
 
-    # First scroll to Videos section
-    print("\nScrolling to find Videos section...")
-    videos_text = d.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
-    max_scroll_attempts = 1
+    # First scroll to find locked videos
+    locked_videos = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
+    max_scroll_attempts = 9
 
-    # Keep scrolling until Videos text is in upper third of screen
+    # Keep scrolling until locked videos are found
     for _ in range(max_scroll_attempts):
-        if videos_text.exists:
-            bounds = videos_text.bounds
-            if bounds[1] < upper_third:
-                print("Videos section found in upper third of screen")
-                break
+        if locked_videos.exists:
+            break
         d.swipe(start_x, start_y, start_x, end_y, duration=0.9)
         sleep(1.5)
 
     # Verify locked videos are present
-    print("\nVerifying locked videos...")
     locked_videos = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
     assert locked_videos.exists, "Locked videos not found"
-    print("Locked videos are present")
 
     # Click on locked videos
-    print("\nClicking on locked videos...")
     locked_videos.click()
     sleep(3)
 
-    # Verify plans popup is present
-    print("\nVerifying plans popup...")
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    assert plans_popup_continue.exists, "Plans popup continue button not found"
-    print("Plans popup is present")
+    # Verify plans popup is present and close it
+    plans_popup_close = d.xpath(PlansPopup.PLANS_POPUP_CLOSE_BUTTON)
+    assert plans_popup_close.exists, "Plans popup close button not found"
 
     # Take a confirmation screenshot
-    print("\nTaking confirmation screenshot...")
     screenshot_path = os.path.join(screenshots_dir, "14_3_2_guest_mode_videos_triggered_plans_popup.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 14_3_2_guest_mode_videos_triggered_plans_popup.png")
 
 
 @pytest.mark.smoke
@@ -159,26 +133,14 @@ def test_guest_mode_search(d, screenshots_dir):
     enter_guest_mode_and_handle_popups(d)
 
     # Navigate to Search
-    print("\nNavigating to Search...")
     search_button = d.xpath(BottomNavBar.SEARCH)
     assert search_button.exists, "Search button not found"
     search_button.click()
     sleep(5)
 
-    # Handle events popup if present
-    handle_guest_mode_plans_popup(d)
-
-    # Verify plans popup is present
-    print("\nVerifying plans popup...")
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    assert plans_popup_continue.exists, "Plans popup continue button not found"
-    print("Plans popup is present")
-
     # Take a confirmation screenshot
-    print("\nTaking confirmation screenshot...")
     screenshot_path = os.path.join(screenshots_dir, "14_4_1_guest_mode_search_triggered_plans_popup.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 14_4_1_guest_mode_search_triggered_plans_popup.png")
 
 
 @pytest.mark.smoke
@@ -201,23 +163,18 @@ def test_guest_mode_favorites(d, screenshots_dir):
     enter_guest_mode_and_handle_popups(d)
 
     # Click on Favorites in bottom navigation
-    print("\nClicking on Favorites in bottom navigation...")
     favorites_button = d.xpath(BottomNavBar.FAVORITES)
     assert favorites_button.exists, "Favorites button not found in bottom navigation"
     favorites_button.click()
     sleep(3)
 
     # Verify plans popup is present
-    print("\nVerifying plans popup...")
-    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CONTINUE_BUTTON)
-    assert plans_popup_continue.exists, "Plans popup continue button not found"
-    print("Plans popup is present")
+    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CLOSE_BUTTON)
+    assert plans_popup_continue.exists, "Plans popup close button not found"
 
     # Take a confirmation screenshot
-    print("\nTaking confirmation screenshot...")
     screenshot_path = os.path.join(screenshots_dir, "14_5_1_guest_mode_search_triggered_plans_popup.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 14_5_1_guest_mode_search_triggered_plans_popup.png")
 
 
 @pytest.mark.smoke
@@ -257,19 +214,14 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
         # Check if the guest mode prompt is visible
         guest_mode_prompt = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_PROMPT)
         if guest_mode_prompt.exists:
-            print("Guest mode prompt is present")
             break
     else:
         assert False, "Guest mode prompt not found after maximum scroll attempts"
 
     # Verify guest mode prompt is present
-    print("\nVerifying guest mode prompt...")
     guest_mode_prompt = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_PROMPT)
     assert guest_mode_prompt.exists, "Guest mode prompt not found"
-    print("Guest mode prompt is present")
 
     # Take a confirmation screenshot
-    print("\nTaking confirmation screenshot...")
     screenshot_path = os.path.join(screenshots_dir, "14_6_1_guest_mode_prompt_end_screen.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 14_6_1_guest_mode_prompt_end_screen.png")

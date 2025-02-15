@@ -149,7 +149,7 @@ class Events:
     EVENTS_POPUP_MAIN = '//android.view.ViewGroup[./*[@text="Events For You"]]'
     EVENTS_POPUP_CLOSE_BUTTON = ('//android.view.ViewGroup[./*[@text="Events For You"]]'
                                  '/android.view.ViewGroup/com.horcrux.svg.SvgView')
-    CAROUSEL_ITEM = '//android.view.ViewGroup[.//android.widget.ImageView and .//android.widget.TextView]'
+    CAROUSEL_ITEM = '//*[@content-desc="{}"]/android.view.ViewGroup[3]/android.widget.TextView[3]'
     EVENT_DETAILS_TEXT = ('//android.widget.TextView[contains(@text, "Date") or contains(@text, "Time") '
                           'or contains(@text, "Where")]')
     ADD_TO_CALENDAR = '//android.widget.TextView[@text="Add to Calendar"]'
@@ -263,16 +263,23 @@ class GuestMode:
     #    GUEST_MODE_SIGN_IN_BUTTON = *need button id because other locators don't work*'
     EVENTS_LIMITED_RESULTS = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_HOME_SCREEN_PROMPT = '//android.widget.TextView[@text="Limited Results"]'
+    GUEST_MODE_ADD_INFO = '//android.widget.TextView[@text="Add Info"]'
+    GUEST_MODE_VIDEOS_SEE_ALL = '//android.view.ViewGroup[@content-desc="See All"]'
     GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS = ('//android.widget.HorizontalScrollView'
                                             '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                             '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                            '/android.view.ViewGroup[3]/android.view.ViewGroup[1]'
-                                            '/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
-    GUEST_MODE_ADD_INFO = '//android.widget.TextView[@text="Add Info"]'
-    GUEST_MODE_VIDEOS_SEE_ALL = '//android.view.ViewGroup[@content-desc="See All"]'
+                                            '/android.view.ViewGroup[3]/android.view.ViewGroup[1]')
 
 
 class PlansPopup:
     """Locators for Plans Popup"""
-    PLANS_POPUP_CONTINUE_BUTTON = ('//android.widget.TextView[@text="Continue as a guest."]'
-                                   ' | //android.view.ViewGroup[@content-desc="Continue as a guest."]')
+    PLANS_POPUP_CLOSE_BUTTON = ('//*[@resource-id="android:id/content"]'
+                                '/android.widget.FrameLayout[1]'
+                                '/android.view.ViewGroup[1]'
+                                '/android.view.ViewGroup[2]'
+                                '/android.view.ViewGroup[2]'
+                                '/android.view.ViewGroup[1]'
+                                '/android.view.ViewGroup[1]'
+                                '/android.view.ViewGroup[1]'
+                                '/android.view.ViewGroup[2]'
+                                '/com.horcrux.svg.SvgView[1]')
