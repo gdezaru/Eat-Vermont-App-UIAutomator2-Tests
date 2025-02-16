@@ -3,7 +3,7 @@ Utilities functions for UI verification
 """
 import os
 from time import sleep
-from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles
+from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen
 from utils_screenshots import take_screenshot
 
 attempt = 1
@@ -81,15 +81,15 @@ def find_event_further_than_30(d):
             
         # If no event found, scroll down and try again
         print("\nNo events found, scrolling down to check more...")
-        d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)  # Scroll from bottom to top
-        sleep(2)  # Wait for scroll animation and content load
+        d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)
+        sleep(2)
 
     if not event_found:
         # Take screenshot for debugging if no events found
         d.screenshot("debug_no_events_further_than_30.png")
         
     assert event_found, "Could not find any events further than 30 minutes after multiple scroll attempts"
-    sleep(1)  # Wait for UI to settle
+    sleep(1)
 
 
 # UI verification functions for Businesses
@@ -256,6 +256,41 @@ def verify_video_playback(d):
     take_screenshot(d, "video_playing")
     print("Video state verification complete")
     return True
+
+
+# UI verification for Settings
+
+def verify_settings_options(d):
+    """
+    Asserts the settings options.
+    """
+    manage_account = d.xpath(SettingsScreen.MANAGE_ACCOUNT)
+    assert manage_account.exists, "Manage Account option not found"
+
+    edit_profile = d.xpath(SettingsScreen.EDIT_PROFILE)
+    assert edit_profile.exists, "Edit Profile option not found"
+
+    share_location = d.xpath(SettingsScreen.SHARE_MY_LOCATION)
+    assert share_location.exists, "Share My Location option not found"
+
+    log_out = d.xpath(SettingsScreen.LOG_OUT)
+    assert log_out.exists, "Log out option not found"
+
+
+def verify_settings_changed_name(d, new_name):
+    """
+    Verifies if the inputted name is visible in the main Settings screen.
+    """
+    name_text = d(text=new_name)
+    assert name_text.exists(timeout=5), f"Updated name '{new_name}' is not visible after saving changes"
+
+
+def verify_save_button_exists(d):
+    """
+    Verifies if the Save button is present in the Edit Profile screen.
+    """
+    save_button = d.xpath(SettingsScreen.EDIT_PROFILE_SAVE_BUTTON)
+    assert save_button.exists, "Save button is not present after editing name"
 
 
 # UI general verification functions

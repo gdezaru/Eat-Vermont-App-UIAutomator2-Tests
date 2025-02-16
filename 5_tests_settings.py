@@ -4,7 +4,11 @@ from time import sleep
 
 from locators import HomeScreen, SettingsScreen
 from utils_authentication import sign_in_and_prepare
-from utils_settings import generate_random_name, generate_random_username
+from utils_device_interaction import change_username_profile_settings
+from utils_scrolling import scroll_to_bottom
+from utils_settings import generate_random_name, generate_random_username, click_settings_button, click_edit_profile, \
+    click_settings_back_button, click_location_toggle, handle_allow_button, click_log_out, click_settings_save_button
+from utils_ui_verification import verify_settings_options, verify_settings_changed_name, verify_save_button_exists
 
 
 @pytest.mark.smoke
@@ -20,30 +24,13 @@ def test_settings_contents(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Settings button
-    settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
-    assert settings_button.exists, "Could not find Settings button"
-    settings_button.click()
-    sleep(2)
+    click_settings_button(d)
 
-    # Verify all settings options are visible
-    manage_account = d.xpath(SettingsScreen.MANAGE_ACCOUNT)
-    assert manage_account.exists, "Manage Account option not found"
-
-    edit_profile = d.xpath(SettingsScreen.EDIT_PROFILE)
-    assert edit_profile.exists, "Edit Profile option not found"
-
-    share_location = d.xpath(SettingsScreen.SHARE_MY_LOCATION)
-    assert share_location.exists, "Share My Location option not found"
-
-    log_out = d.xpath(SettingsScreen.LOG_OUT)
-    assert log_out.exists, "Log out option not found"
+    verify_settings_options(d)
 
     # Take screenshot of settings screen
-    print("\nTaking screenshot of settings screen...")
     screenshot_path = os.path.join(screenshots_dir, "5_1_1_settings_screen_contents.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 5_1_1_settings_screen_contents.png")
 
 
 @pytest.mark.smoke
@@ -65,59 +52,29 @@ def test_settings_screen_navigation(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Settings button
-    settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
-    assert settings_button.exists, "Could not find Settings button"
-    settings_button.click()
-    sleep(2)
+    click_settings_button(d)
 
-    # Click on Edit Profile
-    edit_profile = d.xpath(SettingsScreen.EDIT_PROFILE)
-    assert edit_profile.exists, "Could not find Edit Profile option"
-    edit_profile.click()
-    sleep(2)
+    click_edit_profile(d)
 
     # Take screenshot of Edit Profile screen
-    print("\nTaking screenshot of Edit Profile screen...")
     screenshot_path = os.path.join(screenshots_dir, "5_2_1_edit_profile_screen.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 5_2_1_edit_profile_screen.png")
 
-    # Go back to Settings
-    back_button = d.xpath(SettingsScreen.BACK_BUTTON_SETTINGS)
-    assert back_button.exists, "Could not find Back button"
-    back_button.click()
-    sleep(2)
+    click_settings_back_button(d)
 
-    # Click on Location Toggle
-    location_toggle = d.xpath(SettingsScreen.LOCATION_TOGGLE)
-    assert location_toggle.exists, "Could not find Location Toggle"
-    location_toggle.click()
-    sleep(1)
+    click_location_toggle(d)
 
-    # Handle location permission dialog if it appears
-    location_allow = d.xpath(SettingsScreen.LOCATION_ALLOW)
-    if location_allow.wait(timeout=2):
-        location_allow.click()
-        sleep(1)
+    handle_allow_button(d)
 
     # Take screenshot of Settings screen with toggled location
-    print("\nTaking screenshot of Settings screen with toggled location...")
     screenshot_path = os.path.join(screenshots_dir, "5_2_2_settings_location_toggled.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 5_2_2_settings_location_toggled.png")
 
-    # Click on Log Out
-    log_out = d.xpath(SettingsScreen.LOG_OUT)
-    assert log_out.exists, "Could not find Log Out button"
-    log_out.click()
-    sleep(2)  # Wait for logout to complete
+    click_log_out(d)
 
     # Take screenshot of welcome screen
-    print("\nTaking screenshot of welcome screen...")
     screenshot_path = os.path.join(screenshots_dir, "5_2_3_welcome_screen_after_logout.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 5_2_3_welcome_screen_after_logout.png")
 
 
 @pytest.mark.smoke
@@ -140,17 +97,9 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Settings button
-    settings_button = d.xpath(HomeScreen.SETTINGS_BUTTON)
-    assert settings_button.exists, "Could not find Settings button"
-    settings_button.click()
-    sleep(2)
+    click_settings_button(d)
 
-    # Click on Edit Profile
-    edit_profile = d.xpath(SettingsScreen.EDIT_PROFILE)
-    assert edit_profile.exists, "Could not find Edit Profile option"
-    edit_profile.click()
-    sleep(3)
+    click_edit_profile(d)
 
     # Clear the name field and enter a new random name
     edit_name = d.xpath(SettingsScreen.EDIT_NAME)
@@ -159,55 +108,29 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     d.clear_text()
     new_name = generate_random_name()
     d.send_keys(new_name)
-    sleep(3)  # Wait for text input
+    sleep(3)
 
     # Verify the new name was successfully inputted
     assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
 
-    # Verify save button is present
-    save_button = d.xpath(SettingsScreen.EDIT_PROFILE_SAVE_BUTTON)
-    assert save_button.exists, "Save button is not present after editing name"
+    verify_save_button_exists(d)
 
     # Take screenshot of the edited profile name
-    print("\nTaking screenshot of the edited profile name...")
     screenshot_path = os.path.join(screenshots_dir, "5_3_1_edited_profile_name_save_button_active.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 5_3_1_edited_profile_name_save_button_active.png")
 
-    # Clear the username field and enter a new random username
-    edit_username = d.xpath(SettingsScreen.EDIT_USERNAME)
-    assert edit_username.exists, "Could not find Username field"
-    edit_username.click()
-    d.clear_text()
-    new_username = generate_random_username()
-    d.send_keys(new_username)
-    sleep(1)  # Wait for text input
-
-    # Verify the new username was successfully inputted
-    assert edit_username.get_text() == new_username, (f"Username was not updated correctly. Expected: {new_username},"
-                                                      f" Got: {edit_username.get_text()}")
+    change_username_profile_settings(d)
 
     # Take screenshot of the edited profile username
-    print("\nTaking screenshot of the edited profile username...")
     screenshot_path = os.path.join(screenshots_dir, "5_3_2_edited_profile_username_save_button_active.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 5_3_2_edited_profile_username_save_button_active.png")
 
-    # Scroll to bottom of screen to ensure save button is visible
-    d.swipe_ext("up", scale=0.8)
-    sleep(1)  # Wait for scroll to complete
+    scroll_to_bottom(d)
 
-    # Click save button and verify we return to settings screen
-    save_button = d.xpath(SettingsScreen.EDIT_PROFILE_SAVE_BUTTON)
-    save_button.click()
-    sleep(4)  # Wait for navigation
+    click_settings_save_button(d)
 
-    # Verify the updated name is visible on the settings screen
-    name_text = d(text=new_name)
-    assert name_text.exists(timeout=5), f"Updated name '{new_name}' is not visible after saving changes"
+    verify_settings_changed_name(d)
 
     # Take screenshot of settings screen after saving changes
-    print("\nTaking screenshot of settings screen after saving changes...")
     screenshot_path = os.path.join(screenshots_dir, "5_3_3_settings_screen_after_save.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 5_3_3_settings_screen_after_save.png")

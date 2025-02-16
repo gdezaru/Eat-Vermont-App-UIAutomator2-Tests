@@ -3,7 +3,7 @@ Utility functions for device interaction
 """
 from time import sleep
 import time
-from locators import LoginPage
+from locators import LoginPage, SettingsScreen
 
 
 def clear_app_state(d):
@@ -139,3 +139,18 @@ def click_and_fill_forgot_password(d, email):
     email_field.click()
     d.send_keys(email)
     sleep(1)
+
+
+def change_username_profile_settings(d, generate_random_username):
+    """
+    Changes the username in the Edit Profile screen.
+    """
+    edit_username = d.xpath(SettingsScreen.EDIT_USERNAME)
+    assert edit_username.exists, "Could not find Username field"
+    edit_username.click()
+    d.clear_text()
+    new_username = generate_random_username()
+    d.send_keys(new_username)
+    sleep(1)
+    assert edit_username.get_text() == new_username, (f"Username was not updated correctly. Expected: {new_username},"
+                                                      f" Got: {edit_username.get_text()}")

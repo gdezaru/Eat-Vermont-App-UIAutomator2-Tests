@@ -215,9 +215,7 @@ def click_favorites_button(d):
     favorites_button = d.xpath(BottomNavBar.FAVORITES)
     assert favorites_button.exists, "Could not find Favorites button"
     favorites_button.click()
-    sleep(2)  # Wait for favorites page to load
-
-    # Verify that "Favorites" text is present
+    sleep(2)
     assert d(text="Favorites").exists, "Favorites text not found on screen"
 
 
