@@ -1,7 +1,6 @@
 import pytest
 import os
 from time import sleep
-from locators import MyFavorites, Businesses
 
 from utils_authentication import sign_in_and_prepare
 from utils_device_interaction import search_and_submit
@@ -59,10 +58,8 @@ def test_add_favorite_businesses(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Use utility function to search and submit
     search_and_submit(d, menu_business_name)
 
-    # Wait for and verify Businesses section is present
     verify_businesses_section_present(d)
 
     click_first_business_search_result(d, menu_business_name)
@@ -140,7 +137,6 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Favorites button in bottom navigation
     click_favorites_button(d)
 
     # Takes a screenshot of the favorited business

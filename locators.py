@@ -211,20 +211,21 @@ class MyFavorites:
                                   '/android.view.ViewGroup[1]/android.widget.ScrollView[1]'
                                   '/android.view.ViewGroup[1]/android.view.ViewGroup[2]'
                                   '/com.horcrux.svg.SvgView[1]')
-    FAVORITE_BUSINESS_ADD_REMOVE = ('//*[@resource-id="android:id/content"]'
-                                    '/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
-                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
-                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[3]'
-                                    '/com.horcrux.svg.SvgView[1]')
+    FAVORITE_BUSINESS_ADD_REMOVE = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                    '/android.widget.ScrollView[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                    '/android.view.ViewGroup[1]/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]'
+                                    '/com.horcrux.svg.GroupView[1]')
     FAVORITE_VIDEOS_ADD_REMOVE = ('//android.widget.HorizontalScrollView'
                                   '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                   '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                   '/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]')
-    FAVORITE_TRAILS_ADD_REMOVE = ('//*[contains(@content-desc, "Trail") and contains(@content-desc, "Read More")]'
-                                  '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]'
+    FAVORITE_TRAILS_ADD_REMOVE = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                  '/android.widget.ScrollView[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]'
                                   '/com.horcrux.svg.GroupView[1]')
     ADDED_FAVORITE_EVENT = ('//*[contains(@content-desc, ", ") and ('
                             'contains(@content-desc, "Monday") or '
