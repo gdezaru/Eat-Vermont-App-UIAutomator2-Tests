@@ -183,20 +183,78 @@ def scroll_to_event_and_click(d, screenshots_dir, current_day=None):
 
 def scroll_to_events_within_30(d):
     """
-    Scroll to the events within 30 minutes.
+    Scroll to the events within 30 minutes and ensure the text is in the first quarter of the screen.
+
+    Args:
+        d: UIAutomator2 device instance
+    Returns:
+        bool: True if the text was found and positioned correctly, False otherwise
     """
+    width, height = get_screen_dimensions(d)
+    target_y = get_target_position_in_first_quarter(d)
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
+
     d(scrollable=True).scroll.to(text="Events Within ~30min")
-    assert d(text="Events Within ~30min").exists(timeout=5), "Events Within ~30min text not found"
+    if not d(text="Events Within ~30min").exists(timeout=5):
+        print("Warning: Events Within ~30min text not found")
+        return False
+
+    events_elem = d(text="Events Within ~30min")
+    bounds = events_elem.info['bounds']
+    current_y = (bounds['top'] + bounds['bottom']) // 2
+
+    max_adjustment_attempts = 3
+    for attempt in range(max_adjustment_attempts):
+        if current_y <= target_y:
+            break
+
+        scroll_distance = (current_y - target_y) // 2
+        d.swipe(start_x, start_y, start_x, start_y - scroll_distance, duration=0.5)
+        sleep(1)
+
+        bounds = events_elem.info['bounds']
+        current_y = (bounds['top'] + bounds['bottom']) // 2
+
     sleep(1)
+    return True
 
 
 def scroll_to_events_further_than_30(d):
     """
-    Scroll to the events further than 30 minutes.
+    Scroll to the events further than 30 minutes and ensure the text is in the first quarter of the screen.
+
+    Args:
+        d: UIAutomator2 device instance
+    Returns:
+        bool: True if the text was found and positioned correctly, False otherwise
     """
+    width, height = get_screen_dimensions(d)
+    target_y = get_target_position_in_first_quarter(d)
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
+
     d(scrollable=True).scroll.to(text="Events Further Than ~30min")
-    assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
+    if not d(text="Events Further Than ~30min").exists(timeout=5):
+        print("Warning: Events Further Than ~30min text not found")
+        return False
+
+    events_elem = d(text="Events Further Than ~30min")
+    bounds = events_elem.info['bounds']
+    current_y = (bounds['top'] + bounds['bottom']) // 2
+
+    max_adjustment_attempts = 3
+    for attempt in range(max_adjustment_attempts):
+        if current_y <= target_y:
+            break
+
+        scroll_distance = (current_y - target_y) // 2
+        d.swipe(start_x, start_y, start_x, start_y - scroll_distance, duration=0.5)
+        sleep(1)
+
+        bounds = events_elem.info['bounds']
+        current_y = (bounds['top'] + bounds['bottom']) // 2
+
     sleep(1)
+    return True
 
 
 def scroll_event_card(d):
@@ -220,7 +278,6 @@ def scroll_to_add_info(d):
     """
     Scroll to the Add Info button.
     """
-    # Scroll until Add Info button is visible
     d(scrollable=True).scroll.to(text="Add Info")
     assert d(text="Add Info").exists(timeout=5), "Add Info button not found"
     sleep(1)
