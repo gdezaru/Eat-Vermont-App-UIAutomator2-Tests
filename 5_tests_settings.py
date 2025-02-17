@@ -2,9 +2,9 @@ import pytest
 import os
 from time import sleep
 
-from locators import HomeScreen, SettingsScreen
+from locators import SettingsScreen
 from utils_authentication import sign_in_and_prepare
-from utils_device_interaction import change_username_profile_settings
+from utils_device_interaction import change_username_profile_settings, change_name_profile_settings
 from utils_scrolling import scroll_to_bottom
 from utils_settings import generate_random_name, generate_random_username, click_settings_button, click_edit_profile, \
     click_settings_back_button, click_location_toggle, handle_allow_button, click_log_out, click_settings_save_button
@@ -101,17 +101,9 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
 
     click_edit_profile(d)
 
-    # Clear the name field and enter a new random name
-    edit_name = d.xpath(SettingsScreen.EDIT_NAME)
-    assert edit_name.exists, "Could not find Name field"
-    edit_name.click()
-    d.clear_text()
+    # Generate a random name and store it
     new_name = generate_random_name()
-    d.send_keys(new_name)
-    sleep(3)
-
-    # Verify the new name was successfully inputted
-    assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
+    change_name_profile_settings(d, lambda: new_name)
 
     verify_save_button_exists(d)
 
@@ -119,7 +111,7 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     screenshot_path = os.path.join(screenshots_dir, "5_3_1_edited_profile_name_save_button_active.png")
     d.screenshot(screenshot_path)
 
-    change_username_profile_settings(d)
+    change_username_profile_settings(d, generate_random_username)
 
     # Take screenshot of the edited profile username
     screenshot_path = os.path.join(screenshots_dir, "5_3_2_edited_profile_username_save_button_active.png")
@@ -129,7 +121,7 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
 
     click_settings_save_button(d)
 
-    verify_settings_changed_name(d)
+    verify_settings_changed_name(d, new_name)
 
     # Take screenshot of settings screen after saving changes
     screenshot_path = os.path.join(screenshots_dir, "5_3_3_settings_screen_after_save.png")

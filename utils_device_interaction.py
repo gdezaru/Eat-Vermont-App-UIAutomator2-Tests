@@ -154,3 +154,19 @@ def change_username_profile_settings(d, generate_random_username):
     sleep(1)
     assert edit_username.get_text() == new_username, (f"Username was not updated correctly. Expected: {new_username},"
                                                       f" Got: {edit_username.get_text()}")
+
+
+def change_name_profile_settings(d, generate_random_name):
+    """
+    Changes the name in the Edit Profile screen.
+    """
+    edit_name = d.xpath(SettingsScreen.EDIT_NAME)
+    assert edit_name.exists, "Could not find Name field"
+    edit_name.click()
+    d.clear_text()
+    new_name = generate_random_name()
+    d.send_keys(new_name)
+    sleep(3)
+
+    # Verify the new name was successfully inputted
+    assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
