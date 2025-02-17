@@ -5,12 +5,14 @@ This project contains automated tests for the Eat Vermont mobile application usi
 ## Features
 
 - **Framework**: Python + pytest + UIAutomator2
-- **Retry Mechanism**: Automatic retry for flaky tests
-- **Excel Reporting**: Detailed test results with failure analysis
+- **Enhanced UI Interaction**: Robust element finding and scrolling mechanisms
+- **Smart Scrolling**: Intelligent positioning of elements in viewport
+- **Flexible Verification**: Non-assertive verification methods returning boolean results
 - **Modular Structure**: Organized by functionality
 - **Utilities**: Common functions and helpers
 - **Locators**: Centralized XPath definitions
 - **Configuration**: Flexible test configuration
+- **Screenshot Documentation**: Comprehensive visual test documentation
 
 ## Prerequisites
 
@@ -48,12 +50,14 @@ adb devices
 
 ```
 EatVermontAppAutomatedTests/
-├── conftest.py              # Test fixtures and configuration
-├── config.py               # Test configuration and constants
-├── locators.py            # UI element locators
-├── utils.py               # Utility functions
-├── retry_decorator.py     # Retry mechanism for flaky tests
-├── requirements.txt       # Project dependencies
+├── conftest.py                # Test fixtures and configuration
+├── config.py                  # Test configuration and constants
+├── locators.py               # UI element locators
+├── utils_ui_navigation.py    # UI navigation utilities
+├── utils_ui_verification.py  # UI verification utilities
+├── utils_scrolling.py       # Scrolling and positioning utilities
+├── utils_device_interaction.py # Device interaction utilities
+├── utils_authentication.py   # Authentication utilities
 └── tests/
     ├── 1_tests_sign_in_user_password.py  # Authentication tests
     ├── 2_tests_search_module.py          # Search functionality tests
@@ -74,222 +78,130 @@ EatVermontAppAutomatedTests/
 ## Running Tests
 
 ### Run All Tests
-To run all tests:
 ```bash
 pytest
+```
+
+### Run Smoke Tests Only
+```bash
+pytest -v -m smoke
 ```
 
 ### Run Specific Test File
 ```bash
-pytest 1_tests_sign_in_user_password.py
+pytest -v <test_file.py>
 ```
 
 ### Run Specific Test
 ```bash
-pytest 1_tests_sign_in_user_password.py::test_sign_in_user_password
+pytest -v <test_file.py>::<test_name>
 ```
 
-### Run with Verbose Output
-```bash
-pytest -v
+## Key Features and Improvements
+
+### Smart UI Interaction
+- Enhanced scrolling mechanisms that ensure elements are properly positioned in viewport
+- Intelligent positioning of elements in first quarter of screen for better interaction
+- Non-assertive verification methods that return boolean results for better flow control
+
+### Modular Utilities
+- **utils_ui_navigation.py**: Functions for navigating through the app
+- **utils_ui_verification.py**: Functions for verifying UI elements and states
+- **utils_scrolling.py**: Smart scrolling and element positioning
+- **utils_device_interaction.py**: Device-level interactions
+- **utils_authentication.py**: Authentication and user management
+
+### Robust Locators
+- Centralized XPath definitions in locators.py
+- Carefully crafted selectors for reliability
+- Organized by functional area (Events, Businesses, Trails, etc.)
+
+### Screenshot Documentation
+- Automatic screenshot capture at key points
+- Organized by test case and step
+- Stored in screenshots directory with clear naming convention
+
+## Test Reporting
+
+The framework includes comprehensive test reporting functionality:
+
+### Report Generation
+- Reports are automatically generated after each test run
+- Located in the `reports` directory with timestamp: `reports/test_run_YYYYMMDD_HHMMSS/`
+- Each test run gets its own directory to prevent overwriting
+
+### Report Contents
+1. **Test Summary**
+   - Total tests run
+   - Pass/fail statistics
+   - Test duration
+   - Environment details
+
+2. **Detailed Test Results**
+   - Individual test status
+   - Test execution time
+   - Error messages and stack traces for failures
+   - Links to associated screenshots
+
+3. **Screenshot Integration**
+   - Screenshots are organized in the `screenshots` subdirectory
+   - Named with clear convention: `<test_number>_<step>_<description>.png`
+   - Referenced in the report with clickable links
+   - Captured automatically on test failures
+
+### Report Format
+```
+reports/
+└── test_run_YYYYMMDD_HHMMSS/
+    ├── test_report.html       # Main test report
+    └── screenshots/           # Test screenshots
+        ├── 7_1_1_business_card_with_event.png
+        ├── 7_1_2_business_card_with_menu.png
+        └── ...
 ```
 
-### Run Tests in Parallel
-```bash
-pytest -n auto  # Runs tests in parallel using available CPU cores
-```
-
-### Run Smoke Tests
-To run smoke tests:
-```bash
-pytest -m smoke
-```
-
-### Run Tests in Numerical Order
-The test files are numbered from 1 to 14 (e.g., `1_tests_sign_in_user_password.py`, `2_tests_search_module.py`, etc.). To run smoke tests in numerical order, use:
-```bash
-python run_ordered_tests.py
-```
-
-This script will:
-1. Find all test files that start with a number
-2. Sort them in natural numerical order (1, 2, 3... instead of 1, 10, 11...)
-3. Run only the smoke tests from these files in sequence
-4. Generate a test report in the `reports` directory
-
-## Retry Mechanism
-
-The framework includes an automatic retry mechanism for handling flaky tests:
-
-- Default configuration: 2 retries with 1-second delay
-- Retries on AssertionError and TimeoutError
-- Can be customized per test using decorators:
-
-```python
-@retry(retries=3, delay=2, backoff=2, exceptions=(AssertionError, TimeoutError))
-def test_flaky_feature():
-    # Test code here
-```
-
-## Screenshot Management
-
-The framework includes a robust screenshot management system:
-
-### Screenshot Organization
-- Screenshots are initially saved to a root `screenshots` directory
-- After each test run completes, screenshots are automatically moved to a test-specific folder within the `reports` directory
-- Each test run gets its own timestamped folder to prevent overwriting
-
-### Screenshot Naming Convention
-- Screenshots follow a consistent naming pattern:
-  - `<test_number>_<test_part>_<description>.png`
-  - Example: `7_1_1_business_card_with_event.png`
-
-### Screenshot Locations
-1. **During Test Execution**
-   - Temporarily stored in: `screenshots/`
-   - Managed by the `screenshots_dir` fixture
-
-2. **After Test Completion**
-   - Moved to: `reports/test_run_YYYYMMDD_HHMMSS/screenshots/`
-   - Organized alongside the test report
-
-### Screenshot Usage
-- Screenshots are taken at key points in tests to document UI state
-- Additional screenshots are automatically captured on test failures
-- All screenshots are referenced in the Excel report with clickable links
-
-## Test Reports
-
-The framework generates comprehensive Excel reports after each test run:
-
-### Report Structure
-1. **Test Run Directory**
-   ```
-   reports/
-   └── test_run_YYYYMMDD_HHMMSS/
-       ├── test_report.xlsx
-       └── screenshots/
-           ├── 7_1_1_business_card_with_event.png
-           ├── 7_1_2_business_card_with_menu.png
-           └── ...
-   ```
-
-2. **Excel Report Contents**
-   - Test execution summary
-   - Detailed test results
-   - Screenshot references
-   - Error logs and stack traces
-   - Test retry information
-
-### Report Features
-- **Screenshot Integration**: Direct links to screenshots
-- **Failure Analysis**: Detailed error information
-- **Test Statistics**: Pass/fail rates and durations
-- **Filtering**: Sortable and filterable columns
-- **Color Coding**: Visual status indicators
-
-### Example Usage
-```bash
-# Run tests and generate report
-pytest
-
-# Report and screenshots will be in:
-# reports/test_run_YYYYMMDD_HHMMSS/
-```
-
-## Key Components
-
-### conftest.py
-- Test fixtures
-- Device setup and teardown
-- Screenshot capture on failure
-- Test reporting configuration
-
-### locators.py
-- XPath and UI element selectors
-- Organized by screen/feature
-- Maintainable centralized locators
-
-### utils.py
-- Common test utilities
-- Helper functions
-- State management
-
-### retry_decorator.py
-- Retry mechanism implementation
-- Configurable retry settings
-- Logging for retry attempts
+### Viewing Reports
+- Open the HTML report in any web browser
+- Navigate through test results using the interactive interface
+- Filter and search test results
+- View screenshots directly from the report
 
 ## Best Practices
 
-1. **Test Independence**
-   - Each test should be independent
-   - Clean up any test data
-   - Reset app state when needed
+1. **Element Location**
+   - Use flexible XPath selectors
+   - Prefer text-based location when possible
+   - Include timeouts for dynamic elements
 
-2. **Locator Management**
-   - Keep locators in `locators.py`
-   - Use meaningful names
-   - Comment complex XPaths
+2. **Scrolling and Positioning**
+   - Use smart scrolling utilities
+   - Ensure elements are properly positioned before interaction
+   - Include appropriate waits after scrolling
 
-3. **Error Handling**
-   - Use appropriate assertions
-   - Include meaningful error messages
-   - Handle timeouts properly
+3. **Verification**
+   - Use non-assertive verification when appropriate
+   - Include clear error messages
+   - Capture screenshots for verification failures
 
-4. **Test Data**
-   - Use configuration files
-   - Avoid hardcoding test data
-   - Use meaningful test data
+4. **Test Organization**
+   - Follow naming convention for test files
+   - Group related tests together
+   - Use appropriate markers (e.g., @pytest.mark.smoke)
 
-## Troubleshooting
+## Maintenance
 
-### Common Issues
-
-1. **Device Not Found**
-   - Ensure USB debugging is enabled
-   - Check USB connection
-   - Verify ADB device list
-
-2. **Element Not Found**
-   - Check locator definitions
-   - Verify app state
-   - Add appropriate waits
-
-3. **Test Flakiness**
-   - Increase wait times
-   - Add retry mechanism
-   - Check for race conditions
-
-### Debug Tips
-
-1. Use verbose mode for more details:
-```bash
-pytest -v
-```
-
-2. Enable debug logging:
-```bash
-pytest --log-cli-level=DEBUG
-```
-
-3. Generate HTML report:
-```bash
-pytest --html=report.html
-```
+- Keep locators updated as app UI changes
+- Review and update screenshot references
+- Maintain clear documentation of changes
+- Regular review of test stability and performance
 
 ## Contributing
 
 1. Follow the existing code structure
-2. Add appropriate tests for new features
-3. Update documentation as needed
-4. Use meaningful commit messages
+2. Update documentation for significant changes
+3. Test thoroughly before submitting changes
+4. Include relevant screenshots or examples
 
-## License
+## Support
 
-[Your License Information]
-
-## Contact
-
-[Your Contact Information]
+For issues or questions, please contact the test automation team.
