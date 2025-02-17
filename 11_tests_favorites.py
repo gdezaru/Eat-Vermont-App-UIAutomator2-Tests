@@ -5,7 +5,10 @@ from locators import MyFavorites, Businesses
 
 from utils_authentication import sign_in_and_prepare
 from utils_device_interaction import search_and_submit
-from utils_ui_navigation import interact_with_events_carousel, click_trails_button, click_favorites_button
+from utils_ui_navigation import (click_favorites_button, click_first_event_search_result, add_favorite_event,
+                                 add_favorite_business, click_first_business_search_result, find_trails_text,
+                                 click_trails_read_more, add_favorite_trail, verify_and_remove_favorite_event,
+                                 verify_and_remove_favorite_business, verify_and_remove_favorite_trail)
 from utils_ui_verification import verify_businesses_section_present
 
 # Initialize business names at module level
@@ -26,19 +29,17 @@ def test_add_favorite_events(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Interact with Events carousel item
-    interact_with_events_carousel(d)
+    search_term = "Burlington"
+    search_and_submit(d, search_term)
+    sleep(5)
 
-    # Find and click the favorite icon
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE)
-    assert favorite_icon.exists, "Could not find favorite icon"
-    favorite_icon.click()
-    sleep(2)
+    click_first_event_search_result(d)
+
+    add_favorite_event(d)
 
     # Take screenshot
     screenshot_path = os.path.join(screenshots_dir, "11_1_1_event_favorited.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
@@ -64,17 +65,9 @@ def test_add_favorite_businesses(d, screenshots_dir):
     # Wait for and verify Businesses section is present
     verify_businesses_section_present(d)
 
-    # Click on Big Fatty's BBQ search result under Businesses
-    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
-    assert search_result.exists, "Big Fatty's BBQ not found under Businesses section"
-    search_result.click()
-    sleep(3)
+    click_first_business_search_result(d, menu_business_name)
 
-    # Find and click the favorite icon
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_BUSINESS_ADD_REMOVE)
-    assert favorite_icon.exists, "Could not find favorite icon"
-    favorite_icon.click()
-    sleep(2)
+    add_favorite_business(d)
 
     # Take screenshot of favorited business
     screenshot_path = os.path.join(screenshots_dir, "11_2_1_business_favorited.png")
@@ -94,21 +87,16 @@ def test_add_favorite_trails(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Use utility function to click Trails button
-    click_trails_button(d)
-
-    # Find and click the favorite icon
-    print("\nLocating favorite icon...")
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_TRAILS_ADD_REMOVE)
-    assert favorite_icon.exists, "Could not find favorite icon"
-    print("Favorite icon found, clicking...")
-    favorite_icon.click()
+    find_trails_text(d)
     sleep(2)
+
+    click_trails_read_more(d)
+
+    add_favorite_trail(d)
 
     # Take screenshot of favorited trail
     screenshot_path = os.path.join(screenshots_dir, "11_4_1_trail_favorited.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
@@ -125,30 +113,17 @@ def test_remove_favorite_events(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Click on Favorites button in bottom navigation
     click_favorites_button(d)
 
-    # Verify favorited event is present and take screenshot
-    print("\nVerifying favorited event is present...")
-    favorite_event = d.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
-    assert favorite_event.exists, "Could not find favorited event"
-    print("Found favorited event")
+    # Takes a screenshot of the favorited event
     screenshot_path = os.path.join(screenshots_dir, "11_5_1_favorited_event_before_removal.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
-    # Click on favorite icon to remove from favorites
-    print("\nRemoving event from favorites...")
-    favorite_event.click()
-    sleep(2)
+    verify_and_remove_favorite_event(d)
 
-    # Verify event is no longer in favorites
-    print("\nVerifying event was removed from favorites...")
-    assert not favorite_event.exists, "Event is still present in favorites"
-    print("Event successfully removed from favorites")
+    # Takes a screenshot of the favorites screen after removing the event from favorites
     screenshot_path = os.path.join(screenshots_dir, "11_5_2_favorites_after_removal.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
@@ -168,28 +143,15 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     # Click on Favorites button in bottom navigation
     click_favorites_button(d)
 
-    # Verify favorited business is present and take screenshot
-    print("\nVerifying favorited business is present...")
-    favorite_business = d.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
-    assert favorite_business.exists, "Could not find favorited business"
-    print("Found favorited business")
+    # Takes a screenshot of the favorited business
     screenshot_path = os.path.join(screenshots_dir, "11_6_1_favorited_business_before_removal.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
-    # Click on favorite icon to remove from favorites
-    print("\nRemoving business from favorites...")
-    favorite_business.click()
-    sleep(2)
+    verify_and_remove_favorite_business(d)
 
-    # Verify business is no longer in favorites
-    print("\nVerifying business was removed from favorites...")
-    assert not favorite_business.exists, "Business is still present in favorites"
-    print("Business successfully removed from favorites")
-    sleep(3)  # Wait for UI to update
+    # Takes a screenshot of the favorites screen after removing the business from favorites
     screenshot_path = os.path.join(screenshots_dir, "11_6_2_favorites_after_removal.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
 
 @pytest.mark.smoke
@@ -209,25 +171,12 @@ def test_remove_favorite_trails(d, screenshots_dir):
     # Click on Favorites button in bottom navigation
     click_favorites_button(d)
 
-    # Verify favorited trail is present and take screenshot
-    print("\nVerifying favorited trail is present...")
-    favorite_trail = d.xpath(MyFavorites.ADDED_FAVORITE_TRAIL)
-    assert favorite_trail.exists, "Could not find favorited trail"
-    print("Found favorited trail")
+    # Takes a screenshot of the favorited trail
     screenshot_path = os.path.join(screenshots_dir, "11_8_1_favorited_trail_before_removal.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")
 
-    # Click on favorite icon to remove from favorites
-    print("\nRemoving trail from favorites...")
-    favorite_trail.click()
-    sleep(2)
+    verify_and_remove_favorite_trail(d)
 
-    # Verify trail is no longer in favorites
-    print("\nVerifying trail was removed from favorites...")
-    assert not favorite_trail.exists, "Trail is still present in favorites"
-    print("Trail successfully removed from favorites")
-    sleep(5)  # Wait for UI to update
+    # Takes a screenshot of the favorites screen after removing the trail from favorites
     screenshot_path = os.path.join(screenshots_dir, "11_8_2_favorites_after_removal.png")
     d.screenshot(screenshot_path)
-    print(f"\nTook screenshot: {screenshot_path}")

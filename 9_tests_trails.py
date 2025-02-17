@@ -5,7 +5,8 @@ from time import sleep
 from locators import Trails
 from utils_authentication import sign_in_and_prepare
 from utils_scrolling import scroll_to_bottom
-from utils_ui_navigation import click_trails_button, click_trails_read_more
+from utils_ui_navigation import click_trails_button, click_trails_read_more, find_trails_text, find_trail_name, \
+    click_trails_see_all
 from utils_ui_verification import verify_trails_percentage_progress, verify_trails_visits, verify_trail_status
 
 
@@ -22,18 +23,11 @@ def test_trails_screen(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Use utility function to click Trails button
-    click_trails_button(d)
-    sleep(2)
+    find_trails_text(d)
 
-    # First find any TextView containing "Trail" to get its text
-    trail_text = d(textContains="Trail").get_text()
-    print(f"Found trail: {trail_text}")
+    click_trails_see_all(d)
 
-    # Now use that text with our TRAIL_NAME locator
-    trail_element = d.xpath(Trails.TRAIL_NAME.format(trail_text))
-    assert trail_element.wait(timeout=5), f"Trail element not found"
-    sleep(1)
+    find_trail_name(d)
 
     verify_trail_status(d)
 
@@ -58,7 +52,7 @@ def test_trails_details(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    click_trails_button(d)
+    find_trails_text(d)
     sleep(2)
 
     click_trails_read_more(d)

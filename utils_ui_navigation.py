@@ -2,7 +2,8 @@
 Utility functions for UI verification.
 """
 from time import sleep
-from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips, SearchModule, Trails
+from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips, SearchModule, Trails, \
+    MyFavorites
 from utils_scrolling import calculate_swipe_coordinates, get_screen_dimensions, get_target_position_in_first_quarter
 
 
@@ -120,6 +121,27 @@ def find_and_click_more_info_tab(d):
     return False
 
 
+def add_favorite_event(d):
+    """
+    Clicks the favorite icon on an event card.
+    """
+    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE)
+    assert favorite_icon.exists, "Could not find favorite icon"
+    favorite_icon.click()
+    sleep(2)
+
+
+def verify_and_remove_favorite_event(d):
+    """
+    Verifies that an event has been added to favorites, then removes it.
+    """
+    favorite_event = d.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
+    assert favorite_event.exists, "Could not find favorited event"
+    favorite_event.click()
+    sleep(2)
+    assert not favorite_event.exists, "Event is still present in favorites"
+
+
 # UI navigation functions for Businesses
 def click_business_with_event_search_result(d, business_name):
     """
@@ -150,6 +172,46 @@ def click_business_fyi_tab(d):
     assert fyi_contents.exists, "FYI tab contents not found"
 
 
+def click_first_business_search_result(d, menu_business_name):
+    """
+    Clicks on the first business search result in the list.
+
+    Args:
+        d: UIAutomator2 device instance
+        menu_business_name: The business card containing menu tab.
+
+    Raises:
+        AssertionError: If no search result is found or if click fails
+    """
+    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
+    assert search_result.exists, "Big Fatty's BBQ not found under Businesses section"
+    search_result.click()
+    sleep(3)
+
+
+def add_favorite_business(d):
+    """
+    Clicks the favorite icon on a business card.
+    """
+    favorite_icon = d.xpath(MyFavorites.FAVORITE_BUSINESS_ADD_REMOVE)
+    assert favorite_icon.exists, "Could not find favorite icon"
+    favorite_icon.click()
+    sleep(2)
+
+
+def verify_and_remove_favorite_business(d):
+    """
+    Verifies that a business has been added to favorites, then removes it.
+    """
+    # Verify favorited business is present and take screenshot
+    favorite_business = d.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
+    assert favorite_business.exists, "Could not find favorited business"
+    favorite_business.click()
+    sleep(2)
+    assert not favorite_business.exists, "Business is still present in favorites"
+    sleep(3)
+
+
 # UI navigation functions for View Map
 
 def click_view_map(d):
@@ -164,7 +226,7 @@ def click_view_map(d):
     sleep(5)
 
 
-# UI navigation functions for Day Trips/Trails
+# UI navigation functions for Day Trips
 
 def find_day_trips_text(d):
     """
@@ -229,6 +291,71 @@ def click_day_trips_read_more(d, read_more_button):
     sleep(5)
 
 
+# UI navigation functions for Trails
+def click_trails_see_all(d):
+    """
+    Clicks the "See All" button for the Day Trips section.
+
+    :param d: The device instance.
+    """
+    trails_see_all = d.xpath(HomeScreen.TRAILS_SEE_ALL.format("Start a Trail!"))
+    assert trails_see_all.exists, "Could not find Trails 'See all' button"
+    trails_see_all.click()
+    sleep(2)
+
+
+def find_trails_text(d):
+    """
+    Find the Trails text and Read More button on the Home screen.
+
+    :param d: The device instance.
+    :return: The Read More button element
+    """
+
+    # Get screen dimensions and target position
+    width, height = get_screen_dimensions(d)
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
+    target_y = get_target_position_in_first_quarter(d)
+
+    max_attempts = 5
+    for attempt in range(max_attempts):
+        if d(text="Start a Trail!").exists:
+            # Get the position of Day Trips text
+            day_trips_elem = d(text="Start a Trail!")
+            bounds = day_trips_elem.info['bounds']
+            current_y = (bounds['top'] + bounds['bottom']) // 2
+
+            if current_y <= target_y:
+                break
+
+        d.swipe(start_x, start_y, start_x, end_y, duration=1.0)
+        sleep(2)
+
+    assert d(text="Day Trips").exists(timeout=5), "Start a Trail! text not found"
+
+    # Now look for the Read More button within the Day Trips section
+    read_more_button = d.xpath(Trails.READ_MORE_TRAILS)
+    max_small_scrolls = 3
+
+    for i in range(max_small_scrolls):
+        if read_more_button.exists:
+            break
+        d.swipe(start_x, start_y, start_x, end_y, duration=1.5)
+        sleep(2)
+
+    return read_more_button
+
+
+def find_trail_name(d):
+    """
+    Finds the text of the first trail, then the first Trails name.
+    """
+    trail_text = d(textContains="Trail").get_text()
+    trail_element = d.xpath(Trails.TRAIL_NAME.format(trail_text))
+    assert trail_element.wait(timeout=5), f"Trail element not found"
+    sleep(1)
+
+
 def click_trails_button(d):
     """
     Finds and clicks the Trails button on the home screen.
@@ -248,6 +375,28 @@ def click_trails_read_more(d):
     read_more_button = d.xpath(Trails.READ_MORE_TRAILS)
     assert read_more_button.wait(timeout=5), "Read More button not found"
     read_more_button.click()
+    sleep(5)
+
+
+def add_favorite_trail(d):
+    """
+    Clicks the favorite icon on the trail details screen.
+    """
+    favorite_icon = d.xpath(MyFavorites.FAVORITE_TRAILS_ADD_REMOVE)
+    assert favorite_icon.exists, "Could not find favorite icon"
+    favorite_icon.click()
+    sleep(2)
+
+
+def verify_and_remove_favorite_trail(d):
+    """
+    Verifies that a trail has been added to favorites, then removes it.
+    """
+    favorite_trail = d.xpath(MyFavorites.ADDED_FAVORITE_TRAIL)
+    assert favorite_trail.exists, "Could not find favorited trail"
+    favorite_trail.click()
+    sleep(2)
+    assert not favorite_trail.exists, "Trail is still present in favorites"
     sleep(5)
 
 

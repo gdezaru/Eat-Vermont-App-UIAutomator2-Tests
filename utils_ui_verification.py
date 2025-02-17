@@ -3,7 +3,7 @@ Utilities functions for UI verification
 """
 import os
 from time import sleep
-from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen, Trails
+from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen, Trails, MyFavorites
 from utils_screenshots import take_screenshot
 
 attempt = 1

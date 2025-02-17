@@ -35,6 +35,8 @@ class HomeScreen:
     VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Videos" and ./parent::android.view.ViewGroup]'
     DAY_TRIPS_SEE_ALL = ('//android.widget.TextView[@text="Day Trips"]/following-sibling::*'
                          '//android.widget.TextView[@text="See All"]')
+    TRAILS_SEE_ALL = ('//android.widget.TextView[@text="Start a Trail!"]/following-sibling::*'
+                      '//android.widget.TextView[@text="See All"]')
     EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::'
                                 '*//android.widget.TextView[@text="See All"]')
     EVENTS_FURTHER_THAN_30_SEE_ALL = ('//*[contains(@text, "Events Further Than ~30min")]'
