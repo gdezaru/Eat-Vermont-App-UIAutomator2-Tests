@@ -45,7 +45,7 @@ def interact_with_events_carousel(d):
     Locates and interacts with the Events carousel item.
     """
     print("\nLocating Events carousel item...")
-    sleep(5)  # Wait for UI to load
+    sleep(5)
 
     # Do one scroll first
     screen_info = d.info
@@ -121,6 +121,26 @@ def find_and_click_more_info_tab(d):
 
 
 # UI navigation functions for Businesses
+def click_business_with_event_search_result(d, business_name):
+    """
+    Clicks on the business containing event search result.
+    """
+    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(business_name))
+    assert search_result.exists, "Higher Ground not found under Businesses section"
+    search_result.click()
+    sleep(5)
+
+
+def click_business_with_menu_search_result(d, menu_business_name):
+    """
+    Clicks on the business containing menu search result.
+    """
+    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
+    assert search_result.exists, "Big Fatty's BBQ not found under Businesses section"
+    search_result.click()
+    sleep(3)
+
+
 def click_business_fyi_tab(d):
     """
     Click on FYI tab and verify contents

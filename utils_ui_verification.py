@@ -189,13 +189,37 @@ def verify_business_about_tab(d):
 
 def verify_business_fyi_tab(d):
     """
-    Verify FYI tab is visible
+    Verifies if FYI tab is visible.
     """
     # Click on FYI tab and verify contents
     fyi_tab = d.xpath(Businesses.BUSINESS_FYI_TAB)
     assert fyi_tab.exists, "FYI tab not found"
     fyi_tab.click()
     sleep(2)
+
+
+def verify_business_fyi_tab_contents(d):
+
+    fyi_contents = d.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
+    assert fyi_contents.exists, "FYI tab contents not found"
+
+
+def verify_and_click_business_menu_tab(d):
+    """
+    Verifies if Menu tab is visible.
+    """
+    menu_tab = d.xpath(Businesses.BUSINESS_MENU_TAB)
+    assert menu_tab.exists, "Menu tab not found on business details page"
+    menu_tab.click()
+    sleep(2)
+
+
+def verify_business_menu_tab_contents(d):
+    """
+    Verifies the contents of the business Menu tab.
+    """
+    menu_contents = d.xpath(Businesses.BUSINESS_MENU_TAB_CONTENTS)
+    assert menu_contents.exists, "Menu tab contents not found"
 
 
 # UI verification functions for View Map
