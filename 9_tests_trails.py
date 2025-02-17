@@ -58,7 +58,6 @@ def test_trails_details(d, screenshots_dir):
     """
     sign_in_and_prepare(d)
 
-    # Use utility function to click Trails button
     click_trails_button(d)
     sleep(2)
 
@@ -73,7 +72,6 @@ def test_trails_details(d, screenshots_dir):
     d.screenshot(screenshot_path)
     sleep(1)
 
-    # Use utility function to scroll to bottom of results
     scroll_to_bottom(d)
 
     screenshot_path = os.path.join(screenshots_dir, "9_2_2_trail_details_visits.png")
