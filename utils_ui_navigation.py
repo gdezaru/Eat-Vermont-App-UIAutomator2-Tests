@@ -220,6 +220,15 @@ def click_day_trips_see_all(d):
     sleep(2)
 
 
+def click_day_trips_read_more(d, read_more_button):
+    """
+    Clicks the Read More button of a Day Trip.
+    """
+    assert read_more_button.exists, "Read More button not found"
+    read_more_button.click()
+    sleep(5)
+
+
 def click_trails_button(d):
     """
     Finds and clicks the Trails button on the home screen.

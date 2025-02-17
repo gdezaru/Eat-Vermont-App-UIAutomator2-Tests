@@ -3,7 +3,7 @@ import pytest
 import os
 
 from utils_authentication import sign_in_and_prepare
-from utils_ui_navigation import find_day_trips_text
+from utils_ui_navigation import find_day_trips_text, click_day_trips_read_more
 
 
 @pytest.mark.smoke
@@ -24,8 +24,7 @@ def test_day_trip_card(d, screenshots_dir):
 
     read_more_button = find_day_trips_text(d)
 
-    assert read_more_button.exists, "Read More button not found"
-    read_more_button.click()
-    sleep(5)
+    click_day_trips_read_more(d, read_more_button)
+
     screenshot_path = os.path.join(screenshots_dir, "8_1_1_day_trips_details.png")
     d.screenshot(screenshot_path)
