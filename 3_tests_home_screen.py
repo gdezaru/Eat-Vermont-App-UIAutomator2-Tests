@@ -45,7 +45,7 @@ def test_home_screen_events(d, screenshots_dir, current_day=None):
     scroll_to_event_and_click(d, screenshots_dir, current_day)
 
     # Take screenshot of the event details
-    screenshot_path = os.path.join(screenshots_dir, f"3_1_4_home_screen_event_details_{current_day.lower()}.png")
+    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_event_details_{current_day.lower()}.png")
     d.screenshot(screenshot_path)
 
 

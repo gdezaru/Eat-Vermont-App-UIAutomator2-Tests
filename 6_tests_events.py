@@ -2,9 +2,12 @@ from time import sleep
 import pytest
 import os
 
-from locators import Events
+from conftest import screenshots_dir
 from utils_authentication import sign_in_and_prepare
-from utils_ui_navigation import interact_with_events_carousel
+from utils_device_interaction import search_and_submit
+from utils_scrolling import scroll_event_card, scroll_to_bottom
+from utils_ui_navigation import click_see_all_events_home_screen, find_and_click_more_info_tab, events_add_to_calendar, \
+    click_first_event_search_result
 
 
 @pytest.mark.smoke
@@ -40,73 +43,28 @@ def test_events_card(d, screenshots_dir):
 
     sleep(10)
 
-    # Interact with Events carousel item
-    interact_with_events_carousel(d)
+    search_term = "Burlington"
+    search_and_submit(d, search_term)
+    sleep(5)
 
-    # Scroll until event details text is visible
-    print("\nScrolling to find event details...")
-    max_swipes = 5
-    found = False
-    for i in range(max_swipes):
-        if d.xpath(Events.EVENT_DETAILS_TEXT).exists:
-            found = True
-            break
-        d.swipe_ext("up", scale=0.8)
-        sleep(1)
+    click_first_event_search_result(d)
 
-    assert found, "Could not find event details text after scrolling"
-    print("Event details text found")
+    scroll_event_card(d)
 
     # Take a screenshot of the event details
-    print("\nTaking screenshot of event details...")
     screenshot_path = os.path.join(screenshots_dir, "6_2_1_events_details.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 6_2_1_events_details.png")
 
-    # Check for More Info tab
-    print("\nChecking for More Info tab...")
-    more_info_tab = d.xpath(Events.EVENT_CARD_MORE_INFO_TAB)
-    if more_info_tab.exists:
-        print("More Info tab found, clicking...")
-        more_info_tab.click()
-        sleep(2)  # Wait for tab content to load
-        print("More Info tab clicked")
+    find_and_click_more_info_tab(d)
 
-        # Scroll to bottom of screen
-        print("\nScrolling to bottom of screen...")
-        max_swipes = 5
-        last_screen = ""
-        for i in range(max_swipes):
-            current_screen = d.dump_hierarchy()
-            if current_screen == last_screen:
-                print(f"Reached bottom after {i + 1} swipes")
-                break
-            last_screen = current_screen
-            d.swipe_ext("up", scale=0.8)
-            sleep(1)
-            print(f"Swipe {i + 1}/{max_swipes}")
+    scroll_to_bottom(d)
 
-        # Take screenshot of More Info contents
-        print("\nTaking screenshot of More Info contents...")
-        screenshot_path = os.path.join(screenshots_dir, "6_2_2_more_info_contents.png")
-        d.screenshot(screenshot_path)
-        print("Screenshot saved as 6_2_2_more_info_contents.png")
-    else:
-        print("More Info tab not found, test complete")
+    # Take screenshot of More Info contents
+    screenshot_path = os.path.join(screenshots_dir, "6_2_2_more_info_contents.png")
+    d.screenshot(screenshot_path)
 
-    # Check for Add To Calendar button
-    print("\nChecking for Add To Calendar button...")
-    add_to_calendar = d.xpath(Events.ADD_TO_CALENDAR)
-    assert add_to_calendar.exists, "Could not find Add To Calendar button"
-    print("Add To Calendar button found")
+    events_add_to_calendar(d)
 
-    # Click Add To Calendar and capture screenshot
-    print("Clicking Add To Calendar button...")
-    add_to_calendar.click()
-    sleep(2)  # Wait for calendar dialog to appear
-    print("\nTaking screenshot of calendar dialog...")
+    # Take screenshot of event added to calendar toast popup
     screenshot_path = os.path.join(screenshots_dir, "6_2_3_add_to_calendar.png")
     d.screenshot(screenshot_path)
-    print("Screenshot saved as 6_2_3_add_to_calendar_button_working.png")
-
-    sleep(10)

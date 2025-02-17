@@ -2,7 +2,7 @@
 Utility functions for UI verification.
 """
 from time import sleep
-from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips
+from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips, SearchModule
 from utils_scrolling import calculate_swipe_coordinates, get_screen_dimensions, get_target_position_in_first_quarter
 
 
@@ -67,6 +67,57 @@ def interact_with_events_carousel(d):
             sleep(7)
     else:
         assert False, "Could not find any event elements"
+
+
+def events_add_to_calendar(d):
+    """
+    Attempts to click the add to calendar button in the events card if it exists.
+    Returns True if button was found and clicked, False otherwise.
+    """
+    add_to_calendar = d.xpath(Events.ADD_TO_CALENDAR)
+    if add_to_calendar.exists:
+        add_to_calendar.click()
+        sleep(2)
+        return True
+    return False
+
+
+def click_first_event_search_result(d):
+    """
+    Clicks on the first event search result in the list.
+
+    Args:
+        d: UIAutomator2 device instance
+
+    Raises:
+        AssertionError: If no search result is found or if click fails
+    """
+    result = d.xpath(SearchModule.FIRST_SEARCH_RESULT)
+    assert result.exists, "Could not find any search results"
+    
+    # Try to click with retries
+    max_retries = 3
+    for attempt in range(max_retries):
+        if result.click_exists(timeout=3.0):
+            break
+        sleep(1)  # Short wait between retries
+    else:
+        raise AssertionError("Failed to click the search result after multiple attempts")
+    
+    sleep(2)
+
+
+def find_and_click_more_info_tab(d):
+    """
+    Attempts to find and click the More Info tab within the event card.
+    Returns True if tab was found and clicked, False otherwise.
+    """
+    more_info_tab = d.xpath(Events.EVENT_CARD_MORE_INFO_TAB)
+    if more_info_tab.exists:
+        more_info_tab.click()
+        sleep(2)
+        return True
+    return False
 
 
 # UI navigation functions for Businesses

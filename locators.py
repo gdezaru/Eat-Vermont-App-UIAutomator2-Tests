@@ -79,6 +79,7 @@ class SearchModule:
     """Locators for Search Module"""
     SEARCH_ICON = '//*[@content-desc="Search"]'
     SEARCH_INPUT = '//android.widget.EditText'
+    FIRST_SEARCH_RESULT = '//*[contains(@content-desc, "Burlington")]/android.view.ViewGroup[3]'
 
     @staticmethod
     def search_result(text):

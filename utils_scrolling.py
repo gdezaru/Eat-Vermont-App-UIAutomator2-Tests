@@ -5,7 +5,7 @@ import os
 from time import sleep
 
 from conftest import screenshots_dir
-from locators import EventsScreen
+from locators import EventsScreen, Events
 
 
 def get_screen_dimensions(d):
@@ -144,10 +144,6 @@ def scroll_to_event_and_click(d, screenshots_dir, current_day=None):
 
     assert first_event.exists or no_events_message.exists, "Neither events nor 'No Events' message found"
 
-    # Take screenshot of the successful day's events
-    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_events_{current_day.lower()}.png")
-    d.screenshot(screenshot_path)
-
     # If no event was found initially, scroll to try to find one
     if not first_event.exists and not no_events_message.exists:
         max_scroll_attempts = 3
@@ -201,6 +197,23 @@ def scroll_to_events_further_than_30(d):
     d(scrollable=True).scroll.to(text="Events Further Than ~30min")
     assert d(text="Events Further Than ~30min").exists(timeout=5), "Events Further Than ~30min text not found"
     sleep(1)
+
+
+def scroll_event_card(d):
+    """
+    Attempts to scroll to the bottom of the event card to see its details.
+    Returns True if event details were found, False otherwise.
+    """
+    max_swipes = 5
+    found = False
+    for i in range(max_swipes):
+        if d.xpath(Events.EVENT_DETAILS_TEXT).exists:
+            found = True
+            break
+        d.swipe_ext("up", scale=0.8)
+        sleep(1)
+    
+    return found
 
 
 def scroll_to_add_info(d):

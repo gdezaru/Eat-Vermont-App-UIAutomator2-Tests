@@ -47,7 +47,7 @@ def search_and_submit(d, search_term):
 
     assert search_button is not None, "Could not find Search button"
     search_button.click()
-    sleep(2)
+    sleep(10)
 
     # Find and click search field
     search_field = None
