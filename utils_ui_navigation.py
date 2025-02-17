@@ -2,7 +2,7 @@
 Utility functions for UI verification.
 """
 from time import sleep
-from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips, SearchModule
+from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips, SearchModule, Trails
 from utils_scrolling import calculate_swipe_coordinates, get_screen_dimensions, get_target_position_in_first_quarter
 
 
@@ -239,6 +239,16 @@ def click_trails_button(d):
     assert trails_button.wait(timeout=5), "Trails button not found"
     trails_button.click()
     sleep(2)
+
+
+def click_trails_read_more(d):
+    """
+    Clicks the Read More button of a Day Trip.
+    """
+    read_more_button = d.xpath(Trails.READ_MORE_TRAILS)
+    assert read_more_button.wait(timeout=5), "Read More button not found"
+    read_more_button.click()
+    sleep(5)
 
 
 # UI navigation functions for Add Info

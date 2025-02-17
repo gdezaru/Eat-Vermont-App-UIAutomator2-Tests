@@ -3,7 +3,7 @@ Utilities functions for UI verification
 """
 import os
 from time import sleep
-from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen
+from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen, Trails
 from utils_screenshots import take_screenshot
 
 attempt = 1
@@ -226,6 +226,38 @@ def verify_business_menu_tab_contents(d):
 
 
 # UI verification functions for Day Trips/Trails
+
+
+def verify_trails_percentage_progress(d):
+    """
+    Verifies the percentage progress in the Trails module.
+    """
+    percentage_element = d.xpath(Trails.PERCENTAGE_PROGRESS)
+    assert percentage_element.wait(timeout=5), "Percentage progress not found"
+    percentage_element.get_text()
+
+
+def verify_trails_visits(d):
+    """
+    Verifies the completed number of visits and the text in the Trails Details Screen.
+    """
+    visits_text = d.xpath(Trails.VISITS_COMPLETED_TEXT)
+    assert visits_text.wait(timeout=5), "Visits completed text not found"
+
+    visits_number = d.xpath(Trails.VISITS_COMPLETED_NUMBER)
+    assert visits_number.wait(timeout=5), "Visits completed number not found"
+    visits = visits_number.get_text()
+
+
+def verify_trail_status(d):
+    """
+    Verifies the Trails statuses in the list of trails screen.
+    """
+    status_element = d.xpath(Trails.TRAILS_STATUS)
+    assert status_element.wait(timeout=5), "Trail status not found"
+    current_status = status_element.get_text()
+    assert current_status in ["Not Started", "In Progress", "Complete"], f"Unexpected trail status: {current_status}"
+    sleep(1)
 
 
 # UI verification functions for Favorites/Visit History
