@@ -3,7 +3,7 @@ import os
 
 from time import sleep
 from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import sign_in_and_prepare, SignInPrepare
 from utils_scrolling import get_screen_dimensions, scroll_to_event_and_click, calculate_swipe_coordinates, \
     scroll_to_add_info, scroll_to_events_within_30, scroll_to_events_further_than_30
 from utils_ui_navigation import click_favorites_button, click_see_all_events_home_screen, click_view_map, \
@@ -26,7 +26,8 @@ def test_home_screen_events(d, screenshots_dir, current_day=None):
     6. Verify events are displayed for each day
     7. Verify event details are accessible
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Find and click 'See all' next to events
     click_see_all_events_home_screen(d)
@@ -61,7 +62,8 @@ def test_home_screen_view_map(d, screenshots_dir):
     5. Verify location markers are visible
     6. Test map interaction (zoom, pan)
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Single scroll to show View Map
     d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
@@ -91,7 +93,8 @@ def test_home_screen_videos(d, screenshots_dir):
     5. Attempt to play a video
     6. Verify video playback controls
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Get screen dimensions
     width, height = get_screen_dimensions(d)
@@ -121,7 +124,8 @@ def test_home_screen_add_info(d, screenshots_dir):
     5. Test form validation
     6. Verify submission process
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     scroll_to_add_info(d)
 
@@ -144,7 +148,8 @@ def test_home_screen_day_trips(d, screenshots_dir):
     5. Verify trip details are accessible
     6. Test trip filtering options
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     find_day_trips_text(d)
 
@@ -167,7 +172,8 @@ def test_home_screen_events_within(d, screenshots_dir):
     5. Verify distance information
     6. Test event sorting options
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     scroll_to_events_within_30(d)
 
@@ -198,7 +204,8 @@ def test_home_screen_events_further_than(d, screenshots_dir):
     5. Verify distance information
     6. Test event sorting options
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     scroll_to_events_further_than_30(d)
 
@@ -230,7 +237,8 @@ def test_home_screen_bottom_nav_bar(d, screenshots_dir):
     6. Test Profile button navigation
     7. Verify active state indicators
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Click Favorites button
     click_favorites_button(d)

@@ -2,7 +2,7 @@ from time import sleep
 import pytest
 import os
 
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import sign_in_and_prepare, SignInPrepare
 from utils_ui_navigation import find_day_trips_text, click_day_trips_read_more
 
 
@@ -20,7 +20,8 @@ def test_day_trip_card(d, screenshots_dir):
     7. Click Read More button
     8. Verify day trip details screen
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     read_more_button = find_day_trips_text(d)
 

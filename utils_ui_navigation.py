@@ -2,531 +2,826 @@
 Utility functions for UI verification.
 """
 from time import sleep
-from locators import Events, Businesses, HomeScreen, BottomNavBar, VisitHistory, DayTrips, SearchModule, Trails, \
-    MyFavorites
-from utils_scrolling import calculate_swipe_coordinates, get_screen_dimensions, get_target_position_in_first_quarter
+from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory
+from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
-# UI navigation functions for Events
-def click_see_all_events_home_screen(d):
-    """
-    Clicks the "See All" button on the Events carousel on the Home screen.
+class NavEvents:
+    """Class for handling events navigation and interactions."""
 
-    :param d: The UIAutomator2 device instance.
-    """
-    # Find and click 'See all' next to events
-    see_all_events = d.xpath(HomeScreen.EVENTS_SEE_ALL)
-    assert see_all_events.exists, "Could not find 'See all' for events"
-    see_all_events.click()
-    sleep(10)
+    # Wait times
+    LONG_WAIT = 10
+    MEDIUM_WAIT = 7
+    DEFAULT_WAIT = 2
+    SWIPE_DURATION = 0.4
+    RETRY_WAIT = 1.5
 
+    # Retry settings
+    MAX_CLICK_RETRIES = 3
+    CLICK_TIMEOUT = 3.0
 
-def click_see_all_events_within_30(d):
-    """
-    Clicks the "See All" button on the Events within 30 minutes section on the Home screen.
-    """
-    see_all = d(text="See All")
-    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
-    see_all.click()
-    sleep(2)
+    def __init__(self, device):
+        """
+        Initialize NavEvents with a device instance.
 
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
 
-def click_see_all_events_further_than_30(d):
-    """
-    Clicks the "See All" button on the Events further than 30 minutes section on the Home screen.
-    """
-    see_all = d(text="See All")
-    assert see_all.exists, "Could not find See All button for Events within 30 minutes"
-    see_all.click()
-    sleep(2)
+    def click_see_all_events_home_screen(self):
+        """
+        Clicks the "See All" button on the Events carousel on the Home screen.
 
+        Returns:
+            bool: True if navigation was successful
 
-def interact_with_events_carousel(d):
-    """
-    Locates and interacts with the Events carousel item.
-    """
-    print("\nLocating Events carousel item...")
-    sleep(5)
+        Raises:
+            AssertionError: If 'See all' button is not found
+        """
+        see_all_events = self.device.xpath(HomeScreen.EVENTS_SEE_ALL)
+        assert see_all_events.exists, "Could not find 'See all' for events"
 
-    # Do one scroll first
-    screen_info = d.info
-    width = screen_info['displayWidth']
-    height = screen_info['displayHeight']
-    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
-    d.swipe(start_x, start_y, start_x, end_y, duration=0.4)
-    sleep(1.5)
+        see_all_events.click()
+        sleep(self.LONG_WAIT)
+        return True
 
-    # First find any event element
-    event_element = d.xpath('//android.view.ViewGroup[@content-desc]').get()
-    if event_element:
-        content_desc = event_element.attrib.get('content-desc')
-        if content_desc:
-            carousel_item = d.xpath(Events.CAROUSEL_ITEM.format(content_desc))
-            assert carousel_item.exists, "Could not find Events carousel item"
-            print("Events carousel item found, clicking...")
-            carousel_item.click()
-            sleep(7)
-    else:
+    def click_see_all_events_within_30(self):
+        """
+        Clicks the "See All" button on the Events within 30 minutes section.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If See All button is not found
+        """
+        see_all = self.device(text="See All")
+        assert see_all.exists, "Could not find See All button for Events within 30 minutes"
+
+        see_all.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def click_see_all_events_further_than_30(self):
+        """
+        Clicks the "See All" button on the Events further than 30 minutes section.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If See All button is not found
+        """
+        see_all = self.device(text="See All")
+        assert see_all.exists, "Could not find See All button for Events further than 30 minutes"
+
+        see_all.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def interact_with_events_carousel(self):
+        """
+        Locates and interacts with the Events carousel item.
+
+        Returns:
+            bool: True if interaction was successful
+
+        Raises:
+            AssertionError: If carousel item is not found
+        """
+        print("\nLocating Events carousel item...")
+        sleep(5)
+
+        # Do one scroll first using ScreenSwipe
+        screen_swipe = ScreenSwipe(self.device)
+        screen_swipe.calculate_swipe_coordinates()
+        sleep(self.RETRY_WAIT)
+
+        event_element = self.device.xpath('//android.view.ViewGroup[@content-desc]').get()
+        if event_element:
+            content_desc = event_element.attrib.get('content-desc')
+            if content_desc:
+                carousel_item = self.device.xpath(Events.CAROUSEL_ITEM.format(content_desc))
+                assert carousel_item.exists, "Could not find Events carousel item"
+                print("Events carousel item found, clicking...")
+                carousel_item.click()
+                sleep(self.MEDIUM_WAIT)
+                return True
+
         assert False, "Could not find any event elements"
 
+    def events_add_to_calendar(self):
+        """
+        Attempts to click the add to calendar button in the events card.
 
-def events_add_to_calendar(d):
-    """
-    Attempts to click the add to calendar button in the events card if it exists.
-    Returns True if button was found and clicked, False otherwise.
-    """
-    add_to_calendar = d.xpath(Events.ADD_TO_CALENDAR)
-    if add_to_calendar.exists:
-        add_to_calendar.click()
-        sleep(2)
-        return True
-    return False
+        Returns:
+            bool: True if button was found and clicked, False otherwise
+        """
+        add_to_calendar = self.device.xpath(Events.ADD_TO_CALENDAR)
+        if add_to_calendar.exists:
+            add_to_calendar.click()
+            sleep(self.DEFAULT_WAIT)
+            return True
+        return False
 
+    def click_first_event_search_result(self):
+        """
+        Clicks on the first event search result in the list.
 
-def click_first_event_search_result(d):
-    """
-    Clicks on the first event search result in the list.
+        Returns:
+            bool: True if click was successful
 
-    Args:
-        d: UIAutomator2 device instance
+        Raises:
+            AssertionError: If no search result is found or if click fails
+        """
+        result = self.device.xpath(SearchModule.FIRST_SEARCH_RESULT)
+        assert result.exists, "Could not find any search results"
 
-    Raises:
-        AssertionError: If no search result is found or if click fails
-    """
-    result = d.xpath(SearchModule.FIRST_SEARCH_RESULT)
-    assert result.exists, "Could not find any search results"
-    
-    # Try to click with retries
-    max_retries = 3
-    for attempt in range(max_retries):
-        if result.click_exists(timeout=3.0):
-            break
-        sleep(1)  # Short wait between retries
-    else:
+        for attempt in range(self.MAX_CLICK_RETRIES):
+            if result.click_exists(timeout=self.CLICK_TIMEOUT):
+                sleep(self.DEFAULT_WAIT)
+                return True
+            sleep(1)  # Short wait between retries
+
         raise AssertionError("Failed to click the search result after multiple attempts")
-    
-    sleep(2)
 
+    def find_and_click_more_info_tab(self):
+        """
+        Attempts to find and click the More Info tab within the event card.
 
-def find_and_click_more_info_tab(d):
-    """
-    Attempts to find and click the More Info tab within the event card.
-    Returns True if tab was found and clicked, False otherwise.
-    """
-    more_info_tab = d.xpath(Events.EVENT_CARD_MORE_INFO_TAB)
-    if more_info_tab.exists:
-        more_info_tab.click()
-        sleep(2)
+        Returns:
+            bool: True if tab was found and clicked, False otherwise
+        """
+        more_info_tab = self.device.xpath(Events.EVENT_CARD_MORE_INFO_TAB)
+        if more_info_tab.exists:
+            more_info_tab.click()
+            sleep(self.DEFAULT_WAIT)
+            return True
+        return False
+
+    def add_favorite_event(self):
+        """
+        Clicks the favorite icon on an event card.
+
+        Returns:
+            bool: True if favorite was added successfully
+
+        Raises:
+            AssertionError: If favorite icon is not found
+        """
+        favorite_icon = self.device.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE)
+        assert favorite_icon.exists, "Could not find favorite icon"
+
+        favorite_icon.click()
+        sleep(self.DEFAULT_WAIT)
         return True
-    return False
+
+    def verify_and_remove_favorite_event(self):
+        """
+        Verifies that an event has been added to favorites, then removes it.
+
+        Returns:
+            bool: True if favorite was verified and removed successfully
+
+        Raises:
+            AssertionError: If favorited event is not found or not removed successfully
+        """
+        favorite_event = self.device.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
+        assert favorite_event.exists, "Could not find favorited event"
+
+        favorite_event.click()
+        sleep(self.DEFAULT_WAIT)
+
+        assert not favorite_event.exists, "Event is still present in favorites"
+        return True
 
 
-def add_favorite_event(d):
-    """
-    Clicks the favorite icon on an event card.
-    """
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE)
-    assert favorite_icon.exists, "Could not find favorite icon"
-    favorite_icon.click()
-    sleep(2)
+class NavBusinesses:
+    """Class for handling business navigation and interactions."""
 
+    # Wait times
+    LONG_WAIT = 5
+    DEFAULT_WAIT = 3
+    SHORT_WAIT = 2
 
-def verify_and_remove_favorite_event(d):
-    """
-    Verifies that an event has been added to favorites, then removes it.
-    """
-    favorite_event = d.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
-    assert favorite_event.exists, "Could not find favorited event"
-    favorite_event.click()
-    sleep(2)
-    assert not favorite_event.exists, "Event is still present in favorites"
+    # Default business names
+    DEFAULT_EVENT_BUSINESS = "Higher Ground"
+    DEFAULT_MENU_BUSINESS = "Big Fatty's BBQ"
 
+    def __init__(self, device):
+        """
+        Initialize NavBusinesses with a device instance.
 
-# UI navigation functions for Businesses
-def click_business_with_event_search_result(d, business_name):
-    """
-    Clicks on the business containing event search result.
-    """
-    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(business_name))
-    assert search_result.exists, "Higher Ground not found under Businesses section"
-    search_result.click()
-    sleep(5)
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
 
+    def click_business_with_event_search_result(self, business_name=None):
+        """
+        Clicks on the business containing event search result.
 
-def click_business_with_menu_search_result(d, menu_business_name):
-    """
-    Clicks on the business containing menu search result.
-    """
-    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
-    assert search_result.exists, "Big Fatty's BBQ not found under Businesses section"
-    search_result.click()
+        Args:
+            business_name (str, optional): Name of the business to click.
+                                         Defaults to "Higher Ground"
+
+        Returns:
+            bool: True if business was found and clicked
+
+        Raises:
+            AssertionError: If business is not found under Businesses section
+        """
+        business_name = business_name or self.DEFAULT_EVENT_BUSINESS
+        search_result = self.device.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(business_name))
+        assert search_result.exists, f"{business_name} not found under Businesses section"
+
+        search_result.click()
+        sleep(self.LONG_WAIT)
+        return True
+
+    def click_business_with_menu_search_result(self, menu_business_name=None):
+        """
+        Clicks on the business containing menu search result.
+
+        Args:
+            menu_business_name (str, optional): Name of the business to click.
+                                              Defaults to "Big Fatty's BBQ"
+
+        Returns:
+            bool: True if business was found and clicked
+
+        Raises:
+            AssertionError: If business is not found under Businesses section
+        """
+        menu_business_name = menu_business_name or self.DEFAULT_MENU_BUSINESS
+        search_result = self.device.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
+        assert search_result.exists, f"{menu_business_name} not found under Businesses section"
+
+        search_result.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def verify_business_fyi_tab(self):
+        """
+        Verify FYI tab contents are present.
+
+        Returns:
+            bool: True if FYI tab contents exist
+
+        Raises:
+            AssertionError: If FYI tab contents are not found
+        """
+        fyi_contents = self.device.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
+        assert fyi_contents.exists, "FYI tab contents not found"
+        return True
+
+    def click_first_business_search_result(self, menu_business_name=None):
+        """
+        Clicks on the first business search result in the list.
+
+        Args:
+            menu_business_name (str, optional): The business card containing menu tab.
+                                              Defaults to "Big Fatty's BBQ"
+
+        Returns:
+            bool: True if business was found and clicked
+
+        Raises:
+            AssertionError: If business is not found or if click fails
+        """
+        menu_business_name = menu_business_name or self.DEFAULT_MENU_BUSINESS
+        search_result = self.device.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
+        assert search_result.exists, f"{menu_business_name} not found under Businesses section"
+
+        search_result.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def add_favorite_business(self):
+        """
+        Clicks the favorite icon on a business card.
+
+        Returns:
+            bool: True if favorite was added successfully
+
+        Raises:
+            AssertionError: If favorite icon is not found
+        """
+        favorite_icon = self.device.xpath(MyFavorites.FAVORITE_BUSINESS_ADD_REMOVE)
+        assert favorite_icon.exists, "Could not find favorite icon"
+
+        favorite_icon.click()
+        sleep(self.SHORT_WAIT)
+        return True
+
+    def verify_and_remove_favorite_business(self):
+        """
+        Verifies that a business has been added to favorites, then removes it.
+
+        Returns:
+            bool: True if favorite was verified and removed successfully
+
+        Raises:
+            AssertionError: If favorited business is not found or not removed successfully
+        """
+        favorite_business = self.device.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
+        assert favorite_business.exists, "Could not find favorited business"
+
+        favorite_business.click()
+        sleep(self.SHORT_WAIT)
+
+        assert not favorite_business.exists, "Business is still present in favorites"
+        return True
     sleep(3)
 
 
-def click_business_fyi_tab(d):
-    """
-    Click on FYI tab and verify contents
-    """
-    # Verify FYI tab contents are present
-    fyi_contents = d.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
-    assert fyi_contents.exists, "FYI tab contents not found"
+class NavViewMap:
+    """Class for handling map view navigation."""
+
+    NAVIGATION_WAIT = 5  # Default wait time after clicking View Map
+
+    def __init__(self, device):
+        """
+        Initialize NavViewMap with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def click_view_map(self):
+        """
+        Clicks the View Map button and verifies navigation.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If View Map button is not found
+        """
+        view_map = self.device.xpath(HomeScreen.VIEW_MAP)
+        assert view_map.exists, "Could not find View Map button"
+
+        view_map.click()
+        sleep(self.NAVIGATION_WAIT)
+
+        return True
 
 
-def click_first_business_search_result(d, menu_business_name):
-    """
-    Clicks on the first business search result in the list.
+class NavDayTripsTrails:
+    """Class for handling Trails section navigation and interactions."""
 
-    Args:
-        d: UIAutomator2 device instance
-        menu_business_name: The business card containing menu tab.
+    # Class constants
+    TRAIL_START_TEXT = "Start a Trail!"
+    DAY_TRIPS_TEXT = "Day Trips"
 
-    Raises:
-        AssertionError: If no search result is found or if click fails
-    """
-    search_result = d.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
-    assert search_result.exists, "Big Fatty's BBQ not found under Businesses section"
-    search_result.click()
-    sleep(3)
+    # Wait times
+    DEFAULT_WAIT = 2
+    LONG_WAIT = 5
+    SHORT_WAIT = 1
+
+    # Scroll settings
+    MAX_SCROLL_ATTEMPTS = 5
+    MAX_SMALL_SCROLLS = 3
+    SCROLL_DURATION = 1.0
+    LONG_SCROLL_DURATION = 1.5
+
+    def __init__(self, device):
+        """
+        Initialize NavTrails with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def click_trails_see_all(self):
+        """
+        Clicks the "See All" button for the Trails section.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Trails 'See all' button is not found
+        """
+        trails_see_all = self.device.xpath(HomeScreen.TRAILS_SEE_ALL.format(self.TRAIL_START_TEXT))
+        assert trails_see_all.exists, "Could not find Trails 'See all' button"
+
+        trails_see_all.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def find_trails_text(self):
+        """
+        Find the Trails text and Read More button on the Home screen.
+
+        Returns:
+            UIElement: The Read More button element if found
+
+        Raises:
+            AssertionError: If Start a Trail! text or Read More button is not found
+        """
+        # Initialize screen swipe for coordinates
+        screen_swipe = ScreenSwipe(self.device)
+        start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
+        general_scroll = GeneralScrolling(self.device)
+        target_y = general_scroll.get_target_position_in_first_quarter()
+
+        for attempt in range(self.MAX_SCROLL_ATTEMPTS):
+            if self.device(text=self.TRAIL_START_TEXT).exists:
+                day_trips_elem = self.device(text=self.TRAIL_START_TEXT)
+                bounds = day_trips_elem.info['bounds']
+                current_y = (bounds['top'] + bounds['bottom']) // 2
+
+                if current_y <= target_y:
+                    break
+
+            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.SCROLL_DURATION)
+            sleep(self.DEFAULT_WAIT)
+
+        assert self.device(text=self.DAY_TRIPS_TEXT).exists(timeout=self.LONG_WAIT), (
+            "Start a Trail! text not found"
+        )
+
+        # Find Read More button
+        read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
+
+        for i in range(self.MAX_SMALL_SCROLLS):
+            if read_more_button.exists:
+                break
+            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.LONG_SCROLL_DURATION)
+            sleep(self.DEFAULT_WAIT)
+
+        return read_more_button
+
+    def find_trail_name(self):
+        """
+        Finds the text of the first trail, then the first Trails name.
+
+        Returns:
+            str: The found trail text
+
+        Raises:
+            AssertionError: If trail element is not found
+        """
+        trail_text = self.device(textContains="Trail").get_text()
+        trail_element = self.device.xpath(Trails.TRAIL_NAME.format(trail_text))
+        assert trail_element.wait(timeout=self.LONG_WAIT), f"Trail element not found"
+        sleep(self.SHORT_WAIT)
+        return trail_text
+
+    def click_trails_button(self):
+        """
+        Finds and clicks the Trails button on the home screen.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Trails button is not found
+        """
+        trails_button = self.device.xpath(HomeScreen.TRAILS_BUTTON)
+        assert trails_button.wait(timeout=self.LONG_WAIT), "Trails button not found"
+
+        print("\nClicking Trails button")
+        trails_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def click_trails_read_more(self):
+        """
+        Clicks the Read More button of a Trail.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Read More button is not found
+        """
+        read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
+        assert read_more_button.wait(timeout=self.LONG_WAIT), "Read More button not found"
+
+        read_more_button.click()
+        sleep(self.LONG_WAIT)
+        return True
+
+    def add_favorite_trail(self):
+        """
+        Clicks the favorite icon on the trail details screen.
+
+        Returns:
+            bool: True if favorite was added successfully
+
+        Raises:
+            AssertionError: If favorite icon is not found
+        """
+        favorite_icon = self.device.xpath(MyFavorites.FAVORITE_TRAILS_ADD_REMOVE)
+        assert favorite_icon.exists, "Could not find favorite icon"
+
+        favorite_icon.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def verify_and_remove_favorite_trail(self):
+        """
+        Verifies that a trail has been added to favorites, then removes it.
+
+        Returns:
+            bool: True if favorite was verified and removed successfully
+
+        Raises:
+            AssertionError: If favorited trail is not found or not removed successfully
+        """
+        favorite_trail = self.device.xpath(MyFavorites.ADDED_FAVORITE_TRAIL)
+        assert favorite_trail.exists, "Could not find favorited trail"
+
+        favorite_trail.click()
+        sleep(self.DEFAULT_WAIT)
+
+        assert not favorite_trail.exists, "Trail is still present in favorites"
+        sleep(self.LONG_WAIT)
+        return True
 
 
-def add_favorite_business(d):
-    """
-    Clicks the favorite icon on a business card.
-    """
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_BUSINESS_ADD_REMOVE)
-    assert favorite_icon.exists, "Could not find favorite icon"
-    favorite_icon.click()
-    sleep(2)
+class NavAddInfo:
+    """Class for handling Add Info section navigation."""
+
+    NAVIGATION_WAIT = 5  # Default wait time after clicking Add Info button
+
+    def __init__(self, device):
+        """
+        Initialize NavAddInfo with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def click_add_info_button(self):
+        """
+        Clicks the Add Info button on the Home screen and verifies navigation.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Add Info button is not found
+        """
+        add_info_button = self.device.xpath(HomeScreen.ADD_INFO_BUTTON)
+        assert add_info_button.exists, "Could not find Add Info button"
+
+        add_info_button.click()
+        sleep(self.NAVIGATION_WAIT)
+
+        return True
 
 
-def verify_and_remove_favorite_business(d):
-    """
-    Verifies that a business has been added to favorites, then removes it.
-    """
-    # Verify favorited business is present and take screenshot
-    favorite_business = d.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
-    assert favorite_business.exists, "Could not find favorited business"
-    favorite_business.click()
-    sleep(2)
-    assert not favorite_business.exists, "Business is still present in favorites"
-    sleep(3)
+class NavVideos:
+    """Class for handling videos section navigation."""
 
+    MAX_SMALL_SCROLLS = 3
+    SCROLL_DURATION = 1.0
+    SCROLL_WAIT = 1.5
+    CLICK_WAIT = 5
 
-# UI navigation functions for View Map
+    # Screen position multipliers
+    START_Y_MULTIPLIER = 0.6  # 60% of screen height
+    END_Y_MULTIPLIER = 0.4  # 40% of screen height
 
-def click_view_map(d):
-    """
-    Clicks the View Map button.
+    def __init__(self, device):
+        """
+        Initialize NavVideos with a device instance.
 
-    :param d: The UIAutomator2 device instance.
-    """
-    view_map = d.xpath(HomeScreen.VIEW_MAP)
-    assert view_map.exists, "Could not find View Map button"
-    view_map.click()
-    sleep(5)
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
 
+    def find_and_click_see_all_videos(self, height, start_x):
+        """
+        Find and click the "See All" button for the Videos section using fine-tuned scrolling.
 
-# UI navigation functions for Day Trips
+        Args:
+            height (int): The screen height
+            start_x (int): The starting x-coordinate for the swipe
 
-def find_day_trips_text(d):
-    """
-    Find the Day Trips text and Read More button on the Home screen.
+        Returns:
+            bool: True if button was found and clicked
 
-    :param d: The device instance.
-    :return: The Read More button element
-    """
+        Raises:
+            AssertionError: If Videos See All button is not found after maximum scroll attempts
+        """
+        videos_see_all = self.device.xpath(HomeScreen.VIDEOS_SEE_ALL)
 
-    # Get screen dimensions and target position
-    width, height = get_screen_dimensions(d)
-    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
-    target_y = get_target_position_in_first_quarter(d)
+        # Calculate scroll coordinates using screen height multipliers
+        fine_tune_start_y = int(height * self.START_Y_MULTIPLIER)
+        fine_tune_end_y = int(height * self.END_Y_MULTIPLIER)
 
-    max_attempts = 5
-    for attempt in range(max_attempts):
-        if d(text="Day Trips").exists:
-            # Get the position of Day Trips text
-            day_trips_elem = d(text="Day Trips")
-            bounds = day_trips_elem.info['bounds']
-            current_y = (bounds['top'] + bounds['bottom']) // 2
-
-            if current_y <= target_y:
+        # Perform fine-tuned scrolls
+        for attempt in range(self.MAX_SMALL_SCROLLS):
+            if videos_see_all.exists:
                 break
 
-        d.swipe(start_x, start_y, start_x, end_y, duration=1.0)
-        sleep(2)
+            self.device.swipe(
+                start_x,
+                fine_tune_start_y,
+                start_x,
+                fine_tune_end_y,
+                duration=self.SCROLL_DURATION
+            )
+            sleep(self.SCROLL_WAIT)
 
-    assert d(text="Day Trips").exists(timeout=5), "Day Trips text not found"
+        assert videos_see_all.exists, "Could not find Videos See All button after maximum scroll attempts"
 
-    # Now look for the Read More button within the Day Trips section
-    read_more_button = d.xpath(DayTrips.DAY_TRIPS_READ_MORE_HOME_SCREEN)
-    max_small_scrolls = 3
+        videos_see_all.click()
+        sleep(self.CLICK_WAIT)
 
-    for i in range(max_small_scrolls):
-        if read_more_button.exists:
-            break
-        d.swipe(start_x, start_y, start_x, end_y, duration=1.5)
-        sleep(2)
-
-    return read_more_button
-
-
-def click_day_trips_see_all(d):
-    """
-    Clicks the "See All" button for the Day Trips section.
-
-    :param d: The device instance.
-    """
-    day_trips_see_all = d.xpath(HomeScreen.DAY_TRIPS_SEE_ALL.format("Day Trip"))
-    assert day_trips_see_all.exists, "Could not find Day Trip 'See all' button"
-    day_trips_see_all.click()
-    sleep(2)
+        return True
 
 
-def click_day_trips_read_more(d, read_more_button):
-    """
-    Clicks the Read More button of a Day Trip.
-    """
-    assert read_more_button.exists, "Read More button not found"
-    read_more_button.click()
-    sleep(5)
+class NavFavoritesVisitHistory:
+    """Class for handling favorites and visit history navigation."""
 
+    NAVIGATION_WAIT = 2  # Default wait time after navigation
+    FAVORITES_TEXT = "Favorites"  # Text to verify on favorites screen
 
-# UI navigation functions for Trails
-def click_trails_see_all(d):
-    """
-    Clicks the "See All" button for the Day Trips section.
+    def __init__(self, device):
+        """
+        Initialize NavFavoritesVisitHistory with a device instance.
 
-    :param d: The device instance.
-    """
-    trails_see_all = d.xpath(HomeScreen.TRAILS_SEE_ALL.format("Start a Trail!"))
-    assert trails_see_all.exists, "Could not find Trails 'See all' button"
-    trails_see_all.click()
-    sleep(2)
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
 
+    def click_favorites_button(self):
+        """
+        Clicks the Favorites button in the bottom navigation bar and verifies navigation.
 
-def find_trails_text(d):
-    """
-    Find the Trails text and Read More button on the Home screen.
+        Returns:
+            bool: True if navigation was successful
 
-    :param d: The device instance.
-    :return: The Read More button element
-    """
+        Raises:
+            AssertionError: If Favorites button is not found or navigation verification fails
+        """
+        favorites_button = self.device.xpath(BottomNavBar.FAVORITES)
+        assert favorites_button.exists, "Could not find Favorites button"
+        favorites_button.click()
+        sleep(self.NAVIGATION_WAIT)
 
-    # Get screen dimensions and target position
-    width, height = get_screen_dimensions(d)
-    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
-    target_y = get_target_position_in_first_quarter(d)
+        # Verify navigation
+        assert self.device(text=self.FAVORITES_TEXT).exists, (
+            f"{self.FAVORITES_TEXT} text not found on screen"
+        )
+        return True
 
-    max_attempts = 5
-    for attempt in range(max_attempts):
-        if d(text="Start a Trail!").exists:
-            # Get the position of Day Trips text
-            day_trips_elem = d(text="Start a Trail!")
-            bounds = day_trips_elem.info['bounds']
-            current_y = (bounds['top'] + bounds['bottom']) // 2
+    def click_visit_history(self):
+        """
+        Clicks the Visit History tab.
 
-            if current_y <= target_y:
-                break
+        Returns:
+            bool: True if navigation was successful
 
-        d.swipe(start_x, start_y, start_x, end_y, duration=1.0)
-        sleep(2)
-
-    assert d(text="Day Trips").exists(timeout=5), "Start a Trail! text not found"
-
-    # Now look for the Read More button within the Day Trips section
-    read_more_button = d.xpath(Trails.READ_MORE_TRAILS)
-    max_small_scrolls = 3
-
-    for i in range(max_small_scrolls):
-        if read_more_button.exists:
-            break
-        d.swipe(start_x, start_y, start_x, end_y, duration=1.5)
-        sleep(2)
-
-    return read_more_button
-
-
-def find_trail_name(d):
-    """
-    Finds the text of the first trail, then the first Trails name.
-    """
-    trail_text = d(textContains="Trail").get_text()
-    trail_element = d.xpath(Trails.TRAIL_NAME.format(trail_text))
-    assert trail_element.wait(timeout=5), f"Trail element not found"
-    sleep(1)
-
-
-def click_trails_button(d):
-    """
-    Finds and clicks the Trails button on the home screen.
-
-    :param d: The device instance.
-    """
-    trails_button = d.xpath(HomeScreen.TRAILS_BUTTON)
-    assert trails_button.wait(timeout=5), "Trails button not found"
-    trails_button.click()
-    sleep(2)
-
-
-def click_trails_read_more(d):
-    """
-    Clicks the Read More button of a Day Trip.
-    """
-    read_more_button = d.xpath(Trails.READ_MORE_TRAILS)
-    assert read_more_button.wait(timeout=5), "Read More button not found"
-    read_more_button.click()
-    sleep(5)
-
-
-def add_favorite_trail(d):
-    """
-    Clicks the favorite icon on the trail details screen.
-    """
-    favorite_icon = d.xpath(MyFavorites.FAVORITE_TRAILS_ADD_REMOVE)
-    assert favorite_icon.exists, "Could not find favorite icon"
-    favorite_icon.click()
-    sleep(2)
-
-
-def verify_and_remove_favorite_trail(d):
-    """
-    Verifies that a trail has been added to favorites, then removes it.
-    """
-    favorite_trail = d.xpath(MyFavorites.ADDED_FAVORITE_TRAIL)
-    assert favorite_trail.exists, "Could not find favorited trail"
-    favorite_trail.click()
-    sleep(2)
-    assert not favorite_trail.exists, "Trail is still present in favorites"
-    sleep(5)
-
-
-# UI navigation functions for Add Info
-
-def click_add_info_button(d):
-    """
-    Clicks the Add Info button on the Home screen.
-
-    :param d: The UIAutomator2 device instance.
-    """
-    add_info_button = d.xpath(HomeScreen.ADD_INFO_BUTTON)
-    assert add_info_button.exists, "Could not find Add Info button"
-    add_info_button.click()
-    sleep(5)
-
-
-# UI navigation functions for Videos
-
-def find_and_click_see_all_videos(d, height, start_x):
-    """
-    Find and click the "See All" button for the Videos section.
-
-    :param d: The UIAutomator2 device instance.
-    :param height: The screen height.
-    :param start_x: The starting x-coordinate for the swipe.
-    """
-    # Now do smaller scrolls to find See All
-    max_small_scrolls = 3
-    videos_see_all = d.xpath(HomeScreen.VIDEOS_SEE_ALL)
-
-    # Smaller swipes for fine-tuning
-    fine_tune_start_y = (height * 3) // 5  # Start from 60%
-    fine_tune_end_y = (height * 2) // 5  # End at 40%
-
-    for _ in range(max_small_scrolls):
-        if videos_see_all.exists:
-            break
-        d.swipe(start_x, fine_tune_start_y, start_x, fine_tune_end_y, duration=1.0)
-        sleep(1.5)
-
-    assert videos_see_all.exists, "Could not find Videos See All button"
-    videos_see_all.click()
-    sleep(5)
-
-
-# UI navigation functions for Favorites/Visit History
-
-def click_favorites_button(d):
-    """
-    Clicks the Favorites button in the bottom navigation bar.
-
-    :param d: The UIAutomator2 device instance.
-    """
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Could not find Favorites button"
-    favorites_button.click()
-    sleep(2)
-    assert d(text="Favorites").exists, "Favorites text not found on screen"
-
-
-def click_visit_history(d):
-    """
-    Clicks the Visit History tab.
-
-    :param d: The UIAutomator2 device instance.
-    """
-    visit_history_tab = d.xpath(VisitHistory.VISIT_HISTORY_TAB)
-    assert visit_history_tab.exists, "Could not find Visit History tab"
-    visit_history_tab.click()
-    sleep(2)
+        Raises:
+            AssertionError: If Visit History tab is not found
+        """
+        visit_history_tab = self.device.xpath(VisitHistory.VISIT_HISTORY_TAB)
+        assert visit_history_tab.exists, "Could not find Visit History tab"
+        visit_history_tab.click()
+        sleep(self.NAVIGATION_WAIT)
+        return True
 
 
 # UI navigation functions for Bottom Navigation Bar
 
-def click_home_button(d):
-    """
-    Clicks the Home button in the bottom navigation bar.
+class NavBottomNavBar:
+    """Class for handling bottom navigation bar interactions."""
 
-    :param d: The UIAutomator2 device instance.
-    """
-    home_button = d.xpath(BottomNavBar.NAV_HOME_BUTTON)
-    assert home_button.exists, "Could not find Home button"
-    home_button.click()
-    sleep(5)
-    assert d(text="Events").exists, "Events text not found on home screen"
+    NAVIGATION_WAIT = 5  # Default wait time after navigation
+    EVENTS_TEXT = "Events"  # Text to verify on screens
 
+    def __init__(self, device):
+        """
+        Initialize NavBottomNavBar with a device instance.
 
-def click_events_button(d):
-    """
-    Clicks the Events button in the bottom navigation bar.
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
 
-    :param d: The UIAutomator2 device instance.
-    """
-    events_button = d.xpath(BottomNavBar.EVENTS)
-    assert events_button.exists, "Could not find Events button"
-    events_button.click()
-    sleep(5)
-    assert d(text="Events").exists, "Events text not found on screen"
+    def click_home_button(self):
+        """
+        Clicks the Home button in the bottom navigation bar and verifies navigation.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Home button is not found or navigation verification fails
+        """
+        home_button = self.device.xpath(BottomNavBar.NAV_HOME_BUTTON)
+        assert home_button.exists, "Could not find Home button"
+
+        home_button.click()
+        sleep(self.NAVIGATION_WAIT)
+
+        # Verify navigation
+        assert self.device(text=self.EVENTS_TEXT).exists, (
+            f"{self.EVENTS_TEXT} text not found on home screen"
+        )
+        return True
+
+    def click_events_button(self):
+        """
+        Clicks the Events button in the bottom navigation bar and verifies navigation.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Events button is not found or navigation verification fails
+        """
+        events_button = self.device.xpath(BottomNavBar.EVENTS)
+        assert events_button.exists, "Could not find Events button"
+
+        events_button.click()
+        sleep(self.NAVIGATION_WAIT)
+
+        # Verify navigation
+        assert self.device(text=self.EVENTS_TEXT).exists, (
+            f"{self.EVENTS_TEXT} text not found on screen"
+        )
+        return True
 
 
 # UI navigation for Guest Mode
 
-def guest_mode_click_events_button(d):
-    """
-    Clicks the Events button in the bottom navigation bar in Guest Mode.
+class NavGuestMode:
+    """Class for handling guest mode navigation interactions."""
 
-    :param d: The UIAutomator2 device instance.
-    """
-    events_tab = d.xpath(BottomNavBar.EVENTS)
-    assert events_tab.exists, "Events tab not found"
-    events_tab.click()
-    sleep(2)
+    # Default wait times after clicks
+    EVENTS_WAIT = 2
+    SEARCH_WAIT = 5
+    FAVORITES_WAIT = 3
 
+    def __init__(self, device):
+        """
+        Initialize NavGuestMode with a device instance.
 
-def guest_mode_click_search(d):
-    """
-    Clicks the Search button in Guest Mode.
-    """
-    search_button = d.xpath(BottomNavBar.SEARCH)
-    assert search_button.exists, "Search button not found"
-    search_button.click()
-    sleep(5)
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
 
+    def click_events_button(self):
+        """
+        Clicks the Events button in the bottom navigation bar in Guest Mode.
 
-def guest_mode_click_favorites(d):
-    """
-    Clicks the Favorites button in Guest Mode.
-    """
-    favorites_button = d.xpath(BottomNavBar.FAVORITES)
-    assert favorites_button.exists, "Favorites button not found in bottom navigation"
-    favorites_button.click()
-    sleep(3)
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Events tab is not found
+        """
+        events_tab = self.device.xpath(BottomNavBar.EVENTS)
+        assert events_tab.exists, "Events tab not found"
+
+        events_tab.click()
+        sleep(self.EVENTS_WAIT)
+        return True
+
+    def click_search(self):
+        """
+        Clicks the Search button in Guest Mode.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Search button is not found
+        """
+        search_button = self.device.xpath(BottomNavBar.SEARCH)
+        assert search_button.exists, "Search button not found"
+
+        search_button.click()
+        sleep(self.SEARCH_WAIT)
+        return True
+
+    def click_favorites(self):
+        """
+        Clicks the Favorites button in Guest Mode.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Favorites button is not found
+        """
+        favorites_button = self.device.xpath(BottomNavBar.FAVORITES)
+        assert favorites_button.exists, "Favorites button not found in bottom navigation"
+
+        favorites_button.click()
+        sleep(self.FAVORITES_WAIT)
+        return True

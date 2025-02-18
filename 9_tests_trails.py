@@ -3,7 +3,7 @@ import os
 
 from time import sleep
 from locators import Trails
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import sign_in_and_prepare, SignInPrepare
 from utils_scrolling import scroll_to_bottom
 from utils_ui_navigation import click_trails_button, click_trails_read_more, find_trails_text, find_trail_name, \
     click_trails_see_all
@@ -21,7 +21,8 @@ def test_trails_screen(d, screenshots_dir):
     4. Verify trail status
     5. Take screenshot of trails main screen
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     find_trails_text(d)
 
@@ -50,7 +51,8 @@ def test_trails_details(d, screenshots_dir):
     7. Scroll using swipe
     8. Take screenshot of trail details visits
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     find_trails_text(d)
     sleep(2)

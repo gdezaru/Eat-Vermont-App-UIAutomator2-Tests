@@ -2,7 +2,7 @@ import pytest
 import os
 from time import sleep
 from locators import ViewMap
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import SignInPrepare
 from utils_scrolling import click_and_verify_element
 from utils_ui_navigation import click_view_map
 
@@ -26,7 +26,8 @@ def test_view_map_filters(d, screenshots_dir):
     12. Click Food Pantries filter and verify
     13. Document each filter state with screenshots
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Single scroll to show View Map
     d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)

@@ -2,7 +2,7 @@ import pytest
 import os
 from time import sleep
 
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import sign_in_and_prepare, SignInPrepare
 from utils_device_interaction import search_and_submit
 from utils_ui_navigation import (click_favorites_button, click_first_event_search_result, add_favorite_event,
                                  add_favorite_business, click_first_business_search_result, find_trails_text,
@@ -26,7 +26,8 @@ def test_add_favorite_events(d, screenshots_dir):
     4. Find and click the favorite icon
     5. Take screenshot
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     search_term = "Burlington"
     search_and_submit(d, search_term)
@@ -56,7 +57,8 @@ def test_add_favorite_businesses(d, screenshots_dir):
     8. Find and click the favorite icon
     9. Take screenshot of favorited business
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     search_and_submit(d, menu_business_name)
 
@@ -82,7 +84,8 @@ def test_add_favorite_trails(d, screenshots_dir):
     4. Find and click the favorite icon
     5. Take screenshot of favorited trail
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     find_trails_text(d)
     sleep(2)
@@ -108,7 +111,8 @@ def test_remove_favorite_events(d, screenshots_dir):
     5. Click on favorite icon to remove from favorites
     6. Verify event is no longer in favorites
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     click_favorites_button(d)
 
@@ -135,7 +139,8 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     5. Click on favorite icon to remove from favorites
     6. Verify business is no longer in favorites
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     click_favorites_button(d)
 
@@ -162,7 +167,8 @@ def test_remove_favorite_trails(d, screenshots_dir):
     5. Click on favorite icon to remove from favorites
     6. Verify trail is no longer in favorites
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Click on Favorites button in bottom navigation
     click_favorites_button(d)

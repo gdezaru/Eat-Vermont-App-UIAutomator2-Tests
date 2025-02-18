@@ -2,7 +2,7 @@ from time import sleep
 import pytest
 import os
 
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import SignInPrepare
 from utils_ui_navigation import click_favorites_button, click_visit_history
 
 
@@ -18,7 +18,8 @@ def test_visit_history_screen(d, screenshots_dir):
     5. Verify Visit History screen loads
     6. Take confirmation screenshot
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Click on Favorites button in bottom navigation
     click_favorites_button(d)

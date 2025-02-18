@@ -3,7 +3,7 @@ import pytest
 import os
 
 from conftest import screenshots_dir
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import sign_in_and_prepare, SignInPrepare
 from utils_device_interaction import search_and_submit
 from utils_scrolling import scroll_event_card, scroll_to_bottom
 from utils_ui_navigation import click_see_all_events_home_screen, find_and_click_more_info_tab, events_add_to_calendar, \
@@ -18,7 +18,8 @@ def test_events_popup(d, screenshots_dir):
     1. Sign in with valid credentials
     2. Verify popup contents
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     sleep(10)
 
@@ -39,7 +40,8 @@ def test_events_card(d, screenshots_dir):
     9. Test sharing functionality
     10. Check ticket/RSVP options
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     sleep(10)
 

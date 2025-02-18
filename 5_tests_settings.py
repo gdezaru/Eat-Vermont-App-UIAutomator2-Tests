@@ -1,9 +1,7 @@
 import pytest
 import os
-from time import sleep
 
-from locators import SettingsScreen
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import sign_in_and_prepare, SignInPrepare
 from utils_device_interaction import change_username_profile_settings, change_name_profile_settings
 from utils_scrolling import scroll_to_bottom
 from utils_settings import generate_random_name, generate_random_username, click_settings_button, click_edit_profile, \
@@ -22,7 +20,8 @@ def test_settings_contents(d, screenshots_dir):
     4. Verify all settings options are visible
     5. Take screenshot of settings screen
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     click_settings_button(d)
 
@@ -50,7 +49,8 @@ def test_settings_screen_navigation(d, screenshots_dir):
     10. Click on Log Out
     11. Take screenshot of welcome screen
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     click_settings_button(d)
 
@@ -95,7 +95,8 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     11. Verify the updated name is visible on the settings screen
     12. Take screenshot of settings screen after saving changes
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     click_settings_button(d)
 

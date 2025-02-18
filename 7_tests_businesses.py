@@ -2,7 +2,7 @@ from time import sleep
 import pytest
 import os
 
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import sign_in_and_prepare, SignInPrepare
 from utils_device_interaction import search_and_submit
 from utils_ui_navigation import click_business_with_event_search_result, click_business_fyi_tab, \
     click_business_with_menu_search_result
@@ -29,7 +29,8 @@ def test_business_card_with_event(d, screenshots_dir):
     7. Verify all business card elements are present
     8. Verify business card navigation works correctly
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     search_and_submit(d, business_name)
 
@@ -69,12 +70,11 @@ def test_business_card_with_menu(d, screenshots_dir):
     9. Verify all menu items are displayed correctly
     10. Verify business card navigation works correctly
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
-    # Use utility function to search and submit
     search_and_submit(d, menu_business_name)
 
-    # Wait for and verify Businesses section is present
     verify_businesses_section_present(d)
 
     click_business_with_menu_search_result(d, menu_business_name)

@@ -2,7 +2,7 @@ import pytest
 import os
 from time import sleep
 from config import TEST_USER
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import SignInPrepare
 from utils_device_interaction import handle_notification_permission, click_and_fill_forgot_password
 from locators import LoginPage
 
@@ -22,7 +22,8 @@ def test_sign_in_with_valid_credentials(d, screenshots_dir):
     7. Take screenshot of successful sign in
     8. Verify user is logged in successfully
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Check for success message
     screenshot_path = os.path.join(screenshots_dir, "1_1_1_successful_sign_in_user_password.png")

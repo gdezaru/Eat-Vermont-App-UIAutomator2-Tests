@@ -1,7 +1,7 @@
 import pytest
 from time import sleep
 
-from utils_authentication import sign_in_and_prepare
+from utils_authentication import SignInPrepare
 from utils_device_interaction import search_and_submit
 from utils_scrolling import scroll_to_bottom
 from utils_ui_verification import verify_and_screenshot
@@ -22,7 +22,8 @@ def test_search_events(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain events
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Use utility function to search and submit
     search_term = "Burlington"
@@ -55,7 +56,8 @@ def test_search_businesses(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain businesses
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Use utility function to search and submit
     search_term = "Big Fatty BBQ"
@@ -88,7 +90,8 @@ def test_search_day_trips(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain day trips
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Use utility function to search and submit
     search_term = "Day Trip"
@@ -125,7 +128,8 @@ def test_search_videos(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain videos
     """
-    sign_in_and_prepare(d)
+    sign_in = SignInPrepare(d)
+    sign_in.sign_in_and_prepare()
 
     # Use utility function to search and submit
     search_term = "Rocket"

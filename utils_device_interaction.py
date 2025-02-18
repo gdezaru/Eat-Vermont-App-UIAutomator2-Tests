@@ -6,167 +6,185 @@ import time
 from locators import LoginPage, SettingsScreen
 
 
-def clear_app_state(d):
-    """Clear app data and restart the app"""
-    print("Clearing app state...")
-    app_id = 'com.eatvermont'
-    d.app_stop(app_id)  # Close the app
-    d.app_clear(app_id)  # Clear app data
-    d.app_start(app_id)  # Start the app fresh
-    print("App state cleared and restarted")
+class LaunchApp:
+    def __init__(self, device):
+        """
+        Initialize LaunchApp with a device instance.
 
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+        self.app_id = 'com.eatvermont'
 
-def handle_notification_permission(d):
-    """Handle notification permission dialogs if they appear."""
-    # Handle first permission dialog
-    if d(text="Allow").exists:
-        d(text="Allow").click()
-        sleep(1)
+    def clear_app_state(self):
+        """Clear app data and restart the app"""
+        print("Clearing app state...")
+        self.device.app_stop(self.app_id)  # Close the app
+        self.device.app_clear(self.app_id)  # Clear app data
+        self.device.app_start(self.app_id)  # Start the app fresh
+        print("App state cleared and restarted")
 
-        # Handle second permission dialog if it appears
-        if d(text="Allow").exists:
-            d(text="Allow").click()
+    def handle_notification_permission(self):
+        """Handle notification permission dialogs if they appear."""
+        # Handle first permission dialog
+        if self.device(text="Allow").exists:
+            self.device(text="Allow").click()
             sleep(1)
 
-
-def search_and_submit(d, search_term):
-    """
-    Finds the search button and field, enters a search term, and submits it.
-
-    :param d: The device instance.
-    :param search_term: The term to search for.
-    """
-    # Find and click Search in bottom navigation
-    search_button = None
-    if d(description="Search").exists(timeout=5):
-        search_button = d(description="Search")
-    elif d(text="Search").exists(timeout=5):
-        search_button = d(text="Search")
-    elif d(resourceId="Search").exists(timeout=5):
-        search_button = d(resourceId="Search")
-
-    assert search_button is not None, "Could not find Search button"
-    search_button.click()
-    sleep(10)
-
-    # Find and click search field
-    search_field = None
-    search_selectors = [
-        lambda: d(description="Search"),
-        lambda: d(text="Search"),
-        lambda: d(resourceId="search-input"),
-        lambda: d(className="android.widget.EditText")
-    ]
-
-    for selector in search_selectors:
-        if selector().exists(timeout=3):
-            search_field = selector()
-            break
-
-    assert search_field is not None, "Could not find search field"
-    search_field.click()
-    sleep(1)
-
-    # Enter search term and submit
-    d.send_keys(search_term)
-    sleep(1)
-    d.press("enter")
-    sleep(5)
+            # Handle second permission dialog if it appears
+            if self.device(text="Allow").exists:
+                self.device(text="Allow").click()
+                sleep(1)
 
 
-def find_and_click_video(d, video_locator):
-    """
-    Find a video using the provided locator and click it.
+class SearchSubmit:
+    def __init__(self, device):
+        """
+        Initialize SearchSubmit with a device instance.
 
-    Args:
-        d: UIAutomator2 device instance
-        video_locator: XPath locator for the video element
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+        self.search_selectors = [
+            lambda: self.device(description="Search"),
+            lambda: self.device(text="Search"),
+            lambda: self.device(resourceId="search-input"),
+            lambda: self.device(className="android.widget.EditText")
+        ]
 
-    Returns:
-        bool: True if video was found and clicked, False otherwise
-    """
-    print("\nLooking for video...")
-    video = d.xpath(video_locator)
+    def search_and_submit(self, search_term):
+        """
+        Finds the search button and field, enters a search term, and submits it.
 
-    if not video.exists:
-        print("Video not found")
-        return False
+        Args:
+            search_term: The term to search for.
+        """
+        # Find and click Search in bottom navigation
+        search_button = None
+        if self.device(description="Search").exists(timeout=5):
+            search_button = self.device(description="Search")
+        elif self.device(text="Search").exists(timeout=5):
+            search_button = self.device(text="Search")
+        elif self.device(resourceId="Search").exists(timeout=5):
+            search_button = self.device(resourceId="Search")
 
-    print("Video found, clicking...")
-    video.click()
-    return True
+        assert search_button is not None, "Could not find Search button"
+        search_button.click()
+        sleep(10)
 
+        # Find and click search field
+        search_field = None
+        for selector in self.search_selectors:
+            if selector().exists(timeout=3):
+                search_field = selector()
+                break
 
-def wait_for_video_to_load(timeout=5):
-    """
-    Wait for video to load after clicking.
+        assert search_field is not None, "Could not find search field"
+        search_field.click()
+        sleep(1)
 
-    Args:
-        timeout: How long to wait for video to load (in seconds)
-    """
-    print(f"\nWaiting {timeout} seconds for video to load...")
-    sleep(timeout)
-
-
-def click_and_fill_forgot_password(d, email):
-    """
-    Finds and clicks the Get Started button, navigates to Forgot Password,
-    and enters the email for password reset.
-
-    :param d: The device instance.
-    :param email: The email address to enter for password reset.
-    """
-    # Find and click Get Started button
-    get_started = None
-    if d(description="Get Started").exists(timeout=5):
-        get_started = d(description="Get Started")
-    elif d(text="Get Started").exists(timeout=5):
-        get_started = d(text="Get Started")
-
-    assert get_started is not None, "Could not find Get Started button"
-    get_started.click()
-    time.sleep(2)
-
-    # Click Forgot Password
-    forgot_password = d.xpath(LoginPage.FORGOT_PASSWORD)
-    assert forgot_password.wait(timeout=5), "Forgot Password button not found"
-    forgot_password.click()
-    sleep(2)
-
-    # Enter email
-    email_field = d.xpath(LoginPage.RESET_PASSWORD_EMAIL_FIELD)
-    assert email_field.wait(timeout=5), "Email field not found"
-    email_field.click()
-    d.send_keys(email)
-    sleep(1)
+        # Enter search term and submit
+        self.device.send_keys(search_term)
+        sleep(1)
+        self.device.press("enter")
+        sleep(5)
 
 
-def change_username_profile_settings(d, generate_random_username):
-    """
-    Changes the username in the Edit Profile screen.
-    """
-    edit_username = d.xpath(SettingsScreen.EDIT_USERNAME)
-    assert edit_username.exists, "Could not find Username field"
-    edit_username.click()
-    d.clear_text()
-    new_username = generate_random_username()
-    d.send_keys(new_username)
-    sleep(1)
-    assert edit_username.get_text() == new_username, (f"Username was not updated correctly. Expected: {new_username},"
-                                                      f" Got: {edit_username.get_text()}")
+class ForgotPassword:
+    def __init__(self, device):
+        """
+        Initialize ForgotPassword with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def click_and_fill_forgot_password(self, email):
+        """
+        Finds and clicks the Get Started button, navigates to Forgot Password,
+        and enters the email for password reset.
+
+        Args:
+            email: The email address to enter for password reset.
+        """
+        # Find and click Get Started button
+        get_started = None
+        if self.device(description="Get Started").exists(timeout=5):
+            get_started = self.device(description="Get Started")
+        elif self.device(text="Get Started").exists(timeout=5):
+            get_started = self.device(text="Get Started")
+
+        assert get_started is not None, "Could not find Get Started button"
+        get_started.click()
+        time.sleep(2)
+
+        # Click Forgot Password
+        forgot_password = self.device.xpath(LoginPage.FORGOT_PASSWORD)
+        assert forgot_password.wait(timeout=5), "Forgot Password button not found"
+        forgot_password.click()
+        sleep(2)
+
+        # Enter email
+        email_field = self.device.xpath(LoginPage.RESET_PASSWORD_EMAIL_FIELD)
+        assert email_field.wait(timeout=5), "Email field not found"
+        email_field.click()
+        self.device.send_keys(email)
+        sleep(1)
 
 
-def change_name_profile_settings(d, generate_random_name):
-    """
-    Changes the name in the Edit Profile screen.
-    """
-    edit_name = d.xpath(SettingsScreen.EDIT_NAME)
-    assert edit_name.exists, "Could not find Name field"
-    edit_name.click()
-    d.clear_text()
-    new_name = generate_random_name()
-    d.send_keys(new_name)
-    sleep(3)
+class EditProfile:
+    def __init__(self, device):
+        """
+        Initialize EditProfile with a device instance.
 
-    # Verify the new name was successfully inputted
-    assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def change_username_profile_settings(self, generate_random_username):
+        """
+        Changes the username in the Edit Profile screen.
+
+        Args:
+            generate_random_username: Function that generates a random username
+
+        Returns:
+            str: The new username that was set
+        """
+        edit_username = self.device.xpath(SettingsScreen.EDIT_USERNAME)
+        assert edit_username.exists, "Could not find Username field"
+        edit_username.click()
+        self.device.clear_text()
+        new_username = generate_random_username()
+        self.device.send_keys(new_username)
+        sleep(1)
+        assert edit_username.get_text() == new_username, (
+            f"Username was not updated correctly. Expected: {new_username},"
+            f" Got: {edit_username.get_text()}")
+        return new_username
+
+    def change_name_profile_settings(self, generate_random_name):
+        """
+        Changes the name in the Edit Profile screen.
+
+        Args:
+            generate_random_name: Function that generates a random name
+
+        Returns:
+            str: The new name that was set
+        """
+        edit_name = self.device.xpath(SettingsScreen.EDIT_NAME)
+        assert edit_name.exists, "Could not find Name field"
+        edit_name.click()
+        self.device.clear_text()
+        new_name = generate_random_name()
+        self.device.send_keys(new_name)
+        sleep(3)
+
+        # Verify the new name was successfully inputted
+        assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
+        return new_name

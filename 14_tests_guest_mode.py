@@ -1,11 +1,11 @@
 import pytest
-import os
 
-from utils_authentication import enter_guest_mode_and_handle_popups
-from utils_scrolling import guest_mode_scroll_to_videos
-from utils_ui_navigation import guest_mode_click_events_button, guest_mode_click_search, guest_mode_click_favorites
-from utils_ui_verification import guest_mode_verify_events_limited_results_text, guest_mode_verify_locked_videos, \
-    guest_mode_verify_plans_popup, guest_mode_home_screen_prompt
+
+from utils_authentication import GuestModeAuth
+from utils_screenshots import ScreenshotsManagement
+from utils_scrolling import ScrollVideos, ScreenSwipe
+from utils_ui_navigation import NavGuestMode
+from utils_ui_verification import VerifyGuestMode
 
 
 @pytest.mark.smoke
@@ -22,11 +22,12 @@ def test_guest_mode_button(d, screenshots_dir):
     6. Verify guest mode restrictions are in place
     """
 
-    enter_guest_mode_and_handle_popups(d)
+    guest_mode = GuestModeAuth(d)
+    screenshots = ScreenshotsManagement(d)
 
-    # Take a confirmation screenshot
-    screenshot_path = os.path.join(screenshots_dir, "14_1_1_guest_mode_button.png")
-    d.screenshot(screenshot_path)
+    guest_mode.enter_guest_mode_and_handle_popups()
+
+    screenshots.take_screenshot("14_1_1_guest_mode_button")
 
 
 @pytest.mark.smoke
@@ -45,15 +46,18 @@ def test_guest_mode_events(d, screenshots_dir):
     8. Verify guest mode restrictions on event interactions
     """
 
-    enter_guest_mode_and_handle_popups(d)
+    guest_mode = GuestModeAuth(d)
+    nav_events = NavGuestMode(d)
+    screenshots = ScreenshotsManagement(d)
+    verify_limited_results = VerifyGuestMode(d)
 
-    guest_mode_click_events_button(d)
+    guest_mode.enter_guest_mode_and_handle_popups()
 
-    guest_mode_verify_events_limited_results_text(d)
+    nav_events.click_events_button()
 
-    # Take a confirmation screenshot
-    screenshot_path = os.path.join(screenshots_dir, "14_2_1_guest_mode_events.png")
-    d.screenshot(screenshot_path)
+    verify_limited_results.verify_events_limited_results_text()
+
+    screenshots.take_screenshot("14_2_1_guest_mode_events")
 
 
 @pytest.mark.smoke
@@ -72,15 +76,18 @@ def test_guest_mode_videos(d, screenshots_dir):
     8. Verify plans popup appears for restricted content
     9. Take screenshot of plans popup
     """
-    enter_guest_mode_and_handle_popups(d)
+    guest_mode = GuestModeAuth(d)
+    scroll_videos = ScrollVideos(d)
+    screenshots = ScreenshotsManagement(d)
+    verify_locked_videos = VerifyGuestMode(d)
 
-    guest_mode_scroll_to_videos(d)
+    guest_mode.enter_guest_mode_and_handle_popups()
 
-    guest_mode_verify_locked_videos(d)
+    scroll_videos.guest_mode_scroll_to_videos()
 
-    # Take a confirmation screenshot
-    screenshot_path = os.path.join(screenshots_dir, "14_3_2_guest_mode_videos_triggered_plans_popup.png")
-    d.screenshot(screenshot_path)
+    verify_locked_videos.verify_locked_videos()
+
+    screenshots.take_screenshot("14_3_2_guest_mode_videos_triggered_plans_popup")
 
 
 @pytest.mark.smoke
@@ -99,13 +106,15 @@ def test_guest_mode_search(d, screenshots_dir):
     9. Test search history
     10. Check sign-in prompts
     """
-    enter_guest_mode_and_handle_popups(d)
+    guest_mode = GuestModeAuth(d)
+    nav_search = NavGuestMode(d)
+    screenshots = ScreenshotsManagement(d)
 
-    guest_mode_click_search(d)
+    guest_mode.enter_guest_mode_and_handle_popups()
 
-    # Take a confirmation screenshot
-    screenshot_path = os.path.join(screenshots_dir, "14_4_1_guest_mode_search_triggered_plans_popup.png")
-    d.screenshot(screenshot_path)
+    nav_search.click_search()
+
+    screenshots.take_screenshot("14_4_1_guest_mode_search_triggered_plans_popup")
 
 
 @pytest.mark.smoke
@@ -125,15 +134,18 @@ def test_guest_mode_favorites(d, screenshots_dir):
     10. Test guest session expiry
     """
 
-    enter_guest_mode_and_handle_popups(d)
+    guest_mode = GuestModeAuth(d)
+    nav_favorites = NavGuestMode(d)
+    verify_plans_popup = VerifyGuestMode(d)
+    screenshots = ScreenshotsManagement(d)
 
-    guest_mode_click_favorites(d)
+    guest_mode.enter_guest_mode_and_handle_popups()
 
-    guest_mode_verify_plans_popup(d)
+    nav_favorites.click_favorites()
 
-    # Take a confirmation screenshot
-    screenshot_path = os.path.join(screenshots_dir, "14_5_1_guest_mode_search_triggered_plans_popup.png")
-    d.screenshot(screenshot_path)
+    verify_plans_popup.verify_plans_popup()
+
+    screenshots.take_screenshot("14_5_1_guest_mode_search_triggered_plans_popup")
 
 
 @pytest.mark.smoke
@@ -153,10 +165,14 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
     10. Test guest mode UI
     """
 
-    enter_guest_mode_and_handle_popups(d)
+    guest_mode = GuestModeAuth(d)
+    verify_prompt = VerifyGuestMode(d)
+    screenshots = ScreenshotsManagement(d)
+    screen_swipe = ScreenSwipe(d)
 
-    guest_mode_home_screen_prompt(d)
+    guest_mode.enter_guest_mode_and_handle_popups()
+
+    verify_prompt.verify_home_screen_prompt()
 
     # Take a confirmation screenshot
-    screenshot_path = os.path.join(screenshots_dir, "14_6_1_guest_mode_prompt_end_screen.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("14_6_1_guest_mode_prompt_end_screen")
