@@ -2,7 +2,8 @@
 Utility functions for UI verification.
 """
 from time import sleep
-from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory
+from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
+    ViewMap
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
@@ -366,6 +367,81 @@ class NavViewMap:
         view_map.click()
         sleep(self.NAVIGATION_WAIT)
 
+        return True
+
+    def navigate_to_view_map(self):
+        """
+        Navigate to View Map section by scrolling and clicking.
+
+        Returns:
+            bool: True if navigation was successful
+        """
+        self.device.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
+        sleep(1)
+        return self.click_view_map()
+
+    def click_events_filter(self):
+        """
+        Click Events filter on map.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Events filter is not found
+        """
+        events_filter = self.device.xpath(ViewMap.EVENTS_FILTER)
+        assert events_filter.exists, "Events filter is not visible on the map screen"
+        events_filter.click()
+        sleep(1)
+        return True
+
+    def click_food_drinks_filter(self):
+        """
+        Click Food & Drinks filter on map.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Food & Drinks filter is not found
+        """
+        food_drinks_filter = self.device.xpath(ViewMap.FOOD_AND_DRINKS_FILTER)
+        assert food_drinks_filter.exists, "Food & Drinks filter is not visible on the map screen"
+        food_drinks_filter.click()
+        sleep(1)
+        return True
+
+    def click_farms_filter(self):
+        """
+        Click Farms filter on map.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Farms filter is not found
+        """
+        farms_filter = self.device.xpath(ViewMap.FARMS_FILTER)
+        assert farms_filter.exists, "Farms filter is not visible on the map screen"
+        farms_filter.click()
+        sleep(1)
+        return True
+
+    def click_food_pantries_filter(self):
+        """
+        Click Food Pantries filter on map.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Food Pantries filter is not found
+        """
+        food_pantries_filter = self.device.xpath(ViewMap.FOOD_PANTRIES_FILTER)
+        assert food_pantries_filter.exists, "Food Pantries filter is not visible on the map screen"
+        food_pantries_filter.click()
+        sleep(1)
         return True
 
 

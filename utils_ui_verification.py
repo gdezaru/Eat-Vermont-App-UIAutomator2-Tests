@@ -4,7 +4,7 @@ Utilities functions for UI verification
 import os
 from time import sleep
 from locators import (Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
-                      PlansPopup)
+                      PlansPopup, ViewMap)
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
@@ -245,6 +245,40 @@ class VerifyBusinesses:
         """
         menu_contents = self.device.xpath(Businesses.BUSINESS_MENU_TAB_CONTENTS)
         assert menu_contents.exists, "Menu tab contents not found"
+
+
+class VerifyViewMap:
+    """Verification utilities for View Map screen"""
+
+    def __init__(self, d):
+        self.d = d
+
+    def verify_events_filter_visible(self):
+        """Verify Events filter is visible"""
+        events_filter = self.d.xpath(ViewMap.EVENTS_FILTER)
+        assert events_filter.exists, "Events filter is not visible on the map screen"
+
+    def verify_food_drinks_filter_visible(self):
+        """Verify Food & Drinks filter is visible"""
+        food_drinks_filter = self.d.xpath(ViewMap.FOOD_AND_DRINKS_FILTER)
+        assert food_drinks_filter.exists, "Food & Drinks filter is not visible on the map screen"
+
+    def verify_farms_filter_visible(self):
+        """Verify Farms filter is visible"""
+        farms_filter = self.d.xpath(ViewMap.FARMS_FILTER)
+        assert farms_filter.exists, "Farms filter is not visible on the map screen"
+
+    def verify_food_pantries_filter_visible(self):
+        """Verify Food Pantries filter is visible"""
+        food_pantries_filter = self.d.xpath(ViewMap.FOOD_PANTRIES_FILTER)
+        assert food_pantries_filter.exists, "Food Pantries filter is not visible on the map screen"
+
+    def verify_all_filters_visible(self):
+        """Verify all map filters are visible"""
+        self.verify_events_filter_visible()
+        self.verify_food_drinks_filter_visible()
+        self.verify_farms_filter_visible()
+        self.verify_food_pantries_filter_visible()
 
 
 class VerifyTrails:

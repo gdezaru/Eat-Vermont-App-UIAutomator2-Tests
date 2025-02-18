@@ -18,8 +18,6 @@ def test_guest_mode_button(d, screenshots_dir):
     2. Click Continue as Guest button
     3. Handle events popup if it appears
     4. Take screenshot of guest mode home screen
-    5. Verify guest mode elements are present
-    6. Verify guest mode restrictions are in place
     """
 
     guest_mode = GuestModeAuth(d)
@@ -42,8 +40,7 @@ def test_guest_mode_events(d, screenshots_dir):
     4. Navigate to Events tab
     5. Take screenshot of guest mode events screen
     6. Verify events list is visible
-    7. Verify event details are accessible
-    8. Verify guest mode restrictions on event interactions
+    7. Check Guest Mode limited results popup
     """
 
     guest_mode = GuestModeAuth(d)
@@ -71,10 +68,6 @@ def test_guest_mode_videos(d, screenshots_dir):
     3. Handle events popup if it appears
     4. Navigate to Videos section
     5. Take screenshot of guest mode videos screen
-    6. Verify videos list is visible
-    7. Attempt to interact with locked videos
-    8. Verify plans popup appears for restricted content
-    9. Take screenshot of plans popup
     """
     guest_mode = GuestModeAuth(d)
     scroll_videos = ScrollVideos(d)
@@ -98,13 +91,7 @@ def test_guest_mode_search(d, screenshots_dir):
     1. Launch app
     2. Continue as Guest
     3. Navigate to Search
-    4. Enter search term
-    5. Verify search results
-    6. Test filter options
-    7. Check result details
-    8. Verify location-based
-    9. Test search history
-    10. Check sign-in prompts
+    4. Check Guest Mode popup
     """
     guest_mode = GuestModeAuth(d)
     nav_search = NavGuestMode(d)
@@ -125,13 +112,7 @@ def test_guest_mode_favorites(d, screenshots_dir):
     1. Launch app
     2. Continue as Guest
     3. Navigate to Favorites
-    4. Verify favorites list
-    5. Check favorite details
-    6. Test favorite filtering
-    7. Verify favorite limits
-    8. Check sign-in prompts
-    9. Verify data persistence
-    10. Test guest session expiry
+    4. Check Guest Mode popup
     """
 
     guest_mode = GuestModeAuth(d)
@@ -156,13 +137,7 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
     1. Launch app
     2. Continue as Guest
     3. Scroll to the end of the screen
-    4. Verify guest mode prompt
-    5. Check sign-in prompts
-    6. Verify data persistence
-    7. Test guest session expiry
-    8. Check navigation limits
-    9. Verify restricted features
-    10. Test guest mode UI
+    4. Check Guest Mode home screen prompt
     """
 
     guest_mode = GuestModeAuth(d)
