@@ -21,6 +21,25 @@ class VerifyEvents:
         self.days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         self.days_short = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 
+    def verify_events_search_result(self):
+        """
+        Verify that event search results are displayed.
+        Looks for indicators like "Burlington" or "Event" in the results.
+
+        Returns:
+            bool: True if search results are verified
+
+        Raises:
+            AssertionError: If search results cannot be verified
+        """
+        search_successful = (
+                self.device(textContains="Burlington").exists or
+                self.device(textContains="Event").exists
+        )
+
+        assert search_successful, "Search failed - Could not verify search results"
+        return True
+
     def find_and_click_current_day(self):
         """
         Find and click on the current day element in the events calendar screen.
@@ -178,6 +197,25 @@ class VerifyBusinesses:
 
         assert False, "Could not find any clickable day after trying all days of the week"
 
+    def verify_business_search_result(self):
+        """
+        Verify that business search results are displayed.
+        Looks for indicators like business name or business section.
+
+        Returns:
+            bool: True if search results are verified
+
+        Raises:
+            AssertionError: If search results cannot be verified
+        """
+        search_successful = (
+                self.device(textContains="Big Fatty BBQ").exists or
+                self.device.xpath(Businesses.BUSINESSES_SECTION).exists
+        )
+
+        assert search_successful, "Search failed - Could not verify business search results"
+        return True
+
     def verify_businesses_section_present(self):
         """
         Verifies that the Businesses section is present on the screen.
@@ -281,6 +319,38 @@ class VerifyViewMap:
         self.verify_food_pantries_filter_visible()
 
 
+class VerifyDayTrips:
+    """Class for verifying day trips-related UI elements and interactions."""
+
+    def __init__(self, device):
+        """
+        Initialize VerifyDayTrips with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def verify_day_trips_search_result(self):
+        """
+        Verify that day trips search results are displayed.
+        Looks for indicators like "Day Trip" or day trips section.
+
+        Returns:
+            bool: True if search results are verified
+
+        Raises:
+            AssertionError: If search results cannot be verified
+        """
+        search_successful = (
+            self.device(textContains="Day Trip").exists or
+            self.device(textContains="Trip").exists
+        )
+
+        assert search_successful, "Search failed - Could not verify day trips search results"
+        return True
+
+
 class VerifyTrails:
     """Class for verifying Trails-related UI elements and interactions."""
 
@@ -368,6 +438,25 @@ class VerifyVideos:
         self.device = device
         self.general_scrolling = GeneralScrolling(device)
         self.screenshots = ScreenshotsManagement(device)
+
+    def verify_videos_search_result(self):
+        """
+        Verify that video search results are displayed.
+        Looks for indicators like "Rocket", "Results", or video elements.
+
+        Returns:
+            bool: True if search results are verified
+
+        Raises:
+            AssertionError: If search results cannot be verified
+        """
+        search_successful = (
+                self.device(textContains="Rocket").exists or
+                self.device(textContains="Video").exists
+        )
+
+        assert search_successful, "Search failed - Could not verify video search results"
+        return True
 
     def verify_video_playback(self):
         """

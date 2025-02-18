@@ -1,10 +1,10 @@
 import pytest
-from time import sleep
 
 from utils_authentication import SignInPrepare
-from utils_device_interaction import search_and_submit
-from utils_scrolling import scroll_to_bottom
-from utils_ui_verification import verify_and_screenshot
+from utils_device_interaction import SearchSubmit
+from utils_screenshots import ScreenshotsManagement
+from utils_scrolling import GeneralScrolling
+from utils_ui_verification import VerifyEvents, VerifyBusinesses, VerifyDayTrips, VerifyVideos
 
 
 @pytest.mark.smoke
@@ -23,22 +23,17 @@ def test_search_events(d, screenshots_dir):
     9. Verify results contain events
     """
     sign_in = SignInPrepare(d)
+    search = SearchSubmit(d)
+    verify_events = VerifyEvents(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Use utility function to search and submit
-    search_term = "Burlington"
-    search_and_submit(d, search_term)
-    sleep(2)
+    search.search_and_submit("Burlington")
 
-    # Verify search results and take screenshot
-    verify_and_screenshot(
-        d=d,
-        condition=lambda: d(textContains="Burlington").exists or d(textContains="Results").exists
-                          or d(textContains="Event").exists,
-        error_message="Search failed - Could not verify search results",
-        screenshots_dir=screenshots_dir,
-        filename="2_2_1_search_events.png"
-    )
+    verify_events.verify_events_search_result()
+
+    screenshots.take_screenshot("2_1_1_search_events")
 
 
 @pytest.mark.smoke
@@ -57,22 +52,17 @@ def test_search_businesses(d, screenshots_dir):
     9. Verify results contain businesses
     """
     sign_in = SignInPrepare(d)
+    search = SearchSubmit(d)
+    verify_businesses = VerifyBusinesses(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Use utility function to search and submit
-    search_term = "Big Fatty BBQ"
-    search_and_submit(d, search_term)
-    sleep(2)
+    search.search_and_submit("Big Fatty BBQ")
 
-    # Verify search results and take screenshot
-    verify_and_screenshot(
-        d=d,
-        condition=lambda: d(textContains="Big Fatty BBQ").exists or d(textContains="Results").exists
-                          or d(textContains="Big Fatty BBQ").exists,
-        error_message="Search failed - Could not verify search results",
-        screenshots_dir=screenshots_dir,
-        filename="2_2_2_search_business.png"
-    )
+    verify_businesses.verify_business_search_result()
+
+    screenshots.take_screenshot("2_2_1_search_business")
 
 
 @pytest.mark.smoke
@@ -91,26 +81,20 @@ def test_search_day_trips(d, screenshots_dir):
     9. Verify results contain day trips
     """
     sign_in = SignInPrepare(d)
+    search = SearchSubmit(d)
+    verify_day_trips = VerifyDayTrips(d)
+    general_scroll = GeneralScrolling(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Use utility function to search and submit
-    search_term = "Day Trip"
-    search_and_submit(d, search_term)
-    sleep(2)
+    search.search_and_submit("Day Trip")
 
-    # Use utility function to scroll to bottom of results
-    scroll_to_bottom(d)
-    sleep(2)  # Wait for content to load
+    general_scroll.scroll_to_bottom()
 
-    # Verify search results and take screenshot
-    verify_and_screenshot(
-        d=d,
-        condition=lambda: d(textContains="Day Trip").exists or d(textContains="Results").exists
-                          or d(textContains="Day Trip").exists,
-        error_message="Search failed - Could not verify search results",
-        screenshots_dir=screenshots_dir,
-        filename="2_2_3_search_day_trips.png"
-    )
+    verify_day_trips.verify_day_trips_search_result()
+
+    screenshots.take_screenshot("2_3_1_search_day_trips")
 
 
 @pytest.mark.smoke
@@ -129,22 +113,17 @@ def test_search_videos(d, screenshots_dir):
     9. Verify results contain videos
     """
     sign_in = SignInPrepare(d)
+    search = SearchSubmit(d)
+    verify_videos = VerifyVideos(d)
+    general_scroll = GeneralScrolling(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Use utility function to search and submit
-    search_term = "Rocket"
-    search_and_submit(d, search_term)
-    sleep(2)
+    search.search_and_submit("Rocket")
 
-    # Use utility function to scroll to bottom of results
-    scroll_to_bottom(d)
-    sleep(2)  # Wait for content to load
+    general_scroll.scroll_to_bottom()
 
-    # Verify search results and take screenshot
-    verify_and_screenshot(
-        d=d,
-        condition=lambda: d(textContains="Rocket").exists or d(textContains="Results").exists or d(textContains="Rocket").exists,
-        error_message="Search failed - Could not verify search results",
-        screenshots_dir=screenshots_dir,
-        filename="2_2_4_search_videos.png"
-    )
+    verify_videos.verify_videos_search_result()
+
+    screenshots.take_screenshot("2_2_4_search_videos")
