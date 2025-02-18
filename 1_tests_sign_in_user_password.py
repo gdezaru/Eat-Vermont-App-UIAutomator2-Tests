@@ -3,8 +3,10 @@ import os
 from time import sleep
 from config import TEST_USER
 from utils_authentication import SignInPrepare
-from utils_device_interaction import handle_notification_permission, click_and_fill_forgot_password
-from locators import LoginPage
+from utils_device_interaction import ForgotPassword, LaunchApp
+from utils_screenshots import ScreenshotsManagement
+from utils_ui_navigation import NavForgotPassword
+from utils_ui_verification import VerifyPasswordReset
 
 
 @pytest.mark.smoke
@@ -44,19 +46,18 @@ def test_forgot_password(d, screenshots_dir):
     6. Take screenshot of confirmation screen
     7. Verify success message is displayed
     """
-    handle_notification_permission(d)
+    launch_app = LaunchApp(d)
+    forgot_password = ForgotPassword(d)
+    nav_forgot_password = NavForgotPassword(d)
+    verify_password_reset = VerifyPasswordReset(d)
+    screenshots = ScreenshotsManagement(d)
 
-    # Use utility function to click and fill forgot password
-    click_and_fill_forgot_password(d, TEST_USER['email'])
+    launch_app.handle_notification_permission()
 
-    # Click Reset Password
-    reset_button = d.xpath(LoginPage.RESET_PASSWORD_BUTTON)
-    assert reset_button.wait(timeout=5), "Reset Password button not found"
-    reset_button.click()
-    sleep(5)
+    forgot_password.click_and_fill_forgot_password(TEST_USER['email'])
 
-    # Check for success message
-    success_message = d.xpath(LoginPage.VERIFY_EMAIL_MESSAGE)
-    assert success_message.wait(timeout=5), "Success message not found"
-    screenshot_path = os.path.join(screenshots_dir, "1_2_1_forgot_password.png")
-    d.screenshot(screenshot_path)
+    nav_forgot_password.click_reset_password()
+
+    verify_password_reset.verify_reset_password_text()
+
+    screenshots.take_screenshot("1_2_1_forgot_password")

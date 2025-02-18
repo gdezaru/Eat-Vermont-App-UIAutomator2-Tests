@@ -4,7 +4,7 @@ Utilities functions for UI verification
 import os
 from time import sleep
 from locators import (Businesses, EventsScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
-                      PlansPopup, ViewMap)
+                      PlansPopup, ViewMap, LoginPage)
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
@@ -630,24 +630,28 @@ class VerifyGuestMode:
         assert False, "Guest mode prompt not found after maximum scroll attempts"
 
 
-class UIVerificationUtils:
-    """Utility class for general UI verification functions."""
+class VerifyPasswordReset:
+    """Class for verifying password reset related UI elements and messages."""
 
-    @staticmethod
-    def verify_and_screenshot(device, condition, error_message, screenshots_dir, filename):
+    def __init__(self, device):
         """
-        Verifies a condition and takes a screenshot if successful.
+        Initialize VerifyPasswordReset with a device instance.
 
         Args:
-            device: The UIAutomator2 device instance
-            condition: A callable that returns a boolean
-            error_message: The error message if the condition fails
-            screenshots_dir: The directory to save the screenshot
-            filename: The name of the screenshot file
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def verify_reset_password_text(self):
+        """
+        Verify that the reset password success message is displayed.
+
+        Returns:
+            bool: True if success message is found
 
         Raises:
-            AssertionError: If the condition fails
+            AssertionError: If success message is not found
         """
-        assert condition(), error_message
-        screenshot_path = os.path.join(screenshots_dir, filename)
-        device.screenshot(screenshot_path)
+        success_message = self.device.xpath(LoginPage.VERIFY_EMAIL_MESSAGE)
+        assert success_message.wait(timeout=5), "Success message not found"
+        return True

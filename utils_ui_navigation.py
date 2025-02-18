@@ -3,7 +3,7 @@ Utility functions for UI verification.
 """
 from time import sleep
 from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
-    ViewMap, DayTrips
+    ViewMap, DayTrips, LoginPage
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
@@ -954,4 +954,37 @@ class NavGuestMode:
 
         favorites_button.click()
         sleep(self.FAVORITES_WAIT)
+        return True
+
+
+class NavForgotPassword:
+    """Class for handling forgot password navigation interactions."""
+
+    RESET_WAIT = 5
+
+    def __init__(self, device):
+        """
+        Initialize NavForgotPassword with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def click_reset_password(self):
+        """
+        Click the Reset Password button and wait for navigation.
+
+        Returns:
+            bool: True if button was found and clicked
+
+        Raises:
+            AssertionError: If Reset Password button is not found
+        """
+        reset_button = self.device.xpath(LoginPage.RESET_PASSWORD_BUTTON)
+        assert reset_button.wait(timeout=5), "Reset Password button not found"
+
+        reset_button.click()
+        sleep(self.RESET_WAIT)
+
         return True
