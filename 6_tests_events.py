@@ -3,11 +3,12 @@ import pytest
 import os
 
 from conftest import screenshots_dir
-from utils_authentication import sign_in_and_prepare, SignInPrepare
-from utils_device_interaction import search_and_submit
-from utils_scrolling import scroll_event_card, scroll_to_bottom
-from utils_ui_navigation import click_see_all_events_home_screen, find_and_click_more_info_tab, events_add_to_calendar, \
-    click_first_event_search_result
+from utils_authentication import SignInPrepare
+from utils_device_interaction import SearchSubmit
+from utils_ui_navigation import NavEvents
+from utils_screenshots import ScreenshotsManagement
+from utils_scrolling import EventsScrolling
+from locators import SearchModule
 
 
 @pytest.mark.smoke
@@ -41,32 +42,31 @@ def test_events_card(d, screenshots_dir):
     10. Check ticket/RSVP options
     """
     sign_in = SignInPrepare(d)
+    nav_events = NavEvents(d)
+    screenshots = ScreenshotsManagement(d)
+    search = SearchSubmit(d)
+    events_scroll = EventsScrolling(d)
+
     sign_in.sign_in_and_prepare()
 
-    sleep(10)
-
     search_term = "Burlington"
-    search_and_submit(d, search_term)
-    sleep(5)
+    search.search_and_submit(search_term)
 
-    click_first_event_search_result(d)
+    search_results = d.xpath(SearchModule.search_result(search_term))
+    assert search_results.exists, f"No search results found for term: {search_term}"
 
-    scroll_event_card(d)
+    nav_events.click_first_event_search_result()
 
-    # Take a screenshot of the event details
-    screenshot_path = os.path.join(screenshots_dir, "6_2_1_events_details.png")
-    d.screenshot(screenshot_path)
+    events_scroll.scroll_to_bottom(scroll_times=2)
 
-    find_and_click_more_info_tab(d)
+    screenshots.take_screenshot("6_2_1_events_details")
 
-    scroll_to_bottom(d)
+    nav_events.find_and_click_more_info_tab()
 
-    # Take screenshot of More Info contents
-    screenshot_path = os.path.join(screenshots_dir, "6_2_2_more_info_contents.png")
-    d.screenshot(screenshot_path)
+    events_scroll.scroll_to_bottom(scroll_times=2)
 
-    events_add_to_calendar(d)
+    screenshots.take_screenshot("6_2_2_more_info_contents")
 
-    # Take screenshot of event added to calendar toast popup
-    screenshot_path = os.path.join(screenshots_dir, "6_2_3_add_to_calendar.png")
-    d.screenshot(screenshot_path)
+    nav_events.events_add_to_calendar()
+
+    screenshots.take_screenshot("6_2_3_add_to_calendar")

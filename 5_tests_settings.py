@@ -1,12 +1,11 @@
 import pytest
-import os
 
-from utils_authentication import sign_in_and_prepare, SignInPrepare
-from utils_device_interaction import change_username_profile_settings, change_name_profile_settings
-from utils_scrolling import scroll_to_bottom
-from utils_settings import generate_random_name, generate_random_username, click_settings_button, click_edit_profile, \
-    click_settings_back_button, click_location_toggle, handle_allow_button, click_log_out, click_settings_save_button
-from utils_ui_verification import verify_settings_options, verify_settings_changed_name, verify_save_button_exists
+from utils_authentication import SignInPrepare
+from utils_settings import Settings, EditSaveProfile
+from utils_device_interaction import EditProfile
+from utils_ui_verification import VerifySettings
+from utils_screenshots import ScreenshotsManagement
+from utils_scrolling import GeneralScrolling
 
 
 @pytest.mark.smoke
@@ -21,15 +20,17 @@ def test_settings_contents(d, screenshots_dir):
     5. Take screenshot of settings screen
     """
     sign_in = SignInPrepare(d)
+    settings = Settings(d)
+    verify_settings = VerifySettings(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    click_settings_button(d)
+    settings.click_settings_button()
 
-    verify_settings_options(d)
+    verify_settings.verify_settings_options()
 
-    # Take screenshot of settings screen
-    screenshot_path = os.path.join(screenshots_dir, "5_1_1_settings_screen_contents.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("5_1_1_settings_screen_contents")
 
 
 @pytest.mark.smoke
@@ -50,31 +51,27 @@ def test_settings_screen_navigation(d, screenshots_dir):
     11. Take screenshot of welcome screen
     """
     sign_in = SignInPrepare(d)
+    settings = Settings(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    click_settings_button(d)
+    settings.click_settings_button()
 
-    click_edit_profile(d)
+    settings.click_edit_profile()
 
-    # Take screenshot of Edit Profile screen
-    screenshot_path = os.path.join(screenshots_dir, "5_2_1_edit_profile_screen.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("5_2_1_edit_profile_screen")
 
-    click_settings_back_button(d)
+    settings.click_settings_back_button()
 
-    click_location_toggle(d)
+    settings.click_location_toggle()
+    settings.handle_allow_button()
 
-    handle_allow_button(d)
+    screenshots.take_screenshot("5_2_2_settings_location_toggled")
 
-    # Take screenshot of Settings screen with toggled location
-    screenshot_path = os.path.join(screenshots_dir, "5_2_2_settings_location_toggled.png")
-    d.screenshot(screenshot_path)
+    settings.click_log_out()
 
-    click_log_out(d)
-
-    # Take screenshot of welcome screen
-    screenshot_path = os.path.join(screenshots_dir, "5_2_3_welcome_screen_after_logout.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("5_2_3_welcome_screen")
 
 
 @pytest.mark.smoke
@@ -96,34 +93,31 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     12. Take screenshot of settings screen after saving changes
     """
     sign_in = SignInPrepare(d)
+    settings = Settings(d)
+    edit_profile = EditProfile(d)
+    edit_save = EditSaveProfile(d)
+    verify_settings = VerifySettings(d)
+    screenshots = ScreenshotsManagement(d)
+    scrolling = GeneralScrolling(d)
+
     sign_in.sign_in_and_prepare()
+    settings.click_settings_button()
+    settings.click_edit_profile()
 
-    click_settings_button(d)
+    new_name = edit_profile.change_name_profile_settings(edit_save.generate_random_name)
 
-    click_edit_profile(d)
+    verify_settings.verify_save_button_exists()
 
-    # Generate a random name and store it
-    new_name = generate_random_name()
-    change_name_profile_settings(d, lambda: new_name)
+    screenshots.take_screenshot("5_3_1_edited_profile_name_save_button_active")
 
-    verify_save_button_exists(d)
+    edit_profile.change_username_profile_settings(edit_save.generate_random_username())
 
-    # Take screenshot of the edited profile name
-    screenshot_path = os.path.join(screenshots_dir, "5_3_1_edited_profile_name_save_button_active.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("5_3_2_edited_profile_username_save_button_active")
 
-    change_username_profile_settings(d, generate_random_username)
+    scrolling.scroll_to_bottom()
 
-    # Take screenshot of the edited profile username
-    screenshot_path = os.path.join(screenshots_dir, "5_3_2_edited_profile_username_save_button_active.png")
-    d.screenshot(screenshot_path)
+    edit_save.click_settings_save_button()
 
-    scroll_to_bottom(d)
+    verify_settings.verify_settings_changed_name(new_name)
 
-    click_settings_save_button(d)
-
-    verify_settings_changed_name(d, new_name)
-
-    # Take screenshot of settings screen after saving changes
-    screenshot_path = os.path.join(screenshots_dir, "5_3_3_settings_screen_after_save.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("5_3_3_settings_screen_after_save")

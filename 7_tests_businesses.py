@@ -36,8 +36,8 @@ def test_business_card_with_event(d, screenshots_dir):
     sign_in.sign_in_and_prepare()
 
     search.search_and_submit(business_name)
-    nav_businesses.click_business_with_event_search_result(business_name)
     verify_businesses.verify_businesses_section_present()
+    nav_businesses.click_business_with_event_search_result(business_name)
 
     verify_businesses.verify_business_about_tab()
 
@@ -72,8 +72,8 @@ def test_business_card_with_menu(d, screenshots_dir):
     sign_in.sign_in_and_prepare()
 
     search.search_and_submit(menu_business_name)
-    nav_businesses.click_business_with_menu_search_result(menu_business_name)
     verify_businesses.verify_businesses_section_present()
+    nav_businesses.click_business_with_menu_search_result(menu_business_name)
 
     verify_businesses.verify_business_about_tab()
 

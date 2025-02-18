@@ -72,7 +72,7 @@ class SearchSubmit:
 
         assert search_button is not None, "Could not find Search button"
         search_button.click()
-        sleep(10)
+        sleep(5)
 
         # Find and click search field
         search_field = None

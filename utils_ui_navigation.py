@@ -143,7 +143,7 @@ class NavEvents:
             if result.click_exists(timeout=self.CLICK_TIMEOUT):
                 sleep(self.DEFAULT_WAIT)
                 return True
-            sleep(1)  # Short wait between retries
+            sleep(1)
 
         raise AssertionError("Failed to click the search result after multiple attempts")
 
