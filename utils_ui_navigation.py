@@ -516,6 +516,24 @@ class NavDayTripsTrails:
         assert read_more_button.exists, "Could not find Read More button for Day Trips"
         return read_more_button
 
+
+    def click_day_trips_see_all(self):
+        """
+        Clicks the "See All" button for the Day Trips section.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Day Trips 'See all' button is not found
+        """
+        day_trips_see_all = self.device.xpath(HomeScreen.DAY_TRIPS_SEE_ALL)
+        assert day_trips_see_all.exists, "Could not find Day Trips 'See all' button"
+
+        day_trips_see_all.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
     def click_day_trips_read_more(self, read_more_button=None):
         """
         Clicks the Read More button of a Day Trip.

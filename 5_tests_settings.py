@@ -104,13 +104,13 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     settings.click_settings_button()
     settings.click_edit_profile()
 
-    new_name = edit_profile.change_name_profile_settings(edit_save.generate_random_name)
+    new_name = edit_profile.change_name_profile_settings(lambda: EditSaveProfile.generate_random_name())
 
     verify_settings.verify_save_button_exists()
 
     screenshots.take_screenshot("5_3_1_edited_profile_name_save_button_active")
 
-    edit_profile.change_username_profile_settings(edit_save.generate_random_username())
+    edit_profile.change_username_profile_settings(lambda: EditSaveProfile.generate_random_username())
 
     screenshots.take_screenshot("5_3_2_edited_profile_username_save_button_active")
 

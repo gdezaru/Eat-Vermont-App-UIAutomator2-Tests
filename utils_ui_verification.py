@@ -3,7 +3,7 @@ Utilities functions for UI verification
 """
 import os
 from time import sleep
-from locators import (Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
+from locators import (Businesses, EventsScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
                       PlansPopup, ViewMap)
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import ScreenSwipe, GeneralScrolling

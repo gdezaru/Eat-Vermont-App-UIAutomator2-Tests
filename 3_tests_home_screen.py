@@ -2,19 +2,16 @@ import pytest
 import os
 
 from time import sleep
-from locators import HomeScreen, EventsScreen, ViewMap, HomeScreenTiles, BottomNavBar
-from utils_authentication import sign_in_and_prepare, SignInPrepare
-from utils_scrolling import get_screen_dimensions, scroll_to_event_and_click, calculate_swipe_coordinates, \
-    scroll_to_add_info, scroll_to_events_within_30, scroll_to_events_further_than_30
-from utils_ui_navigation import click_favorites_button, click_see_all_events_home_screen, click_view_map, \
-    find_and_click_see_all_videos, click_add_info_button, find_day_trips_text, click_day_trips_see_all, \
-    click_see_all_events_within_30, click_see_all_events_further_than_30, click_home_button, click_events_button
-from utils_ui_verification import try_next_day, find_and_click_current_day, verify_videos_text_exists, \
-    find_event_within_30, find_event_further_than_30
+from utils_authentication import SignInPrepare
+from utils_screenshots import ScreenshotsManagement
+from utils_scrolling import EventsScrolling, ScreenSwipe, ScrollAddInfo
+from utils_ui_navigation import NavEvents, NavViewMap, NavVideos, NavAddInfo, NavDayTripsTrails, NavBottomNavBar, \
+    NavFavoritesVisitHistory
+from utils_ui_verification import VerifyEvents, VerifyBusinesses, VerifyViewMap, VerifyVideos
 
 
 @pytest.mark.smoke
-def test_home_screen_events(d, screenshots_dir, current_day=None):
+def test_home_screen_events(d, screenshots_dir):
     """
     Test home screen events module functionality
     Steps:
@@ -27,27 +24,25 @@ def test_home_screen_events(d, screenshots_dir, current_day=None):
     7. Verify event details are accessible
     """
     sign_in = SignInPrepare(d)
+    nav_events = NavEvents(d)
+    verify_events = VerifyEvents(d)
+    verify_next_day = VerifyBusinesses(d)
+    events_scrolling = EventsScrolling(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Find and click 'See all' next to events
-    click_see_all_events_home_screen(d)
+    nav_events.click_see_all_events_home_screen()
 
-    # Take screenshot of events page
-    screenshot_path = os.path.join(screenshots_dir, "3_1_1_home_screen_events.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("3_1_1_home_screen_events")
 
-    # Find and click current day
-    current_day = find_and_click_current_day(d)
+    current_day = verify_events.find_and_click_current_day()
 
-    # Try clicking each subsequent day until one works
-    try_next_day(d, current_day)
+    verify_next_day.try_next_day(current_day)
 
-    # Scroll through events calendar, find an event, then click it
-    scroll_to_event_and_click(d, screenshots_dir, current_day)
+    events_scrolling.scroll_to_event_and_click(screenshots_dir, current_day)
 
-    # Take screenshot of the event details
-    screenshot_path = os.path.join(screenshots_dir, f"3_1_2_home_screen_event_details_{current_day.lower()}.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot(f"3_1_2_home_screen_event_details_{current_day.lower()}")
 
 
 @pytest.mark.smoke
@@ -63,22 +58,17 @@ def test_home_screen_view_map(d, screenshots_dir):
     6. Test map interaction (zoom, pan)
     """
     sign_in = SignInPrepare(d)
+    nav_map = NavViewMap(d)
+    verify_map = VerifyViewMap(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Single scroll to show View Map
-    d.swipe(0.5, 0.8, 0.5, 0.4, 0.5)
-    sleep(1)
+    nav_map.navigate_to_view_map()
 
-    # Click "View Map" button
-    click_view_map(d)
+    verify_map.verify_all_filters_visible()
 
-    # Assert that Events filter is visible
-    events_filter = d.xpath(ViewMap.EVENTS_FILTER)
-    assert events_filter.exists, "Events filter is not visible on the map screen"
-
-    # Take screenshot of the map screen with filters
-    screenshot_path = os.path.join(screenshots_dir, "3_2_1_home_screen_view_map_opened.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("3_1_1_home_screen_view_map_opened")
 
 
 @pytest.mark.smoke
@@ -94,22 +84,16 @@ def test_home_screen_videos(d, screenshots_dir):
     6. Verify video playback controls
     """
     sign_in = SignInPrepare(d)
+    nav_videos = NavVideos(d)
+    verify_videos = VerifyVideos(d)
+    screen_swipe = ScreenSwipe(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Get screen dimensions
-    width, height = get_screen_dimensions(d)
+    nav_videos.find_and_click_see_all_videos()
 
-    # Calculate swipe coordinates for finding Videos
-    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
-
-    # First scroll until we find Videos text using the specific locator
-    verify_videos_text_exists(d, start_x, start_y, end_y)
-
-    find_and_click_see_all_videos(d, height, start_x)
-
-    # Take screenshot of the videos page
-    screenshot_path = os.path.join(screenshots_dir, "3_3_1_home_screen_videos_opened.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("3_3_1_home_screen_videos_opened")
 
 
 @pytest.mark.smoke
@@ -125,15 +109,17 @@ def test_home_screen_add_info(d, screenshots_dir):
     6. Verify submission process
     """
     sign_in = SignInPrepare(d)
+    nav_add_info = NavAddInfo(d)
+    scroll_add_info = ScrollAddInfo(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    scroll_to_add_info(d)
+    scroll_add_info.scroll_to_add_info()
 
-    click_add_info_button(d)
+    nav_add_info.click_add_info_button()
 
-    # Take screenshot of the Add Info page
-    screenshot_path = os.path.join(screenshots_dir, "3_4_1_home_screen_add_info_opened.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("3_4_1_home_screen_add_info_opened")
 
 
 @pytest.mark.smoke
@@ -149,15 +135,15 @@ def test_home_screen_day_trips(d, screenshots_dir):
     6. Test trip filtering options
     """
     sign_in = SignInPrepare(d)
+    nav_trips = NavDayTripsTrails(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    find_day_trips_text(d)
+    nav_trips.find_day_trips_text()
+    nav_trips.click_day_trips_see_all()
 
-    click_day_trips_see_all(d)
-
-    # Take screenshot of the Day Trips page
-    screenshot_path = os.path.join(screenshots_dir, "3_5_1_home_screen_day_trips_opened.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("3_5_1_home_screen_day_trips_opened")
 
 
 @pytest.mark.smoke
@@ -173,23 +159,22 @@ def test_home_screen_events_within(d, screenshots_dir):
     6. Test event sorting options
     """
     sign_in = SignInPrepare(d)
+    nav_events = NavEvents(d)
+    verify_events = VerifyEvents(d)
+    events_scrolling = EventsScrolling(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    scroll_to_events_within_30(d)
+    events_scrolling.scroll_to_events_within_30()
 
-    find_event_within_30(d)
+    verify_events.find_event_within_30()
 
-    # Take screenshot of the Events within 30 minutes section
-    screenshot_path = os.path.join(screenshots_dir, "3_6_1_home_screen_events_within.png")
-    d.screenshot(screenshot_path)
-    sleep(1)
+    screenshots.take_screenshot("3_6_1_home_screen_events_within")
 
-    click_see_all_events_within_30(d)
+    nav_events.click_see_all_events_within_30()
 
-    # Take screenshot of the Events within 30 minutes list view
-    screenshot_path = os.path.join(screenshots_dir, "3_6_2_home_screen_events_within_list.png")
-    d.screenshot(screenshot_path)
-    sleep(1)
+    screenshots.take_screenshot("3_6_2_home_screen_events_within_list")
 
 
 @pytest.mark.smoke
@@ -205,23 +190,22 @@ def test_home_screen_events_further_than(d, screenshots_dir):
     6. Test event sorting options
     """
     sign_in = SignInPrepare(d)
+    nav_events = NavEvents(d)
+    verify_events = VerifyEvents(d)
+    events_scrolling = EventsScrolling(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    scroll_to_events_further_than_30(d)
+    events_scrolling.scroll_to_events_further_than_30()
 
-    find_event_further_than_30(d)
+    verify_events.find_event_further_than_30()
 
-    # Take screenshot of the Events within 30 minutes section
-    screenshot_path = os.path.join(screenshots_dir, "3_7_1_home_screen_events_further_than.png")
-    d.screenshot(screenshot_path)
-    sleep(1)
+    screenshots.take_screenshot("3_7_1_home_screen_events_further_than")
 
-    click_see_all_events_further_than_30(d)
+    nav_events.click_see_all_events_further_than_30()
 
-    # Take screenshot of the Events within 30 minutes list view
-    screenshot_path = os.path.join(screenshots_dir, "3_7_2_home_screen_events_more_than_list.png")
-    d.screenshot(screenshot_path)
-    sleep(1)
+    screenshots.take_screenshot("3_7_2_home_screen_events_further_than_list")
 
 
 @pytest.mark.smoke
@@ -238,24 +222,19 @@ def test_home_screen_bottom_nav_bar(d, screenshots_dir):
     7. Verify active state indicators
     """
     sign_in = SignInPrepare(d)
+    nav_bar = NavBottomNavBar(d)
+    nav_favorites = NavFavoritesVisitHistory(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Click Favorites button
-    click_favorites_button(d)
-    sleep(2)
+    nav_favorites.click_favorites_button()
+    screenshots.take_screenshot("3_8_1_bottom_nav_favorites_screen")
 
-    # Take screenshot
-    screenshot_path = os.path.join(screenshots_dir, "3_8_1_bottom_nav_favorites_screen.png")
-    d.screenshot(screenshot_path)
+    nav_bar.click_events_button()
 
-    click_events_button(d)
+    screenshots.take_screenshot("3_8_2_bottom_nav_events_screen")
 
-    # Take screenshot
-    screenshot_path = os.path.join(screenshots_dir, "3_8_2_bottom_nav_events_screen.png")
-    d.screenshot(screenshot_path)
+    nav_bar.click_home_button()
 
-    click_home_button(d)
-
-    # Take screenshot
-    screenshot_path = os.path.join(screenshots_dir, "3_8_3_bottom_nav_home_screen.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("3_8_3_bottom_nav_home_screen")
