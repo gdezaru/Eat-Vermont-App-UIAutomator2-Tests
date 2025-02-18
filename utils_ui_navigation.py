@@ -740,14 +740,7 @@ class NavAddInfo:
 class NavVideos:
     """Class for handling videos section navigation."""
 
-    MAX_SMALL_SCROLLS = 3
-    SCROLL_DURATION = 1.0
-    SCROLL_WAIT = 1.5
     CLICK_WAIT = 5
-
-    # Screen position multipliers
-    START_Y_MULTIPLIER = 0.6  # 60% of screen height
-    END_Y_MULTIPLIER = 0.4  # 40% of screen height
 
     def __init__(self, device):
         """
@@ -758,41 +751,19 @@ class NavVideos:
         """
         self.device = device
 
-    def find_and_click_see_all_videos(self, height, start_x):
+    def find_and_click_see_all_videos(self):
         """
-        Find and click the "See All" button for the Videos section using fine-tuned scrolling.
-
-        Args:
-            height (int): The screen height
-            start_x (int): The starting x-coordinate for the swipe
+        Find and click the "See All" button for the Videos section.
+        The screen should already be scrolled to where the videos section is visible.
 
         Returns:
             bool: True if button was found and clicked
 
         Raises:
-            AssertionError: If Videos See All button is not found after maximum scroll attempts
+            AssertionError: If Videos See All button is not found
         """
         videos_see_all = self.device.xpath(HomeScreen.VIDEOS_SEE_ALL)
-
-        # Calculate scroll coordinates using screen height multipliers
-        fine_tune_start_y = int(height * self.START_Y_MULTIPLIER)
-        fine_tune_end_y = int(height * self.END_Y_MULTIPLIER)
-
-        # Perform fine-tuned scrolls
-        for attempt in range(self.MAX_SMALL_SCROLLS):
-            if videos_see_all.exists:
-                break
-
-            self.device.swipe(
-                start_x,
-                fine_tune_start_y,
-                start_x,
-                fine_tune_end_y,
-                duration=self.SCROLL_DURATION
-            )
-            sleep(self.SCROLL_WAIT)
-
-        assert videos_see_all.exists, "Could not find Videos See All button after maximum scroll attempts"
+        assert videos_see_all.exists, "Could not find Videos See All button"
 
         videos_see_all.click()
         sleep(self.CLICK_WAIT)

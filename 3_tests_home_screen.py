@@ -4,7 +4,7 @@ import os
 from time import sleep
 from utils_authentication import SignInPrepare
 from utils_screenshots import ScreenshotsManagement
-from utils_scrolling import EventsScrolling, ScreenSwipe, ScrollAddInfo
+from utils_scrolling import EventsScrolling, ScreenSwipe, ScrollAddInfo, ScrollVideos, GeneralScrolling
 from utils_ui_navigation import NavEvents, NavViewMap, NavVideos, NavAddInfo, NavDayTripsTrails, NavBottomNavBar, \
     NavFavoritesVisitHistory
 from utils_ui_verification import VerifyEvents, VerifyBusinesses, VerifyViewMap, VerifyVideos
@@ -84,12 +84,13 @@ def test_home_screen_videos(d, screenshots_dir):
     6. Verify video playback controls
     """
     sign_in = SignInPrepare(d)
+    scroll_videos = ScrollVideos(d)
     nav_videos = NavVideos(d)
-    verify_videos = VerifyVideos(d)
-    screen_swipe = ScreenSwipe(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
+
+    scroll_videos.scroll_to_videos()
 
     nav_videos.find_and_click_see_all_videos()
 

@@ -5,7 +5,7 @@ import os
 from time import sleep
 
 from conftest import screenshots_dir
-from locators import EventsScreen, Events, GuestMode
+from locators import EventsScreen, Events, GuestMode, HomeScreen
 
 
 class ScreenSwipe:
@@ -309,6 +309,35 @@ class ScrollVideos(GeneralScrolling):
         """
         super().__init__(device)
 
+    def scroll_to_videos(self):
+        """
+        Scrolls until videos section is found.
+
+        Returns:
+            bool: True if videos section was found
+
+        Raises:
+            AssertionError: If videos section is not found after max attempts
+        """
+        start_x = self.width // 2
+        videos_section = self.device.xpath(HomeScreen.VIDEOS_TEXT_HOME_SCREEN)
+
+        max_scroll_attempts = 9
+        for attempt in range(max_scroll_attempts):
+            if videos_section.exists:
+                return True
+
+            self.device.swipe(
+                start_x,
+                int(self.height * 0.8),  # Start from lower
+                start_x,
+                int(self.height * 0.2),  # End higher
+                duration=0.9
+            )
+            sleep(1.5)
+
+        raise AssertionError("Failed to find videos section after maximum scroll attempts")
+
     def guest_mode_scroll_to_videos(self):
         """
         Scrolls to videos section in Guest Mode.
@@ -322,10 +351,8 @@ class ScrollVideos(GeneralScrolling):
         max_scroll_attempts = 9
         for attempt in range(max_scroll_attempts):
             if locked_videos.exists:
-                print("Found locked videos section")
                 return True
 
-            print(f"Scrolling attempt {attempt + 1}/{max_scroll_attempts}")
             self.device.swipe(start_x, start_y, start_x, end_y, duration=0.9)
             sleep(1.5)
 
