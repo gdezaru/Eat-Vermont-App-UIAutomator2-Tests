@@ -5,7 +5,7 @@ import os
 from time import sleep
 
 from conftest import screenshots_dir
-from locators import EventsScreen, Events
+from locators import EventsScreen, Events, GuestMode
 
 
 def get_screen_dimensions(d):
@@ -281,3 +281,18 @@ def scroll_to_add_info(d):
     d(scrollable=True).scroll.to(text="Add Info")
     assert d(text="Add Info").exists(timeout=5), "Add Info button not found"
     sleep(1)
+
+
+def guest_mode_scroll_to_videos(d):
+    """
+    Scrolls to videos section in Guest Mode.
+    """
+    width, height = get_screen_dimensions(d)
+    start_x, start_y, end_y = calculate_swipe_coordinates(width, height)
+    locked_videos = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
+    max_scroll_attempts = 9
+    for _ in range(max_scroll_attempts):
+        if locked_videos.exists:
+            break
+        d.swipe(start_x, start_y, start_x, end_y, duration=0.9)
+        sleep(1.5)

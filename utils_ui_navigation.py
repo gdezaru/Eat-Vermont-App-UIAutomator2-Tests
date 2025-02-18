@@ -496,3 +496,37 @@ def click_events_button(d):
     events_button.click()
     sleep(5)
     assert d(text="Events").exists, "Events text not found on screen"
+
+
+# UI navigation for Guest Mode
+
+def guest_mode_click_events_button(d):
+    """
+    Clicks the Events button in the bottom navigation bar in Guest Mode.
+
+    :param d: The UIAutomator2 device instance.
+    """
+    events_tab = d.xpath(BottomNavBar.EVENTS)
+    assert events_tab.exists, "Events tab not found"
+    events_tab.click()
+    sleep(2)
+
+
+def guest_mode_click_search(d):
+    """
+    Clicks the Search button in Guest Mode.
+    """
+    search_button = d.xpath(BottomNavBar.SEARCH)
+    assert search_button.exists, "Search button not found"
+    search_button.click()
+    sleep(5)
+
+
+def guest_mode_click_favorites(d):
+    """
+    Clicks the Favorites button in Guest Mode.
+    """
+    favorites_button = d.xpath(BottomNavBar.FAVORITES)
+    assert favorites_button.exists, "Favorites button not found in bottom navigation"
+    favorites_button.click()
+    sleep(3)

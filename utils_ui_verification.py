@@ -3,8 +3,10 @@ Utilities functions for UI verification
 """
 import os
 from time import sleep
-from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen, Trails, MyFavorites
+from locators import Businesses, EventsScreen, HomeScreen, HomeScreenTiles, SettingsScreen, Trails, MyFavorites, \
+    GuestMode, PlansPopup
 from utils_screenshots import take_screenshot
+from utils_scrolling import get_screen_dimensions
 
 attempt = 1
 
@@ -62,12 +64,12 @@ def find_event_further_than_30(d):
     days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     event_found = False
     max_scroll_attempts = 3
-    
+
     print("\nSearching for events further than 30 minutes...")
-    
+
     for attempt in range(max_scroll_attempts):
         print(f"\nScroll attempt {attempt + 1}/{max_scroll_attempts}")
-        
+
         for day in days_of_week:
             events_tile = d.xpath(HomeScreenTiles.EVENTS_MORE_THAN_30_TILE.format(day))
             if events_tile.exists:
@@ -75,10 +77,10 @@ def find_event_further_than_30(d):
                 event_text = events_tile.get_text()
                 print(f"\nFound event further than 30 minutes: {event_text}")
                 break
-        
+
         if event_found:
             break
-            
+
         # If no event found, scroll down and try again
         print("\nNo events found, scrolling down to check more...")
         d.swipe(0.5, 0.8, 0.5, 0.2, 0.5)
@@ -87,7 +89,7 @@ def find_event_further_than_30(d):
     if not event_found:
         # Take screenshot for debugging if no events found
         d.screenshot("debug_no_events_further_than_30.png")
-        
+
     assert event_found, "Could not find any events further than 30 minutes after multiple scroll attempts"
     sleep(1)
 
@@ -199,7 +201,6 @@ def verify_business_fyi_tab(d):
 
 
 def verify_business_fyi_tab_contents(d):
-
     fyi_contents = d.xpath(Businesses.BUSINESS_FYI_TAB_CONTENTS)
     assert fyi_contents.exists, "FYI tab contents not found"
 
@@ -349,6 +350,33 @@ def verify_save_button_exists(d):
     assert save_button.exists, "Save button is not present after editing name"
 
 
+# UI verification for Guest Mode
+
+
+def guest_mode_verify_plans_popup(d):
+    """
+    Verifies the plans popup appearing in Guest Mode after certain actions.
+    """
+    plans_popup_continue = d.xpath(PlansPopup.PLANS_POPUP_CLOSE_BUTTON)
+    assert plans_popup_continue.exists, "Plans popup close button not found"
+
+
+def guest_mode_verify_events_limited_results_text(d):
+    """
+    Verifies if the Limited Results text is present in Guest Mode Events.
+    """
+    limited_results = d.xpath(GuestMode.EVENTS_LIMITED_RESULTS)
+    assert limited_results.exists, "Limited Results text not found"
+
+
+def guest_mode_verify_locked_videos(d):
+    """
+    Verifies if the locked videos are present in Guest Mode..
+    """
+    locked_videos = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
+    assert locked_videos.exists, "Locked videos not found"
+
+
 # UI general verification functions
 
 def verify_and_screenshot(d, condition, error_message, screenshots_dir, filename):
@@ -364,4 +392,25 @@ def verify_and_screenshot(d, condition, error_message, screenshots_dir, filename
     assert condition(), error_message
     screenshot_path = os.path.join(screenshots_dir, filename)
     d.screenshot(screenshot_path)
-    print(f"Screenshot saved as {filename}")
+
+
+def guest_mode_home_screen_prompt(d):
+    """
+    Verifies the Guest Mode prompt at the end of the home screen.
+    """
+    # Use utility function to get screen dimensions
+    width, height = get_screen_dimensions(d)
+    start_x = width // 2
+    start_y = (height * 3) // 4
+    end_y = height // 4
+    max_scroll_attempts = 15
+    for _ in range(max_scroll_attempts):
+        d.swipe(start_x, start_y, start_x, end_y, duration=2.0)
+        sleep(1.5)
+        guest_mode_prompt = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_PROMPT)
+        if guest_mode_prompt.exists:
+            break
+    else:
+        assert False, "Guest mode prompt not found after maximum scroll attempts"
+    guest_mode_prompt = d.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_PROMPT)
+    assert guest_mode_prompt.exists, "Guest mode prompt not found"
