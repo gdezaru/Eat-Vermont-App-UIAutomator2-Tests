@@ -1,9 +1,8 @@
-from time import sleep
 import pytest
-import os
 
-from utils_authentication import sign_in_and_prepare, SignInPrepare
-from utils_ui_navigation import find_day_trips_text, click_day_trips_read_more
+from utils_authentication import SignInPrepare
+from utils_screenshots import ScreenshotsManagement
+from utils_ui_navigation import NavDayTripsTrails
 
 
 @pytest.mark.smoke
@@ -21,11 +20,11 @@ def test_day_trip_card(d, screenshots_dir):
     8. Verify day trip details screen
     """
     sign_in = SignInPrepare(d)
+    nav_trips = NavDayTripsTrails(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
+    read_more_button = nav_trips.find_day_trips_text()
+    nav_trips.click_day_trips_read_more(read_more_button)
 
-    read_more_button = find_day_trips_text(d)
-
-    click_day_trips_read_more(d, read_more_button)
-
-    screenshot_path = os.path.join(screenshots_dir, "8_1_1_day_trips_details.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("8_1_1_day_trips_details")

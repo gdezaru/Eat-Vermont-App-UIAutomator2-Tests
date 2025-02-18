@@ -1,13 +1,10 @@
 import pytest
-import os
 
-from time import sleep
-from locators import Trails
-from utils_authentication import sign_in_and_prepare, SignInPrepare
-from utils_scrolling import scroll_to_bottom
-from utils_ui_navigation import click_trails_button, click_trails_read_more, find_trails_text, find_trail_name, \
-    click_trails_see_all
-from utils_ui_verification import verify_trails_percentage_progress, verify_trails_visits, verify_trail_status
+from utils_authentication import SignInPrepare
+from utils_screenshots import ScreenshotsManagement
+from utils_scrolling import GeneralScrolling
+from utils_ui_navigation import NavDayTripsTrails
+from utils_ui_verification import VerifyTrails
 
 
 @pytest.mark.smoke
@@ -22,19 +19,18 @@ def test_trails_screen(d, screenshots_dir):
     5. Take screenshot of trails main screen
     """
     sign_in = SignInPrepare(d)
+    nav_trails = NavDayTripsTrails(d)
+    verify_trails = VerifyTrails(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
+    nav_trails.find_trails_text()
+    nav_trails.click_trails_see_all()
 
-    find_trails_text(d)
+    nav_trails.find_trail_name()
+    verify_trails.verify_trail_status()
 
-    click_trails_see_all(d)
-
-    find_trail_name(d)
-
-    verify_trail_status(d)
-
-    # Take screenshot of trails main screen
-    screenshot_path = os.path.join(screenshots_dir, "9_1_1_trails_main_screen.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("9_1_1_trails_main_screen")
 
 
 @pytest.mark.smoke
@@ -52,23 +48,19 @@ def test_trails_details(d, screenshots_dir):
     8. Take screenshot of trail details visits
     """
     sign_in = SignInPrepare(d)
+    nav_trails = NavDayTripsTrails(d)
+    verify_trails = VerifyTrails(d)
+    screenshots = ScreenshotsManagement(d)
+    general_scrolling = GeneralScrolling(d)
+
     sign_in.sign_in_and_prepare()
+    nav_trails.find_trails_text()
+    nav_trails.click_trails_read_more()
 
-    find_trails_text(d)
-    sleep(2)
+    verify_trails.verify_trails_percentage_progress()
+    verify_trails.verify_trails_visits()
 
-    click_trails_read_more(d)
+    screenshots.take_screenshot("9_2_1_trail_details")
 
-    verify_trails_percentage_progress(d)
-
-    verify_trails_visits(d)
-
-    # Take screenshot of trail details
-    screenshot_path = os.path.join(screenshots_dir, "9_2_1_trail_details.png")
-    d.screenshot(screenshot_path)
-    sleep(1)
-
-    scroll_to_bottom(d)
-
-    screenshot_path = os.path.join(screenshots_dir, "9_2_2_trail_details_visits.png")
-    d.screenshot(screenshot_path)
+    general_scrolling.scroll_to_bottom()
+    screenshots.take_screenshot("9_2_2_trail_details_visits")

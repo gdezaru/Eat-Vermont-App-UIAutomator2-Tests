@@ -3,7 +3,7 @@ Utility functions for UI verification.
 """
 from time import sleep
 from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
-    ViewMap
+    ViewMap, DayTrips
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
@@ -471,6 +471,71 @@ class NavDayTripsTrails:
             device: UIAutomator2 device instance
         """
         self.device = device
+
+    def find_day_trips_text(self):
+        """
+        Find the Day Trips text and Read More button on the Home screen.
+
+        Returns:
+            UIElement: The Read More button element if found
+
+        Raises:
+            AssertionError: If Day Trips text or Read More button is not found
+        """
+        # Initialize screen swipe for coordinates
+        screen_swipe = ScreenSwipe(self.device)
+        start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
+        general_scroll = GeneralScrolling(self.device)
+        target_y = general_scroll.get_target_position_in_first_quarter()
+
+        for attempt in range(self.MAX_SCROLL_ATTEMPTS):
+            if self.device(text=self.DAY_TRIPS_TEXT).exists:
+                day_trips_elem = self.device(text=self.DAY_TRIPS_TEXT)
+                bounds = day_trips_elem.info['bounds']
+                current_y = (bounds['top'] + bounds['bottom']) // 2
+
+                if current_y <= target_y:
+                    break
+
+            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.SCROLL_DURATION)
+            sleep(self.DEFAULT_WAIT)
+
+        assert self.device(text=self.DAY_TRIPS_TEXT).exists(timeout=self.LONG_WAIT), (
+            "Day Trips text not found"
+        )
+
+        # Find Read More button
+        read_more_button = self.device.xpath(DayTrips.DAY_TRIPS_READ_MORE_HOME_SCREEN)
+
+        for i in range(self.MAX_SMALL_SCROLLS):
+            if read_more_button.exists:
+                break
+            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.LONG_SCROLL_DURATION)
+            sleep(self.DEFAULT_WAIT)
+
+        assert read_more_button.exists, "Could not find Read More button for Day Trips"
+        return read_more_button
+
+    def click_day_trips_read_more(self, read_more_button=None):
+        """
+        Clicks the Read More button of a Day Trip.
+
+        Args:
+            read_more_button (UIElement, optional): The Read More button element.
+                                                If None, will try to find it.
+
+        Returns:
+            bool: True if navigation was successful
+
+        Raises:
+            AssertionError: If Read More button is not found
+        """
+        if read_more_button is None:
+            read_more_button = self.find_day_trips_text()
+
+        read_more_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
 
     def click_trails_see_all(self):
         """
