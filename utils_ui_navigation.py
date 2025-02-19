@@ -326,15 +326,36 @@ class NavBusinesses:
         Raises:
             AssertionError: If favorited business is not found or not removed successfully
         """
+        # First verify the business exists in favorites
+        sleep(self.DEFAULT_WAIT)  # Wait for favorites to load
         favorite_business = self.device.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
-        assert favorite_business.exists, "Could not find favorited business"
+        assert favorite_business.exists, f"Could not find favorited business. Looking for: {self.DEFAULT_MENU_BUSINESS}"
 
+        # Click the business to open its details
         favorite_business.click()
-        sleep(self.SHORT_WAIT)
+        sleep(self.LONG_WAIT)  # Give more time for business details to load
 
+        # Try to find the favorite button with retries
+        max_retries = 3
+        for i in range(max_retries):
+            favorite_icon = self.device.xpath(MyFavorites.FAVORITE_BUSINESS_DETAILS_REMOVE)
+            if favorite_icon.exists:
+                favorite_icon.click()
+                sleep(self.LONG_WAIT)  # Give time for removal animation and UI update
+                break
+            elif i < max_retries - 1:  # Don't sleep on last iteration
+                sleep(self.DEFAULT_WAIT)
+        else:
+            assert False, "Could not find favorite remove button after multiple attempts"
+
+        # Go back to favorites list
+        self.device.press("back")
+        sleep(self.DEFAULT_WAIT)
+
+        # Verify business is removed from favorites
+        favorite_business = self.device.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
         assert not favorite_business.exists, "Business is still present in favorites"
         return True
-    sleep(3)
 
 
 class NavViewMap:
@@ -835,9 +856,6 @@ class NavFavoritesVisitHistory:
         visit_history_tab.click()
         sleep(self.NAVIGATION_WAIT)
         return True
-
-
-# UI navigation functions for Bottom Navigation Bar
 
 class NavBottomNavBar:
     """Class for handling bottom navigation bar interactions."""

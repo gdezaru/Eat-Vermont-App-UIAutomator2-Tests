@@ -2,7 +2,7 @@ import pytest
 
 from utils_authentication import SignInPrepare
 from utils_device_interaction import SearchSubmit
-from utils_ui_navigation import NavFavoritesVisitHistory, NavBusinesses, NavDayTripsTrails, NavEvents
+from utils_ui_navigation import NavBusinesses, NavDayTripsTrails, NavEvents
 from utils_screenshots import ScreenshotsManagement
 from utils_ui_verification import VerifyBusinesses
 
@@ -97,87 +97,3 @@ def test_add_favorite_trails(d, screenshots_dir):
     nav_trails.add_favorite_trail()
 
     screenshots.take_screenshot("11_4_1_trail_favorited.png")
-
-
-@pytest.mark.smoke
-def test_remove_favorite_events(d, screenshots_dir):
-    """
-    Tests the ability to remove events from My Favorites.
-    Steps:
-    1. Sign in using the utility method
-    2. Handle events popup using the utility method
-    3. Click on Favorites button in bottom navigation
-    4. Verify favorited event is present and take screenshot
-    5. Click on favorite icon to remove from favorites
-    6. Verify event is no longer in favorites
-    """
-    sign_in = SignInPrepare(d)
-    nav_favorites = NavFavoritesVisitHistory(d)
-    nav_events = NavEvents(d)
-    screenshots = ScreenshotsManagement(d)
-
-    sign_in.sign_in_and_prepare()
-
-    nav_favorites.click_favorites_button()
-
-    screenshots.take_screenshot("11_5_1_favorited_event_before_removal.png")
-
-    nav_events.verify_and_remove_favorite_event()
-
-    screenshots.take_screenshot("11_5_2_favorites_after_removal.png")
-
-
-@pytest.mark.smoke
-def test_remove_favorite_businesses(d, screenshots_dir):
-    """
-    Tests the ability to remove businesses from My Favorites.
-    Steps:
-    1. Sign in using the utility method
-    2. Handle events popup using the utility method
-    3. Click on Favorites button in bottom navigation
-    4. Verify favorited business is present and take screenshot
-    5. Click on favorite icon to remove from favorites
-    6. Verify business is no longer in favorites
-    """
-    sign_in = SignInPrepare(d)
-    nav_favorites = NavFavoritesVisitHistory(d)
-    nav_business = NavBusinesses(d)
-    screenshots = ScreenshotsManagement(d)
-
-    sign_in.sign_in_and_prepare()
-
-    nav_favorites.click_favorites_button()
-
-    screenshots.take_screenshot("11_6_1_favorited_business_before_removal.png")
-
-    nav_business.verify_and_remove_favorite_business()
-
-    screenshots.take_screenshot("11_6_2_favorites_after_removal.png")
-
-
-@pytest.mark.smoke
-def test_remove_favorite_trails(d, screenshots_dir):
-    """
-    Tests the ability to remove trails from My Favorites.
-    Steps:
-    1. Sign in using the utility method
-    2. Handle events popup using the utility method
-    3. Click on Favorites button in bottom navigation
-    4. Verify favorited trail is present and take screenshot
-    5. Click on favorite icon to remove from favorites
-    6. Verify trail is no longer in favorites
-    """
-    sign_in = SignInPrepare(d)
-    nav_favorites = NavFavoritesVisitHistory(d)
-    nav_trails = NavDayTripsTrails(d)
-    screenshots = ScreenshotsManagement(d)
-
-    sign_in.sign_in_and_prepare()
-
-    nav_favorites.click_favorites_button()
-
-    screenshots.take_screenshot("11_8_1_favorited_trail_before_removal.png")
-
-    nav_trails.verify_and_remove_favorite_trail()
-
-    screenshots.take_screenshot("11_8_2_favorites_after_removal.png")

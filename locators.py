@@ -222,6 +222,10 @@ class MyFavorites:
                                     '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                     '/android.view.ViewGroup[1]/android.view.ViewGroup[3]/com.horcrux.svg.SvgView[1]'
                                     '/com.horcrux.svg.GroupView[1]')
+    FAVORITE_BUSINESS_DETAILS_REMOVE = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                                        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                        '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')
     FAVORITE_VIDEOS_ADD_REMOVE = ('//android.widget.HorizontalScrollView'
                                   '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                   '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
@@ -241,12 +245,7 @@ class MyFavorites:
                             'contains(@content-desc, "Saturday") or '
                             'contains(@content-desc, "Sunday"))]'
                             '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')
-    ADDED_FAVORITE_BUSINESS = ('//*[contains(@content-desc, ", ") and ('
-                               'contains(@content-desc, "Open Now") or '
-                               'contains(@content-desc, "Closed") or '
-                               'contains(@content-desc, "Opening") or '
-                               'contains(@content-desc, "Closing"))]'
-                               '/android.view.ViewGroup[2]/com.horcrux.svg.SvgView[1]')
+    ADDED_FAVORITE_BUSINESS = f'//*[contains(@content-desc, "Big Fatty\'s BBQ")]'
     ADDED_FAVORITE_TRAIL = ('//*[contains(translate(@content-desc, "TRAIL", "trail"), "trail")]'
                             '/android.view.ViewGroup[2]')
     ADDED_FAVORITE_VIDEO = ('//*[@content-desc]'
