@@ -386,7 +386,7 @@ class NavViewMap:
             if view_map.exists:
                 return self.click_view_map()
 
-            self.device.swipe(0.5, 0.8, 0.5, 0.2, 0.5)  # Increased scroll distance
+            self.device.swipe(0.5, 0.8, 0.5, 0.2, 0.5)
             sleep(1.5)
 
         view_map = self.device.xpath(HomeScreen.VIEW_MAP)
