@@ -2,13 +2,11 @@ import pytest
 import os
 from time import sleep
 
-from utils_authentication import sign_in_and_prepare, SignInPrepare
-from utils_device_interaction import search_and_submit
-from utils_ui_navigation import (click_favorites_button, click_first_event_search_result, add_favorite_event,
-                                 add_favorite_business, click_first_business_search_result, find_trails_text,
-                                 click_trails_read_more, add_favorite_trail, verify_and_remove_favorite_event,
-                                 verify_and_remove_favorite_business, verify_and_remove_favorite_trail)
-from utils_ui_verification import verify_businesses_section_present
+from utils_authentication import SignInPrepare
+from utils_device_interaction import SearchSubmit
+from utils_ui_navigation import NavFavoritesVisitHistory, NavBusinesses, NavDayTripsTrails, NavEvents
+from utils_screenshots import ScreenshotsManagement
+from utils_ui_verification import VerifyBusinesses
 
 # Initialize business names at module level
 business_name = "Higher Ground"
@@ -27,19 +25,20 @@ def test_add_favorite_events(d, screenshots_dir):
     5. Take screenshot
     """
     sign_in = SignInPrepare(d)
+    search = SearchSubmit(d)
+    nav_events = NavEvents(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
     search_term = "Burlington"
-    search_and_submit(d, search_term)
-    sleep(5)
+    search.search_and_submit(search_term)
 
-    click_first_event_search_result(d)
+    nav_events.click_first_event_search_result()
 
-    add_favorite_event(d)
+    nav_events.add_favorite_event()
 
-    # Take screenshot
-    screenshot_path = os.path.join(screenshots_dir, "11_1_1_event_favorited.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_1_1_event_favorited.png")
 
 
 @pytest.mark.smoke
@@ -58,19 +57,22 @@ def test_add_favorite_businesses(d, screenshots_dir):
     9. Take screenshot of favorited business
     """
     sign_in = SignInPrepare(d)
+    search = SearchSubmit(d)
+    nav_business = NavBusinesses(d)
+    verify_business = VerifyBusinesses(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    search_and_submit(d, menu_business_name)
+    search.search_and_submit(menu_business_name)
 
-    verify_businesses_section_present(d)
+    verify_business.verify_businesses_section_present()
 
-    click_first_business_search_result(d, menu_business_name)
+    nav_business.click_first_business_search_result(menu_business_name)
 
-    add_favorite_business(d)
+    nav_business.add_favorite_business()
 
-    # Take screenshot of favorited business
-    screenshot_path = os.path.join(screenshots_dir, "11_2_1_business_favorited.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_2_1_business_favorited.png")
 
 
 @pytest.mark.smoke
@@ -85,18 +87,18 @@ def test_add_favorite_trails(d, screenshots_dir):
     5. Take screenshot of favorited trail
     """
     sign_in = SignInPrepare(d)
+    nav_trails = NavDayTripsTrails(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    find_trails_text(d)
-    sleep(2)
+    nav_trails.find_trails_text()
 
-    click_trails_read_more(d)
+    nav_trails.click_trails_read_more()
 
-    add_favorite_trail(d)
+    nav_trails.add_favorite_trail()
 
-    # Take screenshot of favorited trail
-    screenshot_path = os.path.join(screenshots_dir, "11_4_1_trail_favorited.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_4_1_trail_favorited.png")
 
 
 @pytest.mark.smoke
@@ -112,19 +114,19 @@ def test_remove_favorite_events(d, screenshots_dir):
     6. Verify event is no longer in favorites
     """
     sign_in = SignInPrepare(d)
+    nav_favorites = NavFavoritesVisitHistory(d)
+    nav_events = NavEvents(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    click_favorites_button(d)
+    nav_favorites.click_favorites_button()
 
-    # Takes a screenshot of the favorited event
-    screenshot_path = os.path.join(screenshots_dir, "11_5_1_favorited_event_before_removal.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_5_1_favorited_event_before_removal.png")
 
-    verify_and_remove_favorite_event(d)
+    nav_events.verify_and_remove_favorite_event()
 
-    # Takes a screenshot of the favorites screen after removing the event from favorites
-    screenshot_path = os.path.join(screenshots_dir, "11_5_2_favorites_after_removal.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_5_2_favorites_after_removal.png")
 
 
 @pytest.mark.smoke
@@ -140,19 +142,19 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     6. Verify business is no longer in favorites
     """
     sign_in = SignInPrepare(d)
+    nav_favorites = NavFavoritesVisitHistory(d)
+    nav_business = NavBusinesses(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    click_favorites_button(d)
+    nav_favorites.click_favorites_button()
 
-    # Takes a screenshot of the favorited business
-    screenshot_path = os.path.join(screenshots_dir, "11_6_1_favorited_business_before_removal.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_6_1_favorited_business_before_removal.png")
 
-    verify_and_remove_favorite_business(d)
+    nav_business.verify_and_remove_favorite_business()
 
-    # Takes a screenshot of the favorites screen after removing the business from favorites
-    screenshot_path = os.path.join(screenshots_dir, "11_6_2_favorites_after_removal.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_6_2_favorites_after_removal.png")
 
 
 @pytest.mark.smoke
@@ -168,17 +170,16 @@ def test_remove_favorite_trails(d, screenshots_dir):
     6. Verify trail is no longer in favorites
     """
     sign_in = SignInPrepare(d)
+    nav_favorites = NavFavoritesVisitHistory(d)
+    nav_trails = NavDayTripsTrails(d)
+    screenshots = ScreenshotsManagement(d)
+
     sign_in.sign_in_and_prepare()
 
-    # Click on Favorites button in bottom navigation
-    click_favorites_button(d)
+    nav_favorites.click_favorites_button()
 
-    # Takes a screenshot of the favorited trail
-    screenshot_path = os.path.join(screenshots_dir, "11_8_1_favorited_trail_before_removal.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_8_1_favorited_trail_before_removal.png")
 
-    verify_and_remove_favorite_trail(d)
+    nav_trails.verify_and_remove_favorite_trail()
 
-    # Takes a screenshot of the favorites screen after removing the trail from favorites
-    screenshot_path = os.path.join(screenshots_dir, "11_8_2_favorites_after_removal.png")
-    d.screenshot(screenshot_path)
+    screenshots.take_screenshot("11_8_2_favorites_after_removal.png")
