@@ -10,6 +10,7 @@ from test_reporter import ExcelReporter
 # Initialize test items list
 pytest.test_items = []
 
+
 def pytest_collection_modifyitems(items):
     """Store test items for later use in reporting"""
     pytest.test_items = items
@@ -28,14 +29,17 @@ def pytest_collection_modifyitems(items):
 # Create a single instance of the reporter
 reporter = ExcelReporter()
 
+
 def pytest_configure(config):
     """Configure pytest and register the Excel reporter."""
     # Register the reporter as a plugin
     config.pluginmanager.register(reporter)
 
+
 def pytest_addoption(parser):
     """Add command line options."""
     pass
+
 
 @pytest.fixture
 def d():
@@ -99,6 +103,11 @@ def d():
     print("\nGranting app permissions...")
     for permission in permissions:
         run_adb_command(f"-s {device_id} shell pm grant com.eatvermont {permission}")
+
+    # Set FastInputIME as default
+    print("\nSetting FastInputIME as default...")
+    run_adb_command(f"-s {device_id} shell ime set com.github.uiautomator/.FastInputIME")
+    sleep(2)
     
     # Start the app using UI Automator 2's app_start
     print("\nStarting app...")
@@ -122,12 +131,14 @@ def d():
     device.app_stop("com.eatvermont")
     run_adb_command(f"-s {device_id} shell am force-stop com.eatvermont")
 
+
 @pytest.fixture
 def screenshots_dir():
     """Get the screenshots directory for saving test screenshots"""
     screenshots_dir = os.path.join(os.getcwd(), 'screenshots')
     os.makedirs(screenshots_dir, exist_ok=True)
     return screenshots_dir
+
 
 def run_adb_command(command):
     """Run an ADB command and return its output"""
@@ -146,6 +157,7 @@ def run_adb_command(command):
     except Exception as e:
         print(f"Error running ADB command: {e}")
         return None
+
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):

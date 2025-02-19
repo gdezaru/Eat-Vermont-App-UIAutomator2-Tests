@@ -101,21 +101,23 @@ class SignInPrepare:
         """
         Handle events popup if it appears.
         """
-        # Check if events popup exists
+        close_button = self.device.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
+        if close_button.exists:
+            close_button.click()
+            sleep(2)
+            return True
+
         events_popup = self.device.xpath(Events.EVENTS_POPUP_MAIN)
         if events_popup.exists:
-            print("Events popup found, handling it...")
-
-            # Click close button
             close_button = self.device.xpath(Events.EVENTS_POPUP_CLOSE_BUTTON)
             if close_button.exists:
                 close_button.click()
-                sleep(1)
-                print("Closed events popup")
+                sleep(2)
+                return True
             else:
-                print("No close button found on events popup")
-        else:
-            print("No events popup found")
+                return False
+
+        return True
 
 
 class GuestModeAuth(SignInPrepare):

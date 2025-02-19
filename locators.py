@@ -141,9 +141,14 @@ class Events:
     """Locators for Events and Events Popup"""
     EVENT_CARD_DETAILS_TAB = '//android.view.ViewGroup[@content-desc="Details" and @package="com.eatvermont"]'
     EVENT_CARD_MORE_INFO_TAB = '//android.view.ViewGroup[@content-desc="More Info" and @package="com.eatvermont"]'
-    EVENTS_POPUP_MAIN = '//android.view.ViewGroup[./*[@text="Events For You"]]'
-    EVENTS_POPUP_CLOSE_BUTTON = ('//android.view.ViewGroup[./*[@text="Events For You"]]'
-                                 '/android.view.ViewGroup/com.horcrux.svg.SvgView')
+    EVENTS_POPUP_BASE = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                         '/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup[2]'
+                         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]')
+    EVENTS_POPUP_MAIN = EVENTS_POPUP_BASE + '/android.view.ViewGroup[1]'
+    EVENTS_POPUP_CLOSE_BUTTON = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup[2]'
+                                 '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                 '/android.view.ViewGroup[1]/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
     CAROUSEL_ITEM = '//*[@content-desc="{}"]/android.view.ViewGroup[3]/android.widget.TextView[3]'
     EVENT_DETAILS_TEXT = ('//android.widget.TextView[contains(@text, "Date") or contains(@text, "Time") '
                           'or contains(@text, "Where")]')
