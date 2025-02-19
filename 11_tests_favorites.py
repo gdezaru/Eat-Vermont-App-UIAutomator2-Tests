@@ -1,6 +1,4 @@
 import pytest
-import os
-from time import sleep
 
 from utils_authentication import SignInPrepare
 from utils_device_interaction import SearchSubmit
