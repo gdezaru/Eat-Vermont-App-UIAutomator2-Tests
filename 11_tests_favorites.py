@@ -97,7 +97,7 @@ def test_add_favorite_trails(d, screenshots_dir):
 
     nav_trails.add_favorite_trail()
 
-    screenshots.take_screenshot("11_4_1_trail_favorited.png")
+    screenshots.take_screenshot("11_3_1_trail_favorited.png")
 
 
 @pytest.mark.smoke
@@ -135,7 +135,7 @@ def test_remove_favorite_events(d, screenshots_dir):
     favorite_event = d.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
     assert not favorite_event.exists, "Event is still present in favorites"
 
-    screenshots.take_screenshot("11_5_1_favorites_after_removal.png")
+    screenshots.take_screenshot("11_4_1_favorites_after_removal.png")
 
 
 @pytest.mark.smoke
@@ -173,7 +173,7 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     favorite_business = d.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
     assert not favorite_business.exists, "Business is still present in favorites"
 
-    screenshots.take_screenshot("11_6_2_favorites_after_removal.png")
+    screenshots.take_screenshot("11_5_1_favorites_after_removal.png")
 
 
 @pytest.mark.smoke
@@ -197,8 +197,8 @@ def test_remove_favorite_trails(d, screenshots_dir):
 
     nav_favorites.click_favorites_button()
 
-    screenshots.take_screenshot("11_8_1_favorited_trail_before_removal.png")
+    screenshots.take_screenshot("11_6_1_favorited_trail_before_removal.png")
 
     nav_trails.verify_and_remove_favorite_trail()
 
-    screenshots.take_screenshot("11_8_2_favorites_after_removal.png")
+    screenshots.take_screenshot("11_6_2_favorites_after_removal.png")
