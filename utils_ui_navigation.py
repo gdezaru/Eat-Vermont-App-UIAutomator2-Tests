@@ -357,6 +357,22 @@ class NavBusinesses:
         assert not favorite_business.exists, "Business is still present in favorites"
         return True
 
+    def click_back_from_business_details(self):
+        """
+        Clicks the back button from business details view.
+
+        Returns:
+            bool: True if back button was clicked successfully
+
+        Raises:
+            AssertionError: If back button is not found
+        """
+        back_button = self.device.xpath(Businesses.BUSINESSES_BACK_BUTTON)
+        assert back_button.exists, "Could not find back button in business details"
+        back_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
 
 class NavViewMap:
     """Class for handling map view navigation."""

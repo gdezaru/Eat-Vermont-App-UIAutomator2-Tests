@@ -174,6 +174,12 @@ class Businesses:
     BUSINESS_NAME_EVENT_CARD = ('//android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/'
                                 'android.widget.ScrollView/android.view.ViewGroup'
                                 '/android.view.ViewGroup[5]')
+    BUSINESSES_BACK_BUTTON = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                              '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                              '/android.widget.ScrollView[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]/'
+                              'android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                              '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/com.horcrux.svg.SvgView[1]'
+                              '/com.horcrux.svg.GroupView[1]')
 
 
 class DayTrips:
