@@ -19,9 +19,10 @@ def test_add_favorite_events(d, screenshots_dir):
     Steps:
     1. Sign in using the utility method
     2. Handle events popup using the utility method
-    3. Interact with Events carousel item
-    4. Find and click the favorite icon
-    5. Take screenshot
+    3. Search for events
+    4. Click first event result
+    5. Add to favorites
+    6. Take screenshot
     """
     sign_in = SignInPrepare(d)
     search = SearchSubmit(d)
@@ -34,7 +35,6 @@ def test_add_favorite_events(d, screenshots_dir):
     search.search_and_submit(search_term)
 
     nav_events.click_first_event_search_result()
-
     nav_events.add_favorite_event()
 
     screenshots.take_screenshot("11_1_1_event_favorited.png")
@@ -107,25 +107,35 @@ def test_remove_favorite_events(d, screenshots_dir):
     Steps:
     1. Sign in using the utility method
     2. Handle events popup using the utility method
-    3. Click on Favorites button in bottom navigation
-    4. Verify favorited event is present and take screenshot
-    5. Click on favorite icon to remove from favorites
-    6. Verify event is no longer in favorites
+    3. Search for the event
+    4. Click first event result
+    5. Toggle favorite off
+    6. Click in first quarter of screen to exit
+    7. Go to favorites and verify removal
     """
     sign_in = SignInPrepare(d)
     nav_favorites = NavFavoritesVisitHistory(d)
     nav_events = NavEvents(d)
+    search = SearchSubmit(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
+    search_term = "Burlington"
+    search.search_and_submit(search_term)
+
+    nav_events.click_first_event_search_result()
+
+    nav_events.add_favorite_event()
+
+    nav_events.click_out_of_events_details()
+
     nav_favorites.click_favorites_button()
 
-    screenshots.take_screenshot("11_5_1_favorited_event_before_removal.png")
+    favorite_event = d.xpath(MyFavorites.ADDED_FAVORITE_EVENT)
+    assert not favorite_event.exists, "Event is still present in favorites"
 
-    nav_events.verify_and_remove_favorite_event()
-
-    screenshots.take_screenshot("11_5_2_favorites_after_removal.png")
+    screenshots.take_screenshot("11_5_1_favorites_after_removal.png")
 
 
 @pytest.mark.smoke

@@ -136,16 +136,38 @@ class NavEvents:
         Raises:
             AssertionError: If no search result is found or if click fails
         """
+        # Wait for search results to load
+        sleep(self.MEDIUM_WAIT)
+
         result = self.device.xpath(SearchModule.FIRST_SEARCH_RESULT)
-        assert result.exists, "Could not find any search results"
+        assert result.exists, "Could not find any event search results"
 
         for attempt in range(self.MAX_CLICK_RETRIES):
             if result.click_exists(timeout=self.CLICK_TIMEOUT):
-                sleep(self.DEFAULT_WAIT)
+                sleep(self.LONG_WAIT)
                 return True
-            sleep(1)
 
-        raise AssertionError("Failed to click the search result after multiple attempts")
+            if attempt < self.MAX_CLICK_RETRIES - 1:
+                sleep(self.RETRY_WAIT)
+
+        raise AssertionError("Failed to click the event search result after multiple attempts")
+
+    def click_out_of_events_details(self):
+        """
+        Clicks in the first quarter of the screen to exit event details.
+
+        Returns:
+            bool: True if click was successful
+        """
+        screen_swipe = ScreenSwipe(self.device)
+        width, height = screen_swipe.get_dimensions()
+
+        click_x = width // 4
+        click_y = height // 4
+
+        self.device.click(click_x, click_y)
+        sleep(self.DEFAULT_WAIT)
+        return True
 
     def find_and_click_more_info_tab(self):
         """
@@ -166,17 +188,29 @@ class NavEvents:
         Clicks the favorite icon on an event card.
 
         Returns:
-            bool: True if favorite was added successfully
+            bool: True if favorite was added/removed successfully
 
         Raises:
-            AssertionError: If favorite icon is not found
+            AssertionError: If favorite icon is not found or click fails
         """
-        favorite_icon = self.device.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE)
-        assert favorite_icon.exists, "Could not find favorite icon"
+        sleep(self.MEDIUM_WAIT)
 
-        favorite_icon.click()
-        sleep(self.DEFAULT_WAIT)
-        return True
+        for attempt in range(self.MAX_CLICK_RETRIES):
+            favorite_icon = self.device.xpath(MyFavorites.FAVORITE_EVENTS_ADD_REMOVE)
+            if not favorite_icon.exists:
+                if attempt < self.MAX_CLICK_RETRIES - 1:
+                    sleep(self.RETRY_WAIT)
+                    continue
+                raise AssertionError("Could not find favorite icon")
+
+            if favorite_icon.click_exists(timeout=self.CLICK_TIMEOUT):
+                sleep(self.LONG_WAIT)
+                return True
+
+            if attempt < self.MAX_CLICK_RETRIES - 1:
+                sleep(self.RETRY_WAIT)
+
+        raise AssertionError("Could not click favorite icon after multiple attempts")
 
     def verify_and_remove_favorite_event(self):
         """
