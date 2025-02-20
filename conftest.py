@@ -38,13 +38,17 @@ def pytest_configure(config):
 
 def pytest_addoption(parser):
     """Add command line options."""
-    pass
+    parser.addoption("--device-id", action="store", default=None,
+                    help="Android device ID to run tests on")
+    parser.addoption("--app-package", action="store", default="com.eatvermont",
+                    help="Application package name to test")
 
 
 @pytest.fixture
-def d():
+def d(request):
     """Initialize UI Automator 2 device connection and setup"""
-    device_id = 'b0ba3ece'
+    device_id = request.config.getoption("--device-id")
+    app_package = request.config.getoption("--app-package")
     
     # First, kill any existing ADB server
     print("\nRestarting ADB server...")
@@ -55,20 +59,36 @@ def d():
 
     # Check USB connected devices
     print("\nChecking USB connected devices...")
-    devices = run_adb_command("devices")
-    print(f"Connected devices: {devices}")
+    devices_output = run_adb_command("devices")
+    print(f"Connected devices: {devices_output}")
 
-    if device_id not in str(devices):
+    if not device_id:
+        # If no device ID provided, try to use the first connected device
+        devices = [line.split('\t')[0] for line in devices_output.splitlines() 
+                  if line and 'device' in line and not line.startswith('List')]
+        if devices:
+            device_id = devices[0]
+            print(f"No device ID provided. Using first available device: {device_id}")
+        else:
+            raise Exception(
+                "No device ID provided and no devices found. Please either:\n"
+                "1. Provide a device ID using --device-id\n"
+                "2. Connect an Android device via USB\n"
+                "3. Ensure USB debugging is enabled on the device\n"
+                "4. Approve the USB debugging prompt on your device"
+            )
+
+    if device_id not in str(devices_output):
         raise Exception(
-            "Device not found. Please ensure:\n"
-            f"1. Device {device_id} is connected via USB\n"
+            f"Device {device_id} not found. Please ensure:\n"
+            "1. The device is connected via USB\n"
             "2. USB debugging is enabled on the device\n"
             "3. You have approved the USB debugging prompt on your device\n"
-            "Current connected devices: " + str(devices)
+            f"Current connected devices:\n{devices_output}"
         )
 
     # Connect to the device using direct USB connection
-    device = u2.connect_usb()
+    device = u2.connect_usb(device_id)
     
     # Restart UI Automator service
     print("\nRestarting UI Automator service...")
@@ -82,8 +102,8 @@ def d():
     
     # Clean up the app state before starting
     print("\nCleaning up app state...")
-    force_stop_output = run_adb_command(f"-s {device_id} shell am force-stop com.eatvermont")
-    clear_output = run_adb_command(f"-s {device_id} shell pm clear com.eatvermont")
+    force_stop_output = run_adb_command(f"-s {device_id} shell am force-stop {app_package}")
+    clear_output = run_adb_command(f"-s {device_id} shell pm clear {app_package}")
     print(f"Force stop output: {force_stop_output}")
     print(f"Clear output: {clear_output}")
     sleep(1)  # Wait for cleanup
@@ -102,7 +122,7 @@ def d():
     
     print("\nGranting app permissions...")
     for permission in permissions:
-        run_adb_command(f"-s {device_id} shell pm grant com.eatvermont {permission}")
+        run_adb_command(f"-s {device_id} shell pm grant {app_package} {permission}")
 
     # Set FastInputIME as default
     print("\nSetting FastInputIME as default...")
@@ -111,7 +131,7 @@ def d():
     
     # Start the app using UI Automator 2's app_start
     print("\nStarting app...")
-    device.app_start("com.eatvermont", ".MainActivity")
+    device.app_start(app_package, ".MainActivity")
     sleep(3)  # Wait for app to load
     
     # Handle any remaining permission dialogs
@@ -122,14 +142,14 @@ def d():
     # Verify app is running
     current_app = device.app_current()
     print(f"Current app: {current_app}")
-    assert current_app['package'] == "com.eatvermont", "App is not running!"
+    assert current_app['package'] == app_package, "App is not running!"
 
     yield device
 
     # Cleanup after tests
     print("\nCleaning up after tests...")
-    device.app_stop("com.eatvermont")
-    run_adb_command(f"-s {device_id} shell am force-stop com.eatvermont")
+    device.app_stop(app_package)
+    run_adb_command(f"-s {device_id} shell am force-stop {app_package}")
 
 
 @pytest.fixture

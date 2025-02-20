@@ -131,27 +131,68 @@ EatVermontAppAutomatedTests/
 
 ## Running Tests
 
-### All Tests
+### Device Configuration
+
+The test framework supports running tests on any Android device. You can specify your device in two ways:
+
+1. **Using Device ID**
+```bash
+pytest --device-id=your_device_id
+```
+
+2. **Automatic Device Detection**
+If you don't specify a device ID, the framework will automatically use the first connected Android device. Simply connect your device via USB and run:
 ```bash
 pytest
 ```
 
-### Smoke Tests
+3. **Custom App Package**
+If you're testing a different build of the app (e.g., debug version), you can specify the package name:
+```bash
+pytest --app-package=com.eatvermont.debug
+```
+
+### Required Device Setup
+1. Enable USB debugging on your Android device
+   - Go to Settings > About Phone
+   - Tap "Build Number" 7 times to enable Developer Options
+   - Go to Settings > Developer Options
+   - Enable "USB Debugging"
+2. Connect your device via USB
+3. Accept the USB debugging prompt on your device
+4. Verify connection by running:
+```bash
+adb devices
+```
+
+### Running Specific Tests
+
+1. **Run All Tests**
+```bash
+pytest
+```
+
+2. **Run Smoke Tests**
 ```bash
 pytest -v -m smoke
 ```
 
-### Specific Test File
+3. **Run a Specific Test File**
 ```bash
 pytest -v <test_file.py>
 ```
 
-### Specific Test
+4. **Run a Specific Test**
 ```bash
-pytest -v <test_file.py>::<test_name>
+pytest -v -k "test_name"
 ```
 
-## Test Reports
+Example:
+```bash
+pytest -v -k "test_forgot_password" 1_tests_sign_in_user_password.py
+```
+
+### Test Reports
 
 ### Structure
 ```
