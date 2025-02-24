@@ -529,98 +529,6 @@ class NavViewMap:
         return True
 
 
-class AddInfoActions:
-    """Class for handling Add Info actions"""
-
-    def __init__(self, device):
-        """
-        Initialize AddInfoActions with a device instance.
-
-        Args:
-            device: UIAutomator2 device instance
-        """
-        self.device = device
-
-    def input_business_name(self, text):
-        """
-        Click business name field and input text.
-
-        Args:
-            text: Text to input in the business name field
-
-        Returns:
-            bool: True if text was input successfully
-
-        Raises:
-            AssertionError: If business name field is not found
-        """
-        business_name_field = self.device.xpath(AddInfo.BUSINESS_NAME)
-        assert business_name_field.exists, "Business name field not found"
-        business_name_field.click()
-        self.device.send_keys(text)
-        return True
-
-    def input_update_info(self, text):
-        """
-        Click update info field and input text.
-
-        Args:
-            text: Text to input in the update info field
-
-        Returns:
-            bool: True if text was input successfully
-
-        Raises:
-            AssertionError: If update info field is not found
-        """
-        update_info_field = self.device.xpath(AddInfo.ADD_UPDATE_INFO_FIELD)
-        assert update_info_field.exists, "Update info field not found"
-        update_info_field.click()
-        self.device.send_keys(text)
-        return True
-
-    def click_submit_button(self, wait_time=3):
-        """
-        Click the submit button with multiple attempts and verify the Cheers confirmation.
-
-        Args:
-            wait_time: Time to wait for Cheers button to appear (default: 3 seconds)
-
-        Returns:
-            bool: True if button was clicked successfully and Cheers confirmation appeared
-
-        Raises:
-            AssertionError: If submit button is not found or if Cheers confirmation is not visible
-        """
-        self.device(text="Submit").click()
-        sleep(wait_time)
-
-        cheers_button = self.device.xpath(AddInfo.CHEERS_BUTTON)
-        assert cheers_button.exists, "Cheers button not visible after submission"
-
-        return True
-
-    def click_cheers_button(self, wait_time=2):
-        """
-        Click the Cheers button and verify it disappears.
-
-        Returns:
-            bool: True if button was clicked and disappeared successfully
-
-        Raises:
-            AssertionError: If Cheers button is not found initially or if it remains visible after clicking
-        """
-        cheers_button = self.device.xpath(AddInfo.CHEERS_BUTTON)
-        assert cheers_button.exists, "Cheers button not found"
-
-        cheers_button.click()
-        sleep(wait_time)
-
-        assert not cheers_button.exists, "Cheers button still visible after clicking"
-
-        return True
-
-
 class NavDayTripsTrails:
     """Class for handling Trails section navigation and interactions."""
 
@@ -691,7 +599,6 @@ class NavDayTripsTrails:
 
         assert read_more_button.exists, "Could not find Read More button for Day Trips"
         return read_more_button
-
 
     def click_day_trips_see_all(self):
         """
@@ -880,6 +787,35 @@ class NavDayTripsTrails:
         return True
 
 
+class NavCustomDayTrips:
+    """Class for handling Custom Day Trips navigation."""
+
+    def __init__(self, device):
+        """
+        Initialize NavCustomDayTrips with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def click_custom_day_trips_button(self):
+        """
+        Clicks the Create a Custom trip button.
+
+        Returns:
+            bool: True if button was found and clicked
+
+        Raises:
+            AssertionError: If Custom Day Trip button is not found
+        """
+        custom_trip_button = self.device.xpath(HomeScreen.CUSTOM_DAY_TRIP_BUTTON)
+        assert custom_trip_button.exists, "Could not find Create a Custom trip button"
+
+        custom_trip_button.click()
+        return True
+
+
 class NavAddInfo:
     """Class for handling Add Info section navigation."""
 
@@ -909,6 +845,85 @@ class NavAddInfo:
 
         add_info_button.click()
         sleep(self.NAVIGATION_WAIT)
+
+        return True
+
+    def input_business_name(self, text):
+        """
+        Click business name field and input text.
+
+        Args:
+            text: Text to input in the business name field
+
+        Returns:
+            bool: True if text was input successfully
+
+        Raises:
+            AssertionError: If business name field is not found
+        """
+        business_name_field = self.device.xpath(AddInfo.BUSINESS_NAME)
+        assert business_name_field.exists, "Business name field not found"
+        business_name_field.click()
+        self.device.send_keys(text)
+        return True
+
+    def input_update_info(self, text):
+        """
+        Click update info field and input text.
+
+        Args:
+            text: Text to input in the update info field
+
+        Returns:
+            bool: True if text was input successfully
+
+        Raises:
+            AssertionError: If update info field is not found
+        """
+        update_info_field = self.device.xpath(AddInfo.ADD_UPDATE_INFO_FIELD)
+        assert update_info_field.exists, "Update info field not found"
+        update_info_field.click()
+        self.device.send_keys(text)
+        return True
+
+    def click_submit_button(self, wait_time=3):
+        """
+        Click the submit button with multiple attempts and verify the Cheers confirmation.
+
+        Args:
+            wait_time: Time to wait for Cheers button to appear (default: 3 seconds)
+
+        Returns:
+            bool: True if button was clicked successfully and Cheers confirmation appeared
+
+        Raises:
+            AssertionError: If submit button is not found or if Cheers confirmation is not visible
+        """
+        self.device(text="Submit").click()
+        sleep(wait_time)
+
+        cheers_button = self.device.xpath(AddInfo.CHEERS_BUTTON)
+        assert cheers_button.exists, "Cheers button not visible after submission"
+
+        return True
+
+    def click_cheers_button(self, wait_time=2):
+        """
+        Click the Cheers button and verify it disappears.
+
+        Returns:
+            bool: True if button was clicked and disappeared successfully
+
+        Raises:
+            AssertionError: If Cheers button is not found initially or if it remains visible after clicking
+        """
+        cheers_button = self.device.xpath(AddInfo.CHEERS_BUTTON)
+        assert cheers_button.exists, "Cheers button not found"
+
+        cheers_button.click()
+        sleep(wait_time)
+
+        assert not cheers_button.exists, "Cheers button still visible after clicking"
 
         return True
 
@@ -998,6 +1013,7 @@ class NavFavoritesVisitHistory:
         visit_history_tab.click()
         sleep(self.NAVIGATION_WAIT)
         return True
+
 
 class NavBottomNavBar:
     """Class for handling bottom navigation bar interactions."""

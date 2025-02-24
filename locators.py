@@ -187,6 +187,27 @@ class DayTrips:
                                        '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains'
                                        '(@text, "Day Trips")]]]'
                                        '[1]')
+    CUSTOM_DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Create a Custom trip"]'
+    CREATE_TRIP_HEADER = '//android.widget.TextView[@text="Where do you want to go?"]'
+    ADD_A_LOCATION = '//android.widget.TextView[@text="Add A Location"]'
+    QUICK_SUGGESTIONS = '//android.widget.TextView[@text="Quick Suggestions"]'
+    DATE_PICKER = '//android.view.ViewGroup[@content-desc="{}"]'
+    DATE_PICKER_RIGHT_ARROW = ('//*[@resource-id="undefined.header.rightArrow"]/com.horcrux.svg.SvgView[1]'
+                               '/com.horcrux.svg.GroupView[1]')
+    DATE_PICKER_SELECTED_DATE = '//android.widget.TextView[@text="{}"]'
+    AUTO_RECOMMEND_BUTTON = '//android.widget.TextView[@text="Auto-Recommend"]'
+    CUSTOM_DAY_TRIP_EVENTS = '//android.widget.TextView[@text="Events"]'
+    CUSTOM_DAY_TRIP_FOOD_DRINKS = '//android.widget.TextView[@text="Food + Drinks"]'
+    CUSTOM_DAY_TRIP_OUTDOORS = '//android.widget.TextView[@text="Outdoors"]'
+    CUSTOM_DAY_TRIPS_POINTS_OF_INTEREST = '//android.widget.TextView[@text="Points of Interest"]'
+    ADVANCED_FILTER = '//android.widget.TextView[@text=" Advanced Filter"]'
+    NEXT_BUTTON = '//android.widget.TextView[@text="Next"]'
+    CRAFTING_DAY_TRIP = '//android.widget.TextView[@text="Crafting Your Perfect Day Trip"]'
+    DETAILS_SCREEN_LOCATION = '//android.widget.TextView[@text="Location: {}"]'
+    DETAILS_SCREEN_DATE = '//android.widget.TextView[@text="{}"]'
+    QUICK_TIP = '//android.widget.TextView[@text="Quick Tip: Drag and drop to change order."]'
+    ALSO_TIP = '//android.widget.TextView[@text="Also: Swipe side-to-side for more."]'
+    CONTINUE_BUTTON = '//android.widget.TextView[@text="Continue"]'
 
 
 class Trails:

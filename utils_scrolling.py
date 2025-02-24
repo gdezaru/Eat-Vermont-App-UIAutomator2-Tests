@@ -299,6 +299,58 @@ class ScrollAddInfo(GeneralScrolling):
             return False
 
 
+class ScrollToCustomDayTrips:
+    """Class for handling Custom Day Trips navigation."""
+
+    def __init__(self, device):
+        """
+        Initialize NavCustomDayTrips with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+        self.general_scroll = GeneralScrolling(device)
+
+    def scroll_to_custom_day_trips(self, max_attempts=5):
+        """
+        Scroll until Custom Day Trips button is centered on screen.
+
+        Args:
+            max_attempts: Maximum number of scroll attempts (default: 5)
+
+        Returns:
+            bool: True if button was found and centered
+
+        Raises:
+            AssertionError: If button is not found after max attempts
+        """
+        for attempt in range(max_attempts):
+            custom_trips_button = self.device.xpath(DayTrips.CUSTOM_DAY_TRIPS_BUTTON)
+            if custom_trips_button.exists:
+                button_bounds = custom_trips_button.info['bounds']
+                button_center_y = (button_bounds['top'] + button_bounds['bottom']) // 2
+
+                target_y = self.general_scroll.get_target_position_in_first_quarter()
+
+                if button_center_y > target_y:
+                    start_x, start_y, end_y = self.general_scroll.calculate_swipe_coordinates()
+                    self.device.swipe(start_x, start_y, start_x, end_y, duration=0.5)
+                    sleep(1)
+                elif button_center_y < target_y:
+                    start_x, start_y, end_y = self.general_scroll.calculate_swipe_coordinates()
+                    self.device.swipe(start_x, end_y, start_x, start_y, duration=0.5)
+                    sleep(1)
+                else:
+                    return True
+            else:
+                start_x, start_y, end_y = self.general_scroll.calculate_swipe_coordinates()
+                self.device.swipe(start_x, start_y, start_x, end_y, duration=0.5)
+                sleep(1)
+
+        raise AssertionError("Custom Day Trips button not found after maximum scroll attempts")
+
+
 class ScrollVideos(GeneralScrolling):
     def __init__(self, device):
         """

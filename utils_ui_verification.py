@@ -4,7 +4,7 @@ Utilities functions for UI verification
 import os
 from time import sleep
 from locators import (Businesses, EventsScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
-                      PlansPopup, ViewMap, LoginPage)
+                      PlansPopup, ViewMap, LoginPage, DayTrips)
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
@@ -348,6 +348,61 @@ class VerifyDayTrips:
         )
 
         assert search_successful, "Search failed - Could not verify day trips search results"
+        return True
+
+
+class VerifyCustomDayTrips:
+    """Class for verifying Custom Day Trips-related UI elements and interactions."""
+
+    def __init__(self, device):
+        """
+        Initialize VerifyCustomDayTrips with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def verify_create_trip_header(self):
+        """
+        Verify that the Create Trip header text is present.
+
+        Returns:
+            bool: True if header text exists
+
+        Raises:
+            AssertionError: If header text is not found
+        """
+        header = self.device.xpath(DayTrips.CREATE_TRIP_HEADER)
+        assert header.exists, "Create Trip header 'Where do you want to go?' not found"
+        return True
+
+    def verify_add_location(self):
+        """
+        Verify that the Add A Location button is present.
+
+        Returns:
+            bool: True if Add A Location button exists
+
+        Raises:
+            AssertionError: If Add A Location button is not found
+        """
+        add_location = self.device.xpath(DayTrips.ADD_A_LOCATION)
+        assert add_location.exists, "Add A Location button not found"
+        return True
+
+    def verify_quick_suggestions(self):
+        """
+        Verify that the Quick Suggestions section is present.
+
+        Returns:
+            bool: True if Quick Suggestions section exists
+
+        Raises:
+            AssertionError: If Quick Suggestions section is not found
+        """
+        quick_suggestions = self.device.xpath(DayTrips.QUICK_SUGGESTIONS)
+        assert quick_suggestions.exists, "Quick Suggestions section not found"
         return True
 
 
