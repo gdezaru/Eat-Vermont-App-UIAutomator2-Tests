@@ -382,28 +382,266 @@ class VerifyCustomDayTrips:
         Verify that the Add A Location button is present.
 
         Returns:
-            bool: True if Add A Location button exists
+            bool: True if button exists
 
         Raises:
-            AssertionError: If Add A Location button is not found
+            AssertionError: If button is not found
         """
-        add_location = self.device.xpath(DayTrips.ADD_A_LOCATION)
-        assert add_location.exists, "Add A Location button not found"
+        button = self.device.xpath(DayTrips.ADD_A_LOCATION)
+        assert button.exists, "Add A Location button not found"
         return True
 
     def verify_quick_suggestions(self):
         """
-        Verify that the Quick Suggestions section is present.
+        Verify that the Quick Suggestions text is present.
 
         Returns:
-            bool: True if Quick Suggestions section exists
+            bool: True if text exists
 
         Raises:
-            AssertionError: If Quick Suggestions section is not found
+            AssertionError: If text is not found
         """
-        quick_suggestions = self.device.xpath(DayTrips.QUICK_SUGGESTIONS)
-        assert quick_suggestions.exists, "Quick Suggestions section not found"
+        text = self.device.xpath(DayTrips.QUICK_SUGGESTIONS)
+        assert text.exists, "Quick Suggestions text not found"
         return True
+
+    def verify_auto_recommend(self):
+        """
+        Verify that the Auto-Recommend button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.AUTO_RECOMMEND_BUTTON)
+        assert button.exists, "Auto-Recommend button not found"
+        return True
+
+    def verify_date_picker(self, date_str):
+        """
+        Verify that the date picker with specific date is present.
+
+        Args:
+            date_str: Date string in format 'Month DD, YYYY'
+
+        Returns:
+            bool: True if date picker exists
+
+        Raises:
+            AssertionError: If date picker is not found
+        """
+        picker = self.device.xpath(DayTrips.DATE_PICKER.format(date_str))
+        assert picker.exists, f"Date picker for '{date_str}' not found"
+        return True
+
+    def verify_date_picker_right_arrow(self):
+        """
+        Verify that the date picker right arrow is present.
+
+        Returns:
+            bool: True if arrow exists
+
+        Raises:
+            AssertionError: If arrow is not found
+        """
+        arrow = self.device.xpath(DayTrips.DATE_PICKER_RIGHT_ARROW)
+        assert arrow.exists, "Date picker right arrow not found"
+        return True
+
+    def verify_selected_date(self, date_number):
+        """
+        Verify that the selected date is present.
+
+        Args:
+            date_number: String representing the date (e.g., '31')
+
+        Returns:
+            bool: True if date exists
+
+        Raises:
+            AssertionError: If date is not found
+        """
+        date = self.device.xpath(DayTrips.DATE_PICKER_SELECTED_DATE.format(date_number))
+        assert date.exists, f"Selected date '{date_number}' not found"
+        return True
+
+    def verify_events_button(self):
+        """
+        Verify that the Events button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_EVENTS)
+        assert button.exists, "Events button not found"
+        return True
+
+    def verify_food_drinks_button(self):
+        """
+        Verify that the Food + Drinks button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_FOOD_DRINKS)
+        assert button.exists, "Food + Drinks button not found"
+        return True
+
+    def verify_outdoors_button(self):
+        """
+        Verify that the Outdoors button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_OUTDOORS)
+        assert button.exists, "Outdoors button not found"
+        return True
+
+    def verify_points_of_interest_button(self):
+        """
+        Verify that the Points of Interest button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.CUSTOM_DAY_TRIPS_POINTS_OF_INTEREST)
+        assert button.exists, "Points of Interest button not found"
+        return True
+
+    def verify_advanced_filter(self):
+        """
+        Verify that the Advanced Filter button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.ADVANCED_FILTER)
+        assert button.exists, "Advanced Filter button not found"
+        return True
+
+    def verify_next_button(self):
+        """
+        Verify that the Next button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.NEXT_BUTTON)
+        assert button.exists, "Next button not found"
+        return True
+
+    def verify_crafting_day_trip(self):
+        """
+        Verify that the Crafting Your Perfect Day Trip text is present.
+
+        Returns:
+            bool: True if text exists
+
+        Raises:
+            AssertionError: If text is not found
+        """
+        text = self.device.xpath(DayTrips.CRAFTING_DAY_TRIP)
+        assert text.exists, "Crafting Your Perfect Day Trip text not found"
+        return True
+
+    def verify_location_details(self, location):
+        """
+        Verify that the location details text is present.
+
+        Args:
+            location: Name of the location (e.g., 'Monkton')
+
+        Returns:
+            bool: True if text exists
+
+        Raises:
+            AssertionError: If text is not found
+        """
+        text = self.device.xpath(DayTrips.DETAILS_SCREEN_LOCATION.format(location))
+        assert text.exists, f"Location details for '{location}' not found"
+        return True
+
+    def verify_date_details(self, date_str):
+        """
+        Verify that the date details text is present.
+
+        Args:
+            date_str: Date string in format 'Month DD, YYYY'
+
+        Returns:
+            bool: True if text exists
+
+        Raises:
+            AssertionError: If text is not found
+        """
+        text = self.device.xpath(DayTrips.DETAILS_SCREEN_DATE.format(date_str))
+        assert text.exists, f"Date details '{date_str}' not found"
+        return True
+
+    def verify_quick_tip(self):
+        """
+        Verify that the Quick Tip text is present.
+
+        Returns:
+            bool: True if text exists
+
+        Raises:
+            AssertionError: If text is not found
+        """
+        text = self.device.xpath(DayTrips.QUICK_TIP)
+        assert text.exists, "Quick Tip text not found"
+        return True
+
+    def verify_also_tip(self):
+        """
+        Verify that the Also tip text is present.
+
+        Returns:
+            bool: True if text exists
+
+        Raises:
+            AssertionError: If text is not found
+        """
+        text = self.device.xpath(DayTrips.ALSO_TIP)
+        assert text.exists, "Also tip text not found"
+        return True
+
+    def verify_continue_button(self):
+        """
+        Verify that the Continue button is present.
+
+        Returns:
+            bool: True if button exists
+
+        Raises:
+            AssertionError: If button is not found
+        """
+        button = self.device.xpath(DayTrips.CONTINUE_BUTTON)
+        assert button.exists, "Continue button not found"
+        return True
+
+
 
 
 class VerifyTrails:

@@ -815,6 +815,72 @@ class NavCustomDayTrips:
         custom_trip_button.click()
         return True
 
+    def click_create_trip_header(self):
+        """Click the Create Trip header text."""
+        self.device.xpath(DayTrips.CREATE_TRIP_HEADER).click()
+
+    def click_add_location(self):
+        """Click the Add A Location button."""
+        self.device.xpath(DayTrips.ADD_A_LOCATION).click()
+
+    def click_quick_suggestions(self):
+        """Click the Quick Suggestions text."""
+        self.device.xpath(DayTrips.QUICK_SUGGESTIONS).click()
+
+    def click_auto_recommend(self):
+        """Click the Auto-Recommend button."""
+        self.device.xpath(DayTrips.AUTO_RECOMMEND_BUTTON).click()
+
+    def click_date_picker(self, date_str):
+        """
+        Click the date picker with the specified date.
+
+        Args:
+            date_str: Date string in format 'Month DD, YYYY'
+        """
+        self.device.xpath(DayTrips.DATE_PICKER.format(date_str)).click()
+
+    def click_date_picker_right_arrow(self):
+        """Click the date picker right arrow button."""
+        self.device.xpath(DayTrips.DATE_PICKER_RIGHT_ARROW).click()
+
+    def select_date(self, date_number):
+        """
+        Select a specific date from the date picker.
+
+        Args:
+            date_number: String representing the date (e.g., '31')
+        """
+        self.device.xpath(DayTrips.DATE_PICKER_SELECTED_DATE.format(date_number)).click()
+
+    def click_events(self):
+        """Click the Events button."""
+        self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_EVENTS).click()
+
+    def click_food_drinks(self):
+        """Click the Food + Drinks button."""
+        self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_FOOD_DRINKS).click()
+
+    def click_outdoors(self):
+        """Click the Outdoors button."""
+        self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_OUTDOORS).click()
+
+    def click_points_of_interest(self):
+        """Click the Points of Interest button."""
+        self.device.xpath(DayTrips.CUSTOM_DAY_TRIPS_POINTS_OF_INTEREST).click()
+
+    def click_advanced_filter(self):
+        """Click the Advanced Filter button."""
+        self.device.xpath(DayTrips.ADVANCED_FILTER).click()
+
+    def click_next(self):
+        """Click the Next button."""
+        self.device.xpath(DayTrips.NEXT_BUTTON).click()
+
+    def click_continue(self):
+        """Click the Continue button."""
+        self.device.xpath(DayTrips.CONTINUE_BUTTON).click()
+
 
 class NavAddInfo:
     """Class for handling Add Info section navigation."""
