@@ -1,6 +1,5 @@
 from time import sleep
 import pytest
-import os
 
 from conftest import screenshots_dir
 from utils_authentication import SignInPrepare

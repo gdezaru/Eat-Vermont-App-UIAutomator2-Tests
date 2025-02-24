@@ -1,13 +1,11 @@
 import pytest
-import os
 
-from time import sleep
 from utils_authentication import SignInPrepare
 from utils_screenshots import ScreenshotsManagement
-from utils_scrolling import EventsScrolling, ScreenSwipe, ScrollAddInfo, ScrollVideos, GeneralScrolling
+from utils_scrolling import EventsScrolling, ScrollAddInfo, ScrollVideos
 from utils_ui_navigation import NavEvents, NavViewMap, NavVideos, NavAddInfo, NavDayTripsTrails, NavBottomNavBar, \
     NavFavoritesVisitHistory
-from utils_ui_verification import VerifyEvents, VerifyBusinesses, VerifyViewMap, VerifyVideos
+from utils_ui_verification import VerifyEvents, VerifyBusinesses, VerifyViewMap
 
 
 @pytest.mark.smoke

@@ -1,6 +1,5 @@
 import pytest
 import os
-from time import sleep
 from config import TEST_USER
 from utils_authentication import SignInPrepare
 from utils_device_interaction import ForgotPassword, LaunchApp
@@ -27,7 +26,6 @@ def test_sign_in_with_valid_credentials(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     sign_in.sign_in_and_prepare()
 
-    # Check for success message
     screenshot_path = os.path.join(screenshots_dir, "1_1_1_successful_sign_in_user_password.png")
     d.screenshot(screenshot_path)
 

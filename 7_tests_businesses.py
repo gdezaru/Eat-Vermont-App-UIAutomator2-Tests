@@ -1,6 +1,4 @@
-from time import sleep
 import pytest
-import os
 
 from utils_authentication import SignInPrepare
 from utils_ui_navigation import NavBusinesses

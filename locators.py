@@ -49,9 +49,7 @@ class HomeScreen:
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
     TRAILS_BUTTON = '//android.view.ViewGroup[@content-desc="Trail"]'
-
-
-#    LOCATION_PICKER_HOME_SCREEN = *need button id because other locators don't work*'
+    CUSTOM_DAY_TRIP_BUTTON = '//android.widget.TextView[@text="Create a Custom trip"]'
 
 
 class HomeScreenTiles:

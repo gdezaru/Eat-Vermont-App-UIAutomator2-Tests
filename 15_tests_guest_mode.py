@@ -25,7 +25,7 @@ def test_guest_mode_button(d, screenshots_dir):
 
     guest_mode.enter_guest_mode_and_handle_popups()
 
-    screenshots.take_screenshot("14_1_1_guest_mode_button")
+    screenshots.take_screenshot("15_1_1_guest_mode_button")
 
 
 @pytest.mark.smoke
@@ -54,7 +54,7 @@ def test_guest_mode_events(d, screenshots_dir):
 
     verify_limited_results.verify_events_limited_results_text()
 
-    screenshots.take_screenshot("14_2_1_guest_mode_events")
+    screenshots.take_screenshot("15_2_1_guest_mode_events")
 
 
 @pytest.mark.smoke
@@ -80,7 +80,7 @@ def test_guest_mode_videos(d, screenshots_dir):
 
     verify_locked_videos.verify_locked_videos()
 
-    screenshots.take_screenshot("14_3_2_guest_mode_videos_triggered_plans_popup")
+    screenshots.take_screenshot("15_3_2_guest_mode_videos_triggered_plans_popup")
 
 
 @pytest.mark.smoke
@@ -101,7 +101,7 @@ def test_guest_mode_search(d, screenshots_dir):
 
     nav_search.click_search()
 
-    screenshots.take_screenshot("14_4_1_guest_mode_search_triggered_plans_popup")
+    screenshots.take_screenshot("15_4_1_guest_mode_search_triggered_plans_popup")
 
 
 @pytest.mark.smoke
@@ -126,7 +126,7 @@ def test_guest_mode_favorites(d, screenshots_dir):
 
     verify_plans_popup.verify_plans_popup()
 
-    screenshots.take_screenshot("14_5_1_guest_mode_search_triggered_plans_popup")
+    screenshots.take_screenshot("15_5_1_guest_mode_search_triggered_plans_popup")
 
 
 @pytest.mark.smoke
@@ -150,4 +150,4 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
     verify_prompt.verify_home_screen_prompt()
 
     # Take a confirmation screenshot
-    screenshots.take_screenshot("14_6_1_guest_mode_prompt_end_screen")
+    screenshots.take_screenshot("15_6_1_guest_mode_prompt_end_screen")

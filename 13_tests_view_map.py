@@ -1,7 +1,5 @@
 import pytest
-import os
-from time import sleep
-from locators import ViewMap
+
 from utils_authentication import SignInPrepare
 from utils_screenshots import ScreenshotsManagement
 from utils_ui_navigation import NavViewMap
