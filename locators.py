@@ -112,6 +112,7 @@ class AddInfo:
     ADD_UPDATE_INFO_FIELD = ('//android.widget.EditText[@text="e.g. '
                              '\"New hours: 9am-6pm daily.\" or \"New menu!\" (then attach an image)"]')
     SUBMIT_INFO_BUTTON = '//android.widget.TextView[@text="Submit"]'
+    CHEERS_BUTTON = '//android.widget.TextView[@text="Cheers"]'
 
 
 class LocationManagement:

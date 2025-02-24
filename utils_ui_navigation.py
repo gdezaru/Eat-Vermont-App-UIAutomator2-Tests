@@ -3,7 +3,7 @@ Utility functions for UI verification.
 """
 from time import sleep
 from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
-    ViewMap, DayTrips, LoginPage
+    ViewMap, DayTrips, LoginPage, AddInfo
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
@@ -526,6 +526,101 @@ class NavViewMap:
         assert food_pantries_filter.exists, "Food Pantries filter is not visible on the map screen"
         food_pantries_filter.click()
         sleep(1)
+        return True
+
+
+class AddInfoActions:
+    """Class for handling Add Info actions"""
+
+    def __init__(self, device):
+        """
+        Initialize AddInfoActions with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def input_business_name(self, text):
+        """
+        Click business name field and input text.
+
+        Args:
+            text: Text to input in the business name field
+
+        Returns:
+            bool: True if text was input successfully
+
+        Raises:
+            AssertionError: If business name field is not found
+        """
+        business_name_field = self.device.xpath(AddInfo.BUSINESS_NAME)
+        assert business_name_field.exists, "Business name field not found"
+        business_name_field.click()
+        self.device.send_keys(text)
+        return True
+
+    def input_update_info(self, text):
+        """
+        Click update info field and input text.
+
+        Args:
+            text: Text to input in the update info field
+
+        Returns:
+            bool: True if text was input successfully
+
+        Raises:
+            AssertionError: If update info field is not found
+        """
+        update_info_field = self.device.xpath(AddInfo.ADD_UPDATE_INFO_FIELD)
+        assert update_info_field.exists, "Update info field not found"
+        update_info_field.click()
+        self.device.send_keys(text)
+        return True
+
+    def click_submit_button(self, max_attempts=2):
+        """
+        Click the submit button with multiple attempts.
+
+        Args:
+            max_attempts: Maximum number of click attempts (default: 2)
+
+        Returns:
+            bool: True if button was clicked successfully
+
+        Raises:
+            AssertionError: If submit button is not found
+        """
+        submit_button = self.device.xpath(AddInfo.SUBMIT_INFO_BUTTON)
+        assert submit_button.exists, "Submit button not found"
+
+        for _ in range(max_attempts):
+            submit_button.click()
+            sleep(1)
+
+        cheers_button = self.device.xpath(AddInfo.CHEERS_BUTTON)
+        assert cheers_button.exists, "Cheers button not visible after submission"
+        return True
+
+    def click_cheers_button(self):
+        """
+        Click the Cheers button and verify it disappears.
+
+        Returns:
+            bool: True if button was clicked and disappeared successfully
+
+        Raises:
+            AssertionError: If Cheers button is not found initially or if it remains visible after clicking
+        """
+        cheers_button = self.device.xpath(AddInfo.CHEERS_BUTTON)
+        assert cheers_button.exists, "Cheers button not found"
+
+        cheers_button.click()
+        sleep(1)
+
+        assert not cheers_button.exists, "Cheers button still visible after clicking"
+
         return True
 
 

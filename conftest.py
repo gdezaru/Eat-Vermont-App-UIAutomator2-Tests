@@ -95,9 +95,9 @@ def d(request):
     run_adb_command(f"-s {device_id} shell am force-stop com.github.uiautomator")
     run_adb_command(f"-s {device_id} shell am force-stop com.github.uiautomator.test")
     sleep(2)
-    device.service("uiautomator").stop()
+    device.stop_uiautomator()
     sleep(2)
-    device.service("uiautomator").start()
+    device.start_uiautomator()
     sleep(3)  # Wait for service to fully start
     
     # Clean up the app state before starting
