@@ -3,7 +3,7 @@ import pytest
 from utils_authentication import SignInPrepare
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import ScrollAddInfo
-from utils_ui_navigation import NavAddInfo, AddInfoActions
+from utils_ui_navigation import NavAddInfo
 
 
 @pytest.mark.smoke
@@ -24,7 +24,7 @@ def test_add_info_without_photo(d, screenshots_dir):
     nav_add_info = NavAddInfo(d)
     scroll_add_info = ScrollAddInfo(d)
     screenshots = ScreenshotsManagement(d)
-    add_info = AddInfoActions(d)
+    add_info = NavAddInfo(d)
 
     sign_in.sign_in_and_prepare()
 
