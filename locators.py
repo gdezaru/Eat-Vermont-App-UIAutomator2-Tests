@@ -109,8 +109,8 @@ class ViewMap:
 class AddInfo:
     """Locators for Add Info Screen"""
     BUSINESS_NAME = '//android.widget.EditText[@text="Type here."]'
-    ADD_UPDATE_INFO_FIELD = ('//android.widget.EditText[@text="e.g. '
-                             '\"New hours: 9am-6pm daily.\" or \"New menu!\" (then attach an image)"]')
+    ADD_UPDATE_INFO_FIELD = ('//*[@content-desc="Add Info"]/android.view.ViewGroup[1]/android.widget.ScrollView[1]'
+                             '/android.view.ViewGroup[1]/android.view.ViewGroup[2]')
     SUBMIT_INFO_BUTTON = '//android.widget.TextView[@text="Submit"]'
     CHEERS_BUTTON = '//android.widget.TextView[@text="Cheers"]'
 

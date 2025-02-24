@@ -361,13 +361,13 @@ class NavBusinesses:
             AssertionError: If favorited business is not found or not removed successfully
         """
         # First verify the business exists in favorites
-        sleep(self.DEFAULT_WAIT)  # Wait for favorites to load
+        sleep(self.DEFAULT_WAIT)
         favorite_business = self.device.xpath(MyFavorites.ADDED_FAVORITE_BUSINESS)
         assert favorite_business.exists, f"Could not find favorited business. Looking for: {self.DEFAULT_MENU_BUSINESS}"
 
         # Click the business to open its details
         favorite_business.click()
-        sleep(self.LONG_WAIT)  # Give more time for business details to load
+        sleep(self.LONG_WAIT)
 
         # Try to find the favorite button with retries
         max_retries = 3
@@ -375,9 +375,9 @@ class NavBusinesses:
             favorite_icon = self.device.xpath(MyFavorites.FAVORITE_BUSINESS_DETAILS_REMOVE)
             if favorite_icon.exists:
                 favorite_icon.click()
-                sleep(self.LONG_WAIT)  # Give time for removal animation and UI update
+                sleep(self.LONG_WAIT)
                 break
-            elif i < max_retries - 1:  # Don't sleep on last iteration
+            elif i < max_retries - 1:
                 sleep(self.DEFAULT_WAIT)
         else:
             assert False, "Could not find favorite remove button after multiple attempts"
@@ -579,31 +579,28 @@ class AddInfoActions:
         self.device.send_keys(text)
         return True
 
-    def click_submit_button(self, max_attempts=2):
+    def click_submit_button(self, wait_time=3):
         """
-        Click the submit button with multiple attempts.
+        Click the submit button with multiple attempts and verify the Cheers confirmation.
 
         Args:
-            max_attempts: Maximum number of click attempts (default: 2)
+            wait_time: Time to wait for Cheers button to appear (default: 3 seconds)
 
         Returns:
-            bool: True if button was clicked successfully
+            bool: True if button was clicked successfully and Cheers confirmation appeared
 
         Raises:
-            AssertionError: If submit button is not found
+            AssertionError: If submit button is not found or if Cheers confirmation is not visible
         """
-        submit_button = self.device.xpath(AddInfo.SUBMIT_INFO_BUTTON)
-        assert submit_button.exists, "Submit button not found"
-
-        for _ in range(max_attempts):
-            submit_button.click()
-            sleep(1)
+        self.device(text="Submit").click()
+        sleep(wait_time)
 
         cheers_button = self.device.xpath(AddInfo.CHEERS_BUTTON)
         assert cheers_button.exists, "Cheers button not visible after submission"
+
         return True
 
-    def click_cheers_button(self):
+    def click_cheers_button(self, wait_time=2):
         """
         Click the Cheers button and verify it disappears.
 
@@ -617,7 +614,7 @@ class AddInfoActions:
         assert cheers_button.exists, "Cheers button not found"
 
         cheers_button.click()
-        sleep(1)
+        sleep(wait_time)
 
         assert not cheers_button.exists, "Cheers button still visible after clicking"
 
