@@ -791,6 +791,7 @@ class NavCustomDayTrips:
     """Class for handling Custom Day Trips navigation."""
     SEARCH_WAIT = 5
     DEFAULT_WAIT = 2
+
     def __init__(self, device):
         """
         Initialize NavCustomDayTrips with a device instance.
@@ -814,15 +815,18 @@ class NavCustomDayTrips:
         assert custom_trip_button.exists, "Could not find Create a Custom trip button"
 
         custom_trip_button.click()
+        sleep(self.DEFAULT_WAIT)
         return True
 
     def click_create_trip_header(self):
         """Click the Create Trip header text."""
         self.device.xpath(DayTrips.CREATE_TRIP_HEADER).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_add_location(self):
         """Click the Add A Location button."""
         self.device.xpath(DayTrips.ADD_A_LOCATION).click()
+        sleep(self.DEFAULT_WAIT)
 
     def search_and_pick_location(self, location_name):
         """Searches for a location"""
@@ -842,16 +846,19 @@ class NavCustomDayTrips:
     def click_quick_suggestions(self):
         """Click the Quick Suggestions text."""
         self.device.xpath(DayTrips.QUICK_SUGGESTIONS).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_auto_recommend(self):
         """Click the Auto-Recommend button."""
         self.device.xpath(DayTrips.AUTO_RECOMMEND_BUTTON).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_date_picker(self):
         """
         Click the date picker with the specified date.
         """
         self.device.xpath(DayTrips.DATE_PICKER).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_date_picker_right_arrow(self):
         """Click the date picker right arrow button."""
@@ -865,34 +872,42 @@ class NavCustomDayTrips:
             date_number: String representing the date (e.g., '31')
         """
         self.device.xpath(DayTrips.DATE_PICKER_SELECTED_DATE.format(date_number)).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_events(self):
         """Click the Events button."""
         self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_EVENTS).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_food_drinks(self):
         """Click the Food + Drinks button."""
         self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_FOOD_DRINKS).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_outdoors(self):
         """Click the Outdoors button."""
         self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_OUTDOORS).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_points_of_interest(self):
         """Click the Points of Interest button."""
         self.device.xpath(DayTrips.CUSTOM_DAY_TRIPS_POINTS_OF_INTEREST).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_advanced_filter(self):
         """Click the Advanced Filter button."""
         self.device.xpath(DayTrips.ADVANCED_FILTER).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_next(self):
         """Click the Next button."""
         self.device.xpath(DayTrips.NEXT_BUTTON).click()
+        sleep(self.DEFAULT_WAIT)
 
     def click_continue(self):
         """Click the Continue button."""
         self.device.xpath(DayTrips.CONTINUE_BUTTON).click()
+        sleep(self.DEFAULT_WAIT)
 
 
 class NavAddInfo:
