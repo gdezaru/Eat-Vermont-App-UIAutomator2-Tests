@@ -1137,6 +1137,33 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         return True
 
+    def click_three_dotted_menu(self):
+        """
+        Click the three-dotted menu button in day trip details.
+
+        Raises:
+            AssertionError: If menu button is not found
+        """
+        menu_button = self.device.xpath(DayTrips.DAY_TRIPS_THREE_DOTTED_BUTTON)
+        assert menu_button.exists, "Three-dotted menu button not found"
+
+        menu_button.click()
+        sleep(self.DEFAULT_WAIT)
+
+    def click_delete_trip(self):
+        """
+        Click the delete button in the trip options menu.
+        Note: Three-dotted menu must be opened first.
+
+        Raises:
+            AssertionError: If delete button is not found
+        """
+        delete_button = self.device.xpath(DayTrips.DAY_TRIPS_DELETE_BUTTON)
+        assert delete_button.exists, "Delete button not found in menu"
+
+        delete_button.click()
+        sleep(self.DEFAULT_WAIT)
+
 
 class NavAddInfo:
     """Class for handling Add Info section navigation."""

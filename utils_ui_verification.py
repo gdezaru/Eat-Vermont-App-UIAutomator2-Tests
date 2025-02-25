@@ -669,7 +669,52 @@ class VerifyCustomDayTrips:
         assert button.exists, "Continue button not found"
         return True
 
+    def verify_day_trip_details_date(self, month=None, day=None, year=None):
+        """
+        Verify that a specific date is present in the day trip details.
 
+        Args:
+            month (str, optional): Month name (e.g., 'March'). Defaults to current month.
+            day (str, optional): Day of month (e.g., '1'). Defaults to current day.
+            year (str, optional): Year in YYYY format (e.g., '2025'). Defaults to current year.
+
+        Returns:
+            bool: True if date is found
+
+        Raises:
+            AssertionError: If date is not found
+
+        Example:
+            verify_day_trip_details_date("March", "1", "2025")  # Verifies "March 1, 2025" is present
+        """
+        from datetime import datetime
+        current_date = datetime.now()
+        month = month or current_date.strftime('%B')
+        day = day or str(current_date.day)
+        year = year or str(current_date.year)
+        date_string = f"{month} {day}, {year}"
+        date_element = self.device.xpath(DayTrips.DAY_TRIP_DETAILS_DATE.format(date_string))
+        assert date_element.exists, f"Expected date '{date_string}' not found in day trip details"
+        return True
+
+    def verify_day_trip_places_count(self):
+        """
+        Verify that the number of places is displayed and is within valid range (1-100).
+
+        Returns:
+            int: The number of places found
+
+        Raises:
+            AssertionError: If places count is not found or is outside valid range
+        """
+        places_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+        assert places_element.exists, "Places count not found"
+        places_text = places_element.get_text()
+        places_text = str(places_text)
+        digits = ''.join(c for c in places_text if c.isdigit())
+        number = int(digits) if digits else 0
+        assert 1 <= number <= 100, f"Places count ({number}) is outside valid range (1-100)"
+        return number
 
 
 class VerifyTrails:

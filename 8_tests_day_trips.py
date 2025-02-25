@@ -403,6 +403,7 @@ def test_auto_generated_day_trip_events_details(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_trips = NavDayTripsTrails(d)
     nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
@@ -413,7 +414,19 @@ def test_auto_generated_day_trip_events_details(d, screenshots_dir):
 
     nav_custom_trips.click_my_trips()
 
-    screenshots.take_screenshot("8_7_1_custom_day_trips_my_trips")
+    nav_custom_trips.search_day_trip_with_events()
+
+    screenshots.take_screenshot("8_7_1_custom_day_trip_events_my_trips")
+
+    verify_custom_trips.verify_day_trip_details_date()
+
+    verify_custom_trips.verify_day_trip_places_count()
+
+    screenshots.take_screenshot("8_7_2_custom_day_trip_events_details")
+
+    nav_custom_trips.click_three_dotted_menu()
+
+    nav_custom_trips.click_delete_trip()
 
 
 def test_auto_generated_day_trip_food_and_drinks_details(d, screenshots_dir):
@@ -435,6 +448,7 @@ def test_auto_generated_day_trip_food_and_drinks_details(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_trips = NavDayTripsTrails(d)
     nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
@@ -445,7 +459,19 @@ def test_auto_generated_day_trip_food_and_drinks_details(d, screenshots_dir):
 
     nav_custom_trips.click_my_trips()
 
-    screenshots.take_screenshot("8_8_1_custom_day_trips_my_trips")
+    nav_custom_trips.search_day_trip_with_food_drinks()
+
+    screenshots.take_screenshot("8_9_1_custom_day_trips_food_drinks_my_trips")
+
+    verify_custom_trips.verify_day_trip_details_date()
+
+    verify_custom_trips.verify_day_trip_places_count()
+
+    screenshots.take_screenshot("8_9_2_custom_day_trip_food_drinks_details")
+
+    nav_custom_trips.click_three_dotted_menu()
+
+    nav_custom_trips.click_delete_trip()
 
 
 def test_auto_generated_day_trip_outdoors_details(d, screenshots_dir):
@@ -467,6 +493,7 @@ def test_auto_generated_day_trip_outdoors_details(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_trips = NavDayTripsTrails(d)
     nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
@@ -477,7 +504,19 @@ def test_auto_generated_day_trip_outdoors_details(d, screenshots_dir):
 
     nav_custom_trips.click_my_trips()
 
-    screenshots.take_screenshot("8_9_1_custom_day_trips_my_trips")
+    nav_custom_trips.search_day_trip_with_outdoors()
+
+    screenshots.take_screenshot("8_10_1_custom_day_trips_outdoors_my_trips")
+
+    verify_custom_trips.verify_day_trip_details_date()
+
+    verify_custom_trips.verify_day_trip_places_count()
+
+    screenshots.take_screenshot("8_10_2_custom_day_trip_outdoors_details")
+
+    nav_custom_trips.click_three_dotted_menu()
+
+    nav_custom_trips.click_delete_trip()
 
 
 def test_auto_generated_day_trip_points_of_interest_details(d, screenshots_dir):
@@ -499,6 +538,7 @@ def test_auto_generated_day_trip_points_of_interest_details(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_trips = NavDayTripsTrails(d)
     nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
@@ -509,4 +549,16 @@ def test_auto_generated_day_trip_points_of_interest_details(d, screenshots_dir):
 
     nav_custom_trips.click_my_trips()
 
-    screenshots.take_screenshot("8_10_1_custom_day_trips_my_trips")
+    nav_custom_trips.search_day_trip_with_points_of_interest()
+
+    screenshots.take_screenshot("8_11_1_custom_day_trips_points_of_interest_my_trips")
+
+    verify_custom_trips.verify_day_trip_details_date()
+
+    verify_custom_trips.verify_day_trip_places_count()
+
+    screenshots.take_screenshot("8_11_2_custom_day_trip_points_of_interest_details")
+
+    nav_custom_trips.click_three_dotted_menu()
+
+    nav_custom_trips.click_delete_trip()

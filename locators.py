@@ -190,6 +190,11 @@ class DayTrips:
     MY_TRIPS = '//android.widget.TextView[@text="My Trips"]'
     DAY_TRIPS_SEARCH = '//android.widget.EditText[@text="Search"]'
     DAY_TRIPS_SEARCH_RESULT = '//android.widget.TextView[contains(@text, "{}")]'
+    DAY_TRIP_DETAILS_DATE = '//android.widget.TextView[@text="{}"]'
+    DAY_TRIPS_DETAILS_PLACES = '//android.widget.TextView[contains(@text, " Places")]'
+    DAY_TRIPS_THREE_DOTTED_BUTTON = ('//android.view.ViewGroup[contains(@content-desc, "More options")'
+                                     ' or contains(@content-desc, "menu")]')
+    DAY_TRIPS_DELETE_BUTTON = '//android.widget.TextView[@text="Delete"]'
     # Locators for automatic custom Day Trips builder
     CUSTOM_DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Create a Custom trip"]'
     CREATE_TRIP_HEADER = '//android.widget.TextView[@text="Where do you want to go?"]'
