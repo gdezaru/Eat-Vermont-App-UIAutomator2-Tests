@@ -204,11 +204,13 @@ class DayTrips:
     ADVANCED_FILTER = '//android.widget.TextView[@text=" Advanced Filter"]'
     NEXT_BUTTON = '//android.widget.TextView[@text="Next"]'
     CRAFTING_DAY_TRIP = '//android.widget.TextView[@text="Crafting Your Trip"]'
-    DETAILS_SCREEN_LOCATION = '//android.widget.TextView[@text="Location: {}"]'
+    DETAILS_SCREEN_LOCATION = '//android.widget.TextView[contains(@text, "{}")]'
     DETAILS_SCREEN_DATE = '//android.widget.TextView[@text="{}"]'
     QUICK_TIP = '//android.widget.TextView[@text="Quick Tip: Drag and drop to change order."]'
     ALSO_TIP = '//android.widget.TextView[@text="Also: Swipe side-to-side for more."]'
     CONTINUE_BUTTON = '//android.widget.TextView[@text="Continue"]'
+    TRIP_NAME = '//android.widget.EditText[@text="Enter Trip name"]'
+    SAVE_TRIP = '//android.widget.TextView[@text="Save"]'
 
 
 class Trails:

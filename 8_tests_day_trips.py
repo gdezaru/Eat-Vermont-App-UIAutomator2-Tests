@@ -137,7 +137,11 @@ def test_auto_generated_day_trip_events(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    screenshots.take_screenshot("8_3_3_custom_day_trips_events_back_on_home_screen")
+    nav_custom_trips.enter_trip_name()
+
+    screenshots.take_screenshot("8_3_3_custom_day_trips_events_trip_name")
+
+    nav_custom_trips.click_save_trip()
 
 
 def test_auto_generated_day_trip_food_and_drinks(d, screenshots_dir):
@@ -213,7 +217,11 @@ def test_auto_generated_day_trip_food_and_drinks(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    screenshots.take_screenshot("8_4_3_custom_day_trips_events_back_on_home_screen")
+    nav_custom_trips.enter_trip_name()
+
+    screenshots.take_screenshot("8_4_3_custom_day_trips_food_and_drinks_trip_name")
+
+    nav_custom_trips.click_save_trip()
 
 
 def test_auto_generated_day_trip_outdoors(d, screenshots_dir):
@@ -289,7 +297,11 @@ def test_auto_generated_day_trip_outdoors(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    screenshots.take_screenshot("8_5_3_custom_day_trips_events_back_on_home_screen")
+    nav_custom_trips.enter_trip_name()
+
+    screenshots.take_screenshot("8_5_3_custom_day_trips_outdoors_trip_name")
+
+    nav_custom_trips.click_save_trip()
 
 
 def test_auto_generated_day_trip_points_of_interest(d, screenshots_dir):
@@ -365,4 +377,8 @@ def test_auto_generated_day_trip_points_of_interest(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    screenshots.take_screenshot("8_6_3_custom_day_trips_events_back_on_home_screen")
+    nav_custom_trips.enter_trip_name()
+
+    screenshots.take_screenshot("8_6_3_custom_day_trips_points_of_interest_trip_name")
+
+    nav_custom_trips.click_save_trip()

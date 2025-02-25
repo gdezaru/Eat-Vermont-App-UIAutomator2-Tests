@@ -917,6 +917,42 @@ class NavCustomDayTrips:
         self.device.xpath(DayTrips.CONTINUE_BUTTON).click()
         sleep(self.DEFAULT_WAIT)
 
+    def enter_trip_name(self):
+        """
+        Click the trip name field and enter a unique name with format:
+        AutoTestEventsTrip[random_number]
+
+        Returns:
+            str: The generated trip name
+
+        Example:
+            AutoTestEventsTrip42
+        """
+        import random
+        random_number = random.randint(1, 9999)
+        trip_name = f"AutoTestEventsTrip{random_number}"
+        trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
+        assert trip_name_field.exists, "Trip name input field not found"
+        trip_name_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+
+        return trip_name
+
+    def click_save_trip(self):
+        """
+        Click the Save button to save the trip.
+
+        Returns:
+            bool: True if button was found and clicked
+
+        Raises:
+            AssertionError: If Save button is not found
+        """
+        save_button = self.device.xpath(DayTrips.SAVE_TRIP)
+        assert save_button.exists, "Save Trip button not found"
+
 
 class NavAddInfo:
     """Class for handling Add Info section navigation."""
