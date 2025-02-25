@@ -532,16 +532,13 @@ class NavViewMap:
 class NavDayTripsTrails:
     """Class for handling Trails section navigation and interactions."""
 
-    # Class constants
     TRAIL_START_TEXT = "Start a Trail!"
     DAY_TRIPS_TEXT = "Day Trips"
 
-    # Wait times
     DEFAULT_WAIT = 2
     LONG_WAIT = 5
     SHORT_WAIT = 1
 
-    # Scroll settings
     MAX_SCROLL_ATTEMPTS = 5
     MAX_SMALL_SCROLLS = 3
     SCROLL_DURATION = 1.0
@@ -566,7 +563,6 @@ class NavDayTripsTrails:
         Raises:
             AssertionError: If Day Trips text or Read More button is not found
         """
-        # Initialize screen swipe for coordinates
         screen_swipe = ScreenSwipe(self.device)
         start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
         general_scroll = GeneralScrolling(self.device)
@@ -588,7 +584,6 @@ class NavDayTripsTrails:
             "Day Trips text not found"
         )
 
-        # Find Read More button
         read_more_button = self.device.xpath(DayTrips.DAY_TRIPS_READ_MORE_HOME_SCREEN)
 
         for i in range(self.MAX_SMALL_SCROLLS):

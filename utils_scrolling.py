@@ -75,23 +75,6 @@ class GeneralScrolling(ScreenSwipe):
         """
         return self.height // 4
 
-    def click_and_verify_element(self, element_locator, description):
-        """
-        Clicks an element and verifies its presence.
-
-        Args:
-            element_locator: The XPath locator for the element.
-            description: A description of the element for logging.
-
-        Raises:
-            AssertionError: If the element is not found
-        """
-        print(f"\nClicking and verifying {description}...")
-        element = self.device.xpath(element_locator)
-        assert element.exists, f"{description} not found"
-        element.click()
-        print(f"{description} clicked and verified.")
-
     def scroll_to_bottom(self, scroll_times=3, duration=0.5):
         """
         Scrolls to the bottom of the results on the screen.
@@ -302,6 +285,16 @@ class ScrollAddInfo(GeneralScrolling):
 class ScrollToCustomDayTrips:
     """Class for handling Custom Day Trips navigation."""
 
+    # Class constants
+    DAY_TRIPS_TEXT = "Day Trips"
+    CUSTOM_TRIP_TEXT = "Create a Custom trip"
+
+    # Scroll settings
+    MAX_SCROLL_ATTEMPTS = 5
+    SCROLL_DURATION = 0.3
+    DEFAULT_WAIT = 2
+    LONG_WAIT = 5
+
     def __init__(self, device):
         """
         Initialize NavCustomDayTrips with a device instance.
@@ -314,41 +307,46 @@ class ScrollToCustomDayTrips:
 
     def scroll_to_custom_day_trips(self, max_attempts=5):
         """
-        Scroll until Custom Day Trips button is centered on screen.
+        Scroll until Day Trips section is found and centered.
 
         Args:
             max_attempts: Maximum number of scroll attempts (default: 5)
 
         Returns:
-            bool: True if button was found and centered
+            bool: True if Day Trips section was found and centered
 
         Raises:
-            AssertionError: If button is not found after max attempts
+            AssertionError: If Day Trips section is not found after max attempts
         """
+        # Initialize screen swipe for coordinates
+        screen_swipe = ScreenSwipe(self.device)
+        start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
+        target_y = self.general_scroll.get_target_position_in_first_quarter()
+        scroll_end_y = (start_y + end_y) // 2
         for attempt in range(max_attempts):
-            custom_trips_button = self.device.xpath(DayTrips.CUSTOM_DAY_TRIPS_BUTTON)
-            if custom_trips_button.exists:
-                button_bounds = custom_trips_button.info['bounds']
-                button_center_y = (button_bounds['top'] + button_bounds['bottom']) // 2
+            if self.device(text=self.DAY_TRIPS_TEXT).exists:
+                day_trips_elem = self.device(text=self.DAY_TRIPS_TEXT)
+                bounds = day_trips_elem.info['bounds']
+                current_y = (bounds['top'] + bounds['bottom']) // 2
 
-                target_y = self.general_scroll.get_target_position_in_first_quarter()
+                if current_y <= target_y:
+                    if current_y < target_y - 100:
+                        self.device.swipe(start_x, end_y, start_x, start_y, duration=self.SCROLL_DURATION)
+                        sleep(self.DEFAULT_WAIT)
+                    else:
+                        break
+            self.device.swipe(start_x, start_y, start_x, scroll_end_y, duration=self.SCROLL_DURATION)
+            sleep(self.DEFAULT_WAIT)
 
-                if button_center_y > target_y:
-                    start_x, start_y, end_y = self.general_scroll.calculate_swipe_coordinates()
-                    self.device.swipe(start_x, start_y, start_x, end_y, duration=0.5)
-                    sleep(1)
-                elif button_center_y < target_y:
-                    start_x, start_y, end_y = self.general_scroll.calculate_swipe_coordinates()
-                    self.device.swipe(start_x, end_y, start_x, start_y, duration=0.5)
-                    sleep(1)
-                else:
-                    return True
-            else:
-                start_x, start_y, end_y = self.general_scroll.calculate_swipe_coordinates()
-                self.device.swipe(start_x, start_y, start_x, end_y, duration=0.5)
-                sleep(1)
+        assert self.device(text=self.DAY_TRIPS_TEXT).exists(timeout=self.LONG_WAIT), (
+            "Day Trips text not found"
+        )
+        custom_trip_button = self.device(text=self.CUSTOM_TRIP_TEXT)
+        assert custom_trip_button.exists(timeout=self.LONG_WAIT), (
+            "Custom Day Trip button not found"
+        )
 
-        raise AssertionError("Custom Day Trips button not found after maximum scroll attempts")
+        return True
 
 
 class ScrollVideos(GeneralScrolling):

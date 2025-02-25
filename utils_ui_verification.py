@@ -562,7 +562,7 @@ class VerifyCustomDayTrips:
             AssertionError: If text is not found
         """
         text = self.device.xpath(DayTrips.CRAFTING_DAY_TRIP)
-        assert text.exists, "Crafting Your Perfect Day Trip text not found"
+        assert text.exists, "Crafting Your Trip text not found"
         return True
 
     def verify_location_details(self, location):
