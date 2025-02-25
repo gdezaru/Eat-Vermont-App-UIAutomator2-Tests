@@ -2,6 +2,7 @@
 Utilities functions for UI verification
 """
 import os
+import time
 from time import sleep
 from locators import (Businesses, EventsScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
                       PlansPopup, ViewMap, LoginPage, DayTrips)
@@ -565,21 +566,48 @@ class VerifyCustomDayTrips:
         assert text.exists, "Crafting Your Trip text not found"
         return True
 
-    def verify_location_details(self, location):
+    def wait_for_crafting_popup_to_disappear(self, timeout=30):
         """
-        Verify that the location details text is present.
+        Wait for the 'Crafting Your Trip' popup to disappear.
 
         Args:
-            location: Name of the location (e.g., 'Burlington')
+            timeout: Maximum time to wait in seconds (default: 30)
 
         Returns:
-            bool: True if text exists
+            bool: True if popup disappeared
 
         Raises:
-            AssertionError: If text is not found
+            AssertionError: If popup is still present after timeout
         """
-        text = self.device.xpath(DayTrips.DETAILS_SCREEN_LOCATION.format(location))
-        assert text.exists, f"Location details for '{location}' not found"
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            crafting_popup = self.device.xpath(DayTrips.CRAFTING_DAY_TRIP)
+            if not crafting_popup.exists:
+                return True
+            sleep(1)
+
+        assert False, "Crafting Your Trip popup did not disappear after {} seconds".format(timeout)
+
+    def verify_location_details(self, location_name):
+        """
+        Verify location details are present for a specific location.
+        First waits for the Crafting popup to disappear.
+
+        Args:
+            location_name: Name of the location to verify
+
+        Returns:
+            bool: True if location details are found
+
+        Raises:
+            AssertionError: If location details are not found
+        """
+        # First wait for the Crafting popup to disappear
+        self.wait_for_crafting_popup_to_disappear()
+
+        # Now check for location details
+        location_details = self.device.xpath(DayTrips.DETAILS_SCREEN_LOCATION.format(location_name))
+        assert location_details.exists, f"Location details for '{location_name}' not found"
         return True
 
     def verify_date_details(self, date_str):

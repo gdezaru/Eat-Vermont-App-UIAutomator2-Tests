@@ -123,6 +123,8 @@ def test_auto_generated_day_trip_events(d, screenshots_dir):
 
     verify_custom_trips.verify_crafting_day_trip()
 
+    verify_custom_trips.wait_for_crafting_popup_to_disappear()
+
     verify_custom_trips.verify_location_details("Burlington")
 
     verify_custom_trips.verify_quick_tip()
@@ -196,6 +198,8 @@ def test_auto_generated_day_trip_food_and_drinks(d, screenshots_dir):
     nav_custom_trips.click_next()
 
     verify_custom_trips.verify_crafting_day_trip()
+
+    verify_custom_trips.wait_for_crafting_popup_to_disappear()
 
     verify_custom_trips.verify_location_details("Burlington")
 
@@ -271,6 +275,8 @@ def test_auto_generated_day_trip_outdoors(d, screenshots_dir):
 
     verify_custom_trips.verify_crafting_day_trip()
 
+    verify_custom_trips.wait_for_crafting_popup_to_disappear()
+
     verify_custom_trips.verify_location_details("Burlington")
 
     verify_custom_trips.verify_quick_tip()
@@ -344,6 +350,8 @@ def test_auto_generated_day_trip_points_of_interest(d, screenshots_dir):
     nav_custom_trips.click_next()
 
     verify_custom_trips.verify_crafting_day_trip()
+
+    verify_custom_trips.wait_for_crafting_popup_to_disappear()
 
     verify_custom_trips.verify_location_details("Burlington")
 

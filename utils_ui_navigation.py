@@ -848,11 +848,24 @@ class NavCustomDayTrips:
         self.device.xpath(DayTrips.AUTO_RECOMMEND_BUTTON).click()
         sleep(self.DEFAULT_WAIT)
 
-    def click_date_picker(self):
+    def click_date_picker(self, month=None, day=None, year=None):
         """
-        Click the date picker with the specified date.
+        Click the date picker with a specific date.
+
+        Args:
+            month (str, optional): Month name (e.g., 'February'). Defaults to current month.
+            day (str, optional): Day of month (e.g., '25'). Defaults to current day.
+            year (str, optional): Year in YYYY format (e.g., '2025'). Defaults to current year.
         """
-        self.device.xpath(DayTrips.DATE_PICKER).click()
+        from datetime import datetime
+        current_date = datetime.now()
+        month = month or current_date.strftime('%B')
+        day = day or str(current_date.day)
+        year = year or str(current_date.year)
+        date_string = f"{month} {day}, {year}"
+        date_picker = self.device.xpath(f'//android.view.ViewGroup[@content-desc="{date_string}"]')
+        assert date_picker.exists, f"Could not find date picker with date: {date_string}"
+        date_picker.click()
         sleep(self.DEFAULT_WAIT)
 
     def click_date_picker_right_arrow(self):
