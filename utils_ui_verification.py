@@ -570,7 +570,7 @@ class VerifyCustomDayTrips:
         Verify that the location details text is present.
 
         Args:
-            location: Name of the location (e.g., 'Monkton')
+            location: Name of the location (e.g., 'Burlington')
 
         Returns:
             bool: True if text exists

@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 import pytest
 
 from utils_authentication import SignInPrepare
@@ -78,5 +80,283 @@ def test_auto_generated_day_trip_events(d, screenshots_dir):
     8. Taps Auto-Recommend
     9. Selects Events
     10. Asserts that Advanced Filter button is present
-    11.
+    11. Taps Next
+    12. Asserts that the Crafting Your Perfect Day Trip popup is visible
+    13. Waits for the Day Trips details to load
+    14. Asserts that the Location is visible
+    15. Asserts that the Date is visible
+    16. Asserts that the Quick Tip and Also are visible
+    17. Taps the Continue button
+    18. Asserts that the user is back on the home screen
     """
+    sign_in = SignInPrepare(d)
+    scroll_custom_trips = ScrollToCustomDayTrips(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    scroll_custom_trips.scroll_to_custom_day_trips()
+
+    nav_custom_trips.click_custom_day_trips_button()
+
+    nav_custom_trips.click_add_location()
+
+    nav_custom_trips.search_and_pick_location("Burlington")
+
+    nav_custom_trips.click_date_picker()
+
+    nav_custom_trips.click_date_picker_right_arrow()
+
+    nav_custom_trips.select_date("1")
+
+    screenshots.take_screenshot("8_3_1_custom_day_trips_events_location_and_date_added")
+
+    nav_custom_trips.click_auto_recommend()
+
+    verify_custom_trips.verify_advanced_filter()
+
+    nav_custom_trips.click_events()
+
+    verify_custom_trips.verify_next_button()
+
+    nav_custom_trips.click_next()
+
+    verify_custom_trips.verify_crafting_day_trip()
+
+    verify_custom_trips.verify_location_details("Burlington")
+
+    verify_custom_trips.verify_quick_tip()
+
+    verify_custom_trips.verify_also_tip()
+
+    verify_custom_trips.verify_continue_button()
+
+    screenshots.take_screenshot("8_3_2_custom_day_trips_events_day_trips_details")
+
+    nav_custom_trips.click_continue()
+
+    screenshots.take_screenshot("8_3_3_custom_day_trips_events_back_on_home_screen")
+
+
+def test_auto_generated_day_trip_food_and_drinks(d, screenshots_dir):
+    """
+    Tests the auto generation of a Day Trip in Custom Day Trips module.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Custom Day Trip section
+    4. Tap Create a Custom trip
+    5. Searches for a location
+    6. Confirms the location
+    7. Selects a date from the calendar
+    8. Taps Auto-Recommend
+    9. Selects Food + Drinks
+    10. Asserts that Advanced Filter button is present
+    11. Taps Next
+    12. Asserts that the Crafting Your Perfect Day Trip popup is visible
+    13. Waits for the Day Trips details to load
+    14. Asserts that the Location is visible
+    15. Asserts that the Date is visible
+    16. Asserts that the Quick Tip and Also are visible
+    17. Taps the Continue button
+    18. Asserts that the user is back on the home screen
+    """
+    sign_in = SignInPrepare(d)
+    scroll_custom_trips = ScrollToCustomDayTrips(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    scroll_custom_trips.scroll_to_custom_day_trips()
+
+    nav_custom_trips.click_custom_day_trips_button()
+
+    nav_custom_trips.click_add_location()
+
+    nav_custom_trips.search_and_pick_location("Burlington")
+
+    nav_custom_trips.click_date_picker()
+
+    nav_custom_trips.click_date_picker_right_arrow()
+
+    nav_custom_trips.select_date("1")
+
+    screenshots.take_screenshot("8_4_1_custom_day_trips_events_location_and_date_added")
+
+    nav_custom_trips.click_auto_recommend()
+
+    verify_custom_trips.verify_advanced_filter()
+
+    nav_custom_trips.click_food_drinks()
+
+    verify_custom_trips.verify_next_button()
+
+    nav_custom_trips.click_next()
+
+    verify_custom_trips.verify_crafting_day_trip()
+
+    verify_custom_trips.verify_location_details("Burlington")
+
+    verify_custom_trips.verify_quick_tip()
+
+    verify_custom_trips.verify_also_tip()
+
+    verify_custom_trips.verify_continue_button()
+
+    screenshots.take_screenshot("8_4_2_custom_day_trips_food_drinks_day_trips_details")
+
+    nav_custom_trips.click_continue()
+
+    screenshots.take_screenshot("8_4_3_custom_day_trips_events_back_on_home_screen")
+
+
+def test_auto_generated_day_trip_outdoors(d, screenshots_dir):
+    """
+    Tests the auto generation of a Day Trip in Custom Day Trips module.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Custom Day Trip section
+    4. Tap Create a Custom trip
+    5. Searches for a location
+    6. Confirms the location
+    7. Selects a date from the calendar
+    8. Taps Auto-Recommend
+    9. Selects Outdoors
+    10. Asserts that Advanced Filter button is present
+    11. Taps Next
+    12. Asserts that the Crafting Your Perfect Day Trip popup is visible
+    13. Waits for the Day Trips details to load
+    14. Asserts that the Location is visible
+    15. Asserts that the Date is visible
+    16. Asserts that the Quick Tip and Also are visible
+    17. Taps the Continue button
+    18. Asserts that the user is back on the home screen
+    """
+    sign_in = SignInPrepare(d)
+    scroll_custom_trips = ScrollToCustomDayTrips(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    scroll_custom_trips.scroll_to_custom_day_trips()
+
+    nav_custom_trips.click_custom_day_trips_button()
+
+    nav_custom_trips.click_add_location()
+
+    nav_custom_trips.search_and_pick_location("Burlington")
+
+    nav_custom_trips.click_date_picker()
+
+    nav_custom_trips.click_date_picker_right_arrow()
+
+    nav_custom_trips.select_date("1")
+
+    screenshots.take_screenshot("8_5_1_custom_day_trips_events_location_and_date_added")
+
+    nav_custom_trips.click_auto_recommend()
+
+    verify_custom_trips.verify_advanced_filter()
+
+    nav_custom_trips.click_outdoors()
+
+    verify_custom_trips.verify_next_button()
+
+    nav_custom_trips.click_next()
+
+    verify_custom_trips.verify_crafting_day_trip()
+
+    verify_custom_trips.verify_location_details("Burlington")
+
+    verify_custom_trips.verify_quick_tip()
+
+    verify_custom_trips.verify_also_tip()
+
+    verify_custom_trips.verify_continue_button()
+
+    screenshots.take_screenshot("8_5_2_custom_day_trips_outdoors_day_trips_details")
+
+    nav_custom_trips.click_continue()
+
+    screenshots.take_screenshot("8_5_3_custom_day_trips_events_back_on_home_screen")
+
+
+def test_auto_generated_day_trip_points_of_interest(d, screenshots_dir):
+    """
+    Tests the auto generation of a Day Trip in Custom Day Trips module.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Custom Day Trip section
+    4. Tap Create a Custom trip
+    5. Searches for a location
+    6. Confirms the location
+    7. Selects a date from the calendar
+    8. Taps Auto-Recommend
+    9. Selects Points of Interest
+    10. Asserts that Advanced Filter button is present
+    11. Taps Next
+    12. Asserts that the Crafting Your Perfect Day Trip popup is visible
+    13. Waits for the Day Trips details to load
+    14. Asserts that the Location is visible
+    15. Asserts that the Date is visible
+    16. Asserts that the Quick Tip and Also are visible
+    17. Taps the Continue button
+    18. Asserts that the user is back on the home screen
+    """
+    sign_in = SignInPrepare(d)
+    scroll_custom_trips = ScrollToCustomDayTrips(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    verify_custom_trips = VerifyCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    scroll_custom_trips.scroll_to_custom_day_trips()
+
+    nav_custom_trips.click_custom_day_trips_button()
+
+    nav_custom_trips.click_add_location()
+
+    nav_custom_trips.search_and_pick_location("Burlington")
+
+    nav_custom_trips.click_date_picker()
+
+    nav_custom_trips.click_date_picker_right_arrow()
+
+    nav_custom_trips.select_date("1")
+
+    screenshots.take_screenshot("8_6_1_custom_day_trips_events_location_and_date_added")
+
+    nav_custom_trips.click_auto_recommend()
+
+    verify_custom_trips.verify_advanced_filter()
+
+    nav_custom_trips.click_points_of_interest()
+
+    verify_custom_trips.verify_next_button()
+
+    nav_custom_trips.click_next()
+
+    verify_custom_trips.verify_crafting_day_trip()
+
+    verify_custom_trips.verify_location_details("Burlington")
+
+    verify_custom_trips.verify_quick_tip()
+
+    verify_custom_trips.verify_also_tip()
+
+    verify_custom_trips.verify_continue_button()
+
+    screenshots.take_screenshot("8_6_2_custom_day_trips_points_interest_day_trips_details")
+
+    nav_custom_trips.click_continue()
+
+    screenshots.take_screenshot("8_6_3_custom_day_trips_events_back_on_home_screen")

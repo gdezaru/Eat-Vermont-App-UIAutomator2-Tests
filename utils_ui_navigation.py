@@ -789,7 +789,8 @@ class NavDayTripsTrails:
 
 class NavCustomDayTrips:
     """Class for handling Custom Day Trips navigation."""
-
+    SEARCH_WAIT = 5
+    DEFAULT_WAIT = 2
     def __init__(self, device):
         """
         Initialize NavCustomDayTrips with a device instance.
@@ -823,6 +824,21 @@ class NavCustomDayTrips:
         """Click the Add A Location button."""
         self.device.xpath(DayTrips.ADD_A_LOCATION).click()
 
+    def search_and_pick_location(self, location_name):
+        """Searches for a location"""
+        search_field = self.device.xpath(DayTrips.CUSTOM_DAY_TRIP_SEARCH)
+        assert search_field.exists, "Could not find search field"
+        search_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(location_name)
+        sleep(self.DEFAULT_WAIT)
+        location_result = self.device.xpath(f'//android.widget.TextView[@text="{location_name}"]')
+        assert location_result.exists, f"Could not find location result for: {location_name}"
+        location_result.click()
+        sleep(self.SEARCH_WAIT)
+
+        return True
+
     def click_quick_suggestions(self):
         """Click the Quick Suggestions text."""
         self.device.xpath(DayTrips.QUICK_SUGGESTIONS).click()
@@ -831,14 +847,11 @@ class NavCustomDayTrips:
         """Click the Auto-Recommend button."""
         self.device.xpath(DayTrips.AUTO_RECOMMEND_BUTTON).click()
 
-    def click_date_picker(self, date_str):
+    def click_date_picker(self):
         """
         Click the date picker with the specified date.
-
-        Args:
-            date_str: Date string in format 'Month DD, YYYY'
         """
-        self.device.xpath(DayTrips.DATE_PICKER.format(date_str)).click()
+        self.device.xpath(DayTrips.DATE_PICKER).click()
 
     def click_date_picker_right_arrow(self):
         """Click the date picker right arrow button."""

@@ -190,6 +190,7 @@ class DayTrips:
     CUSTOM_DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Create a Custom trip"]'
     CREATE_TRIP_HEADER = '//android.widget.TextView[@text="Where do you want to go?"]'
     ADD_A_LOCATION = '//android.widget.TextView[@text="Add A Location"]'
+    CUSTOM_DAY_TRIP_SEARCH = '//android.widget.TextView[@text="Search here"]'
     QUICK_SUGGESTIONS = '//android.widget.TextView[@text="Quick Suggestions"]'
     DATE_PICKER = '//android.view.ViewGroup[@content-desc="{}"]'
     DATE_PICKER_RIGHT_ARROW = ('//*[@resource-id="undefined.header.rightArrow"]/com.horcrux.svg.SvgView[1]'
