@@ -5,7 +5,7 @@ import os
 from time import sleep
 
 from conftest import screenshots_dir
-from locators import EventsScreen, Events, GuestMode, HomeScreen
+from locators import EventsScreen, Events, GuestMode, HomeScreen, DayTrips
 
 
 class ScreenSwipe:
