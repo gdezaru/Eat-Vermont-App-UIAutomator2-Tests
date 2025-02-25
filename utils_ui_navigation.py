@@ -917,7 +917,7 @@ class NavCustomDayTrips:
         self.device.xpath(DayTrips.CONTINUE_BUTTON).click()
         sleep(self.DEFAULT_WAIT)
 
-    def enter_trip_name(self):
+    def enter_trip_with_events_name(self):
         """
         Click the trip name field and enter a unique name with format:
         AutoTestEventsTrip[random_number]
@@ -940,6 +940,74 @@ class NavCustomDayTrips:
 
         return trip_name
 
+    def enter_trip_with_food_drinks_name(self):
+        """
+        Click the trip name field and enter a unique name with format:
+        AutoTestEventsTrip[random_number]
+
+        Returns:
+            str: The generated trip name
+
+        Example:
+            AutoTestEventsTrip42
+        """
+        import random
+        random_number = random.randint(1, 9999)
+        trip_name = f"AutoTestFoodDrinksTrip{random_number}"
+        trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
+        assert trip_name_field.exists, "Trip name input field not found"
+        trip_name_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+
+        return trip_name
+
+    def enter_trip_with_outdoors_name(self):
+        """
+        Click the trip name field and enter a unique name with format:
+        AutoTestEventsTrip[random_number]
+
+        Returns:
+            str: The generated trip name
+
+        Example:
+            AutoTestEventsTrip42
+        """
+        import random
+        random_number = random.randint(1, 9999)
+        trip_name = f"AutoTestOutdoorsTrip{random_number}"
+        trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
+        assert trip_name_field.exists, "Trip name input field not found"
+        trip_name_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+
+        return trip_name
+
+    def enter_trip_with_points_of_interest_name(self):
+        """
+        Click the trip name field and enter a unique name with format:
+        AutoTestEventsTrip[random_number]
+
+        Returns:
+            str: The generated trip name
+
+        Example:
+            AutoTestEventsTrip42
+        """
+        import random
+        random_number = random.randint(1, 9999)
+        trip_name = f"AutoTestPointsOfInterestTrip{random_number}"
+        trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
+        assert trip_name_field.exists, "Trip name input field not found"
+        trip_name_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+        return trip_name
+
     def click_save_trip(self):
         """
         Click the Save button to save the trip.
@@ -952,6 +1020,122 @@ class NavCustomDayTrips:
         """
         save_button = self.device.xpath(DayTrips.SAVE_TRIP)
         assert save_button.exists, "Save Trip button not found"
+
+    def click_my_trips(self):
+        """
+        Click the My Trips button.
+
+        Returns:
+            bool: True if button was found and clicked
+
+        Raises:
+            AssertionError: If My Trips button is not found
+        """
+        my_trips_button = self.device.xpath(DayTrips.MY_TRIPS)
+        assert my_trips_button.exists, "My Trips button not found"
+        my_trips_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def search_day_trip_with_events(self, trip_name="AutoTestEventsTrip"):
+        """
+        Search for a day trip and click on the search result.
+
+        Args:
+            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
+
+        Returns:
+            bool: True if search was successful
+
+        Raises:
+            AssertionError: If search field or result is not found
+        """
+        search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
+        assert search_field.exists, "Day Trips search field not found"
+        search_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
+        assert search_result.exists, f"Search result for '{trip_name}' not found"
+        search_result.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def search_day_trip_with_food_drinks(self, trip_name="AutoTestFoodDrinksTrip"):
+        """
+        Search for a day trip and click on the search result.
+
+        Args:
+            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
+
+        Returns:
+            bool: True if search was successful
+
+        Raises:
+            AssertionError: If search field or result is not found
+        """
+        search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
+        assert search_field.exists, "Day Trips search field not found"
+        search_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
+        assert search_result.exists, f"Search result for '{trip_name}' not found"
+        search_result.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def search_day_trip_with_outdoors(self, trip_name="AutoTestOutdoorsTrip"):
+        """
+        Search for a day trip and click on the search result.
+
+        Args:
+            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
+
+        Returns:
+            bool: True if search was successful
+
+        Raises:
+            AssertionError: If search field or result is not found
+        """
+        search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
+        assert search_field.exists, "Day Trips search field not found"
+        search_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
+        assert search_result.exists, f"Search result for '{trip_name}' not found"
+        search_result.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def search_day_trip_with_points_of_interest(self, trip_name="AutoTestPointsOfInterestTrip"):
+        """
+        Search for a day trip and click on the search result.
+
+        Args:
+            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
+
+        Returns:
+            bool: True if search was successful
+
+        Raises:
+            AssertionError: If search field or result is not found
+        """
+        search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
+        assert search_field.exists, "Day Trips search field not found"
+        search_field.click()
+        sleep(self.DEFAULT_WAIT)
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT)
+        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
+        assert search_result.exists, f"Search result for '{trip_name}' not found"
+        search_result.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
 
 
 class NavAddInfo:

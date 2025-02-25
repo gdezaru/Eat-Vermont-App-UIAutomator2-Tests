@@ -137,7 +137,7 @@ def test_auto_generated_day_trip_events(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    nav_custom_trips.enter_trip_name()
+    nav_custom_trips.enter_trip_with_events_name()
 
     screenshots.take_screenshot("8_3_3_custom_day_trips_events_trip_name")
 
@@ -217,7 +217,7 @@ def test_auto_generated_day_trip_food_and_drinks(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    nav_custom_trips.enter_trip_name()
+    nav_custom_trips.enter_trip_with_food_drinks_name()
 
     screenshots.take_screenshot("8_4_3_custom_day_trips_food_and_drinks_trip_name")
 
@@ -297,7 +297,7 @@ def test_auto_generated_day_trip_outdoors(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    nav_custom_trips.enter_trip_name()
+    nav_custom_trips.enter_trip_with_outdoors_name()
 
     screenshots.take_screenshot("8_5_3_custom_day_trips_outdoors_trip_name")
 
@@ -377,8 +377,136 @@ def test_auto_generated_day_trip_points_of_interest(d, screenshots_dir):
 
     nav_custom_trips.click_continue()
 
-    nav_custom_trips.enter_trip_name()
+    nav_custom_trips.enter_trip_with_points_of_interest_name()
 
     screenshots.take_screenshot("8_6_3_custom_day_trips_points_of_interest_trip_name")
 
     nav_custom_trips.click_save_trip()
+
+
+def test_auto_generated_day_trip_events_details(d, screenshots_dir):
+    """
+    Test goes to My Trips tab and checks the contents of the previously generated day trip.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Custom Day Trip section
+    4. Taps See All
+    5. Taps My Trips tab
+    6. Opens the details of the Day Trip Containing Events
+    7. Asserts that a date is present
+    8. Asserts that the number of places section is present
+    9. Scrolls to the bottom of the page
+    10. Asserts that the number of the last item matches the number of places
+    11. Deletes the Day Trip
+    """
+    sign_in = SignInPrepare(d)
+    nav_trips = NavDayTripsTrails(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    nav_trips.find_day_trips_text()
+
+    nav_trips.click_day_trips_see_all()
+
+    nav_custom_trips.click_my_trips()
+
+    screenshots.take_screenshot("8_7_1_custom_day_trips_my_trips")
+
+
+def test_auto_generated_day_trip_food_and_drinks_details(d, screenshots_dir):
+    """
+    Test goes to My Trips tab and checks the contents of the previously generated day trip.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Custom Day Trip section
+    4. Taps See All
+    5. Taps My Trips tab
+    6. Opens the details of the Day Trip Containing Food + Drinks
+    7. Asserts that a date is present
+    8. Asserts that the number of places section is present
+    9. Scrolls to the bottom of the page
+    10. Asserts that the number of the last item matches the number of places
+    11. Deletes the Day Trip
+    """
+    sign_in = SignInPrepare(d)
+    nav_trips = NavDayTripsTrails(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    nav_trips.find_day_trips_text()
+
+    nav_trips.click_day_trips_see_all()
+
+    nav_custom_trips.click_my_trips()
+
+    screenshots.take_screenshot("8_8_1_custom_day_trips_my_trips")
+
+
+def test_auto_generated_day_trip_outdoors_details(d, screenshots_dir):
+    """
+    Test goes to My Trips tab and checks the contents of the previously generated day trip.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Custom Day Trip section
+    4. Taps See All
+    5. Taps My Trips tab
+    6. Opens the details of the Day Trip Containing Outdoors
+    7. Asserts that a date is present
+    8. Asserts that the number of places section is present
+    9. Scrolls to the bottom of the page
+    10. Asserts that the number of the last item matches the number of places
+    11. Deletes the Day Trip
+    """
+    sign_in = SignInPrepare(d)
+    nav_trips = NavDayTripsTrails(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    nav_trips.find_day_trips_text()
+
+    nav_trips.click_day_trips_see_all()
+
+    nav_custom_trips.click_my_trips()
+
+    screenshots.take_screenshot("8_9_1_custom_day_trips_my_trips")
+
+
+def test_auto_generated_day_trip_points_of_interest_details(d, screenshots_dir):
+    """
+    Test goes to My Trips tab and checks the contents of the previously generated day trip.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Scroll to center the Custom Day Trip section
+    4. Taps See All
+    5. Taps My Trips tab
+    6. Opens the details of the Day Trip Containing Points of Interest
+    7. Asserts that a date is present
+    8. Asserts that the number of places section is present
+    9. Scrolls to the bottom of the page
+    10. Asserts that the number of the last item matches the number of places
+    11. Deletes the Day Trip
+    """
+    sign_in = SignInPrepare(d)
+    nav_trips = NavDayTripsTrails(d)
+    nav_custom_trips = NavCustomDayTrips(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    nav_trips.find_day_trips_text()
+
+    nav_trips.click_day_trips_see_all()
+
+    nav_custom_trips.click_my_trips()
+
+    screenshots.take_screenshot("8_10_1_custom_day_trips_my_trips")

@@ -182,11 +182,15 @@ class Businesses:
 
 
 class DayTrips:
-    """Locators for Day Trips"""
+    """Locators for Day Trips and Custom Day Trips builder"""
     DAY_TRIPS_READ_MORE_HOME_SCREEN = ('//android.widget.TextView[@text="Read More"]'
                                        '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains'
                                        '(@text, "Day Trips")]]]'
                                        '[1]')
+    MY_TRIPS = '//android.widget.TextView[@text="My Trips"]'
+    DAY_TRIPS_SEARCH = '//android.widget.EditText[@text="Search"]'
+    DAY_TRIPS_SEARCH_RESULT = '//android.widget.TextView[contains(@text, "{}")]'
+    # Locators for automatic custom Day Trips builder
     CUSTOM_DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Create a Custom trip"]'
     CREATE_TRIP_HEADER = '//android.widget.TextView[@text="Where do you want to go?"]'
     ADD_A_LOCATION = '//android.widget.TextView[@text="Add A Location"]'
@@ -211,6 +215,7 @@ class DayTrips:
     CONTINUE_BUTTON = '//android.widget.TextView[@text="Continue"]'
     TRIP_NAME = '//android.widget.EditText[@text="Enter Trip name"]'
     SAVE_TRIP = '//android.widget.TextView[@text="Save"]'
+    # Locators for manual Day Trips builder
 
 
 class Trails:
