@@ -139,8 +139,6 @@ def test_home_screen_day_trips(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    nav_trips.find_day_trips_text()
-
     nav_trips.click_day_trips_see_all()
 
     screenshots.take_screenshot("3_5_1_home_screen_day_trips_opened")
