@@ -597,17 +597,37 @@ class NavDayTripsTrails:
 
     def click_day_trips_see_all(self):
         """
-        Clicks the "See All" button for the Day Trips section.
+        Scrolls to the Day Trips section and clicks the "See All" button.
 
         Returns:
             bool: True if navigation was successful
 
         Raises:
-            AssertionError: If Day Trips 'See all' button is not found
+            AssertionError: If Day Trips section or 'See all' button is not found
         """
+        screen_swipe = ScreenSwipe(self.device)
+        start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
+        general_scroll = GeneralScrolling(self.device)
+        target_y = general_scroll.get_target_position_in_first_quarter()
+        scroll_end_y = (start_y + end_y) // 2
+        for attempt in range(self.MAX_SCROLL_ATTEMPTS):
+            if self.device(text=self.DAY_TRIPS_TEXT).exists:
+                day_trips_elem = self.device(text=self.DAY_TRIPS_TEXT)
+                bounds = day_trips_elem.info['bounds']
+                current_y = (bounds['top'] + bounds['bottom']) // 2
+                if current_y <= target_y:
+                    if current_y < target_y - 100:
+                        self.device.swipe(start_x, end_y, start_x, start_y, duration=self.SCROLL_DURATION)
+                        sleep(self.DEFAULT_WAIT)
+                    else:
+                        break
+            self.device.swipe(start_x, start_y, start_x, scroll_end_y, duration=self.SCROLL_DURATION)
+            sleep(self.DEFAULT_WAIT)
+        assert self.device(text=self.DAY_TRIPS_TEXT).exists(timeout=self.LONG_WAIT), (
+            "Day Trips text not found"
+        )
         day_trips_see_all = self.device.xpath(HomeScreen.DAY_TRIPS_SEE_ALL)
-        assert day_trips_see_all.exists, "Could not find Day Trips 'See all' button"
-
+        assert day_trips_see_all.exists(timeout=self.LONG_WAIT), "Could not find Day Trips 'See all' button"
         day_trips_see_all.click()
         sleep(self.DEFAULT_WAIT)
         return True
