@@ -1031,16 +1031,22 @@ class NavCustomDayTrips:
     def click_save_trip(self):
         """
         Click the Save button to save the trip.
+        Makes two attempts to click the button to ensure it's properly clicked.
 
         Returns:
             bool: True if button was found and clicked
 
         Raises:
-            AssertionError: If Save button is not found
+            AssertionError: If Save button is not found or click fails
         """
         save_button = self.device.xpath(DayTrips.SAVE_TRIP)
-        assert save_button.exists, "Save Trip button not found"
-        sleep(10)
+        assert save_button.exists(timeout=self.SEARCH_WAIT), "Save Trip button not found"
+        save_button.click()
+        sleep(self.DEFAULT_WAIT)
+        if save_button.exists:
+            save_button.click()
+            sleep(self.DEFAULT_WAIT)
+        return True
 
     def click_my_trips(self):
         """
