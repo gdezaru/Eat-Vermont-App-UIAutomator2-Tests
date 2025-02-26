@@ -950,7 +950,7 @@ class NavCustomDayTrips:
         """
         import random
         random_number = random.randint(1, 9999)
-        trip_name = f"AutoTestEventsTrip{random_number}"
+        trip_name = f"Events{random_number}"
         trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
         assert trip_name_field.exists, "Trip name input field not found"
         trip_name_field.click()
@@ -973,7 +973,7 @@ class NavCustomDayTrips:
         """
         import random
         random_number = random.randint(1, 9999)
-        trip_name = f"AutoTestFoodDrinksTrip{random_number}"
+        trip_name = f"FoodDrinks{random_number}"
         trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
         assert trip_name_field.exists, "Trip name input field not found"
         trip_name_field.click()
@@ -996,7 +996,7 @@ class NavCustomDayTrips:
         """
         import random
         random_number = random.randint(1, 9999)
-        trip_name = f"AutoTestOutdoorsTrip{random_number}"
+        trip_name = f"Outdoors{random_number}"
         trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
         assert trip_name_field.exists, "Trip name input field not found"
         trip_name_field.click()
@@ -1019,7 +1019,7 @@ class NavCustomDayTrips:
         """
         import random
         random_number = random.randint(1, 9999)
-        trip_name = f"AutoTestPointsOfInterestTrip{random_number}"
+        trip_name = f"PtsInterest{random_number}"
         trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
         assert trip_name_field.exists, "Trip name input field not found"
         trip_name_field.click()
@@ -1057,7 +1057,7 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         return True
 
-    def search_day_trip_with_events(self, trip_name="AutoTestEventsTrip"):
+    def search_day_trip_with_events(self, trip_name="Events"):
         """
         Search for a day trip and click on the search result.
 
@@ -1082,7 +1082,7 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         return True
 
-    def search_day_trip_with_food_drinks(self, trip_name="AutoTestFoodDrinksTrip"):
+    def search_day_trip_with_food_drinks(self, trip_name="FoodDrinks"):
         """
         Search for a day trip and click on the search result.
 
@@ -1107,7 +1107,7 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         return True
 
-    def search_day_trip_with_outdoors(self, trip_name="AutoTestOutdoorsTrip"):
+    def search_day_trip_with_outdoors(self, trip_name="Outdoors"):
         """
         Search for a day trip and click on the search result.
 
@@ -1132,7 +1132,7 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         return True
 
-    def search_day_trip_with_points_of_interest(self, trip_name="AutoTestPointsOfInterestTrip"):
+    def search_day_trip_with_points_of_interest(self, trip_name="PtsInterest"):
         """
         Search for a day trip and click on the search result.
 
