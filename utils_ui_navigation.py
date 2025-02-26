@@ -1040,6 +1040,7 @@ class NavCustomDayTrips:
         """
         save_button = self.device.xpath(DayTrips.SAVE_TRIP)
         assert save_button.exists, "Save Trip button not found"
+        sleep(10)
 
     def click_my_trips(self):
         """
