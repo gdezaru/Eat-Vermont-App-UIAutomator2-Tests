@@ -626,9 +626,9 @@ class NavDayTripsTrails:
         assert self.device(text=self.DAY_TRIPS_TEXT).exists(timeout=self.LONG_WAIT), (
             "Day Trips text not found"
         )
-        day_trips_see_all = self.device.xpath(HomeScreen.DAY_TRIPS_SEE_ALL)
-        assert day_trips_see_all.exists(timeout=self.LONG_WAIT), "Could not find Day Trips 'See all' button"
-        day_trips_see_all.click()
+        see_all_button = self.device(text="See All")
+        assert see_all_button.exists(timeout=self.LONG_WAIT), "Could not find 'See all' text next to Day Trips"
+        see_all_button.click()
         sleep(self.DEFAULT_WAIT)
         return True
 
