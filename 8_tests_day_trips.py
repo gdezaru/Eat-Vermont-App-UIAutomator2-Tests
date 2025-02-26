@@ -26,14 +26,16 @@ def test_day_trip_card(d, screenshots_dir):
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
+
     read_more_button = nav_trips.find_day_trips_text()
+
     nav_trips.click_day_trips_read_more(read_more_button)
 
     screenshots.take_screenshot("8_1_1_day_trips_details")
 
 
 @pytest.mark.smoke
-def test_custom_day_trip_create_trip_screem(d, screenshots_dir):
+def test_custom_day_trip_create_trip_screen(d, screenshots_dir):
     """
     Tests if the Custom Day Trips builder can be accessed from the home screen.
     Steps:
