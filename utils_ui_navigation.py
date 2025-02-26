@@ -567,31 +567,31 @@ class NavDayTripsTrails:
         start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
         general_scroll = GeneralScrolling(self.device)
         target_y = general_scroll.get_target_position_in_first_quarter()
+        scroll_end_y = (start_y + end_y) // 2
 
         for attempt in range(self.MAX_SCROLL_ATTEMPTS):
             if self.device(text=self.DAY_TRIPS_TEXT).exists:
                 day_trips_elem = self.device(text=self.DAY_TRIPS_TEXT)
                 bounds = day_trips_elem.info['bounds']
                 current_y = (bounds['top'] + bounds['bottom']) // 2
-
                 if current_y <= target_y:
-                    break
-
-            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.SCROLL_DURATION)
+                    if current_y < target_y - 100:
+                        self.device.swipe(start_x, end_y, start_x, start_y, duration=self.LONG_SCROLL_DURATION)
+                        sleep(self.DEFAULT_WAIT)
+                    else:
+                        break
+            self.device.swipe(start_x, start_y, start_x, scroll_end_y, duration=self.SCROLL_DURATION)
             sleep(self.DEFAULT_WAIT)
-
         assert self.device(text=self.DAY_TRIPS_TEXT).exists(timeout=self.LONG_WAIT), (
             "Day Trips text not found"
         )
-
         read_more_button = self.device.xpath(DayTrips.DAY_TRIPS_READ_MORE_HOME_SCREEN)
-
         for i in range(self.MAX_SMALL_SCROLLS):
             if read_more_button.exists:
                 break
-            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.LONG_SCROLL_DURATION)
+            small_scroll_end = start_y - (start_y - end_y) // 4
+            self.device.swipe(start_x, start_y, start_x, small_scroll_end, duration=self.LONG_SCROLL_DURATION)
             sleep(self.DEFAULT_WAIT)
-
         assert read_more_button.exists, "Could not find Read More button for Day Trips"
         return read_more_button
 

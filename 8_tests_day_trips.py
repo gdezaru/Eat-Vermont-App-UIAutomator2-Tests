@@ -170,8 +170,6 @@ def test_auto_generated_day_trip_events_details(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    nav_trips.find_day_trips_text()
-
     nav_trips.click_day_trips_see_all()
 
     nav_custom_trips.click_my_trips()
@@ -294,8 +292,6 @@ def test_auto_generated_day_trip_food_and_drinks_details(d, screenshots_dir):
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
-
-    nav_trips.find_day_trips_text()
 
     nav_trips.click_day_trips_see_all()
 
@@ -420,8 +416,6 @@ def test_auto_generated_day_trip_outdoors_details(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    nav_trips.find_day_trips_text()
-
     nav_trips.click_day_trips_see_all()
 
     nav_custom_trips.click_my_trips()
@@ -544,8 +538,6 @@ def test_auto_generated_day_trip_points_of_interest_details(d, screenshots_dir):
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
-
-    nav_trips.find_day_trips_text()
 
     nav_trips.click_day_trips_see_all()
 
