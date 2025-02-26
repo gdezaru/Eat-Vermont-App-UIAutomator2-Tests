@@ -1036,12 +1036,12 @@ class NavCustomDayTrips:
         Raises:
             AssertionError: If Save Trip button is not found
         """
-        save_button = self.device.xpath(DayTrips.SAVE_TRIP).wait(timeout=self.SEARCH_WAIT)
-        assert save_button, "Save Trip button not found"
+        save_button = self.device.xpath(DayTrips.SAVE_TRIP)
+        assert save_button.wait(timeout=self.SEARCH_WAIT), "Save Trip button not found"
         save_button.click()
         sleep(self.DEFAULT_WAIT)
-        save_button = self.device.xpath(DayTrips.SAVE_TRIP).wait(timeout=self.DEFAULT_WAIT)
-        if save_button:
+        save_button = self.device.xpath(DayTrips.SAVE_TRIP)
+        if save_button.wait(timeout=self.DEFAULT_WAIT):
             save_button.click()
             sleep(self.DEFAULT_WAIT)
 
@@ -1063,28 +1063,21 @@ class NavCustomDayTrips:
 
     def search_day_trip_with_events(self, trip_name="Events"):
         """
-        Search for a day trip and click on the search result.
-
-        Args:
-            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
-
-        Returns:
-            bool: True if search was successful
+        Search for a day trip containing "Events" and click on the search result.
 
         Raises:
             AssertionError: If search field or result is not found
         """
         search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
-        assert search_field.exists, "Day Trips search field not found"
+        assert search_field.wait(timeout=self.SEARCH_WAIT), "Day Trips search field not found"
         search_field.click()
         sleep(self.DEFAULT_WAIT)
-        self.device.send_keys(trip_name)
+        self.device.send_keys("Events")
+        sleep(self.DEFAULT_WAIT * 2)
+        events_text = self.device.xpath('//android.widget.TextView[@text="Events"]')
+        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events text not found"
+        events_text.click()
         sleep(self.DEFAULT_WAIT)
-        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
-        assert search_result.exists, f"Search result for '{trip_name}' not found"
-        search_result.click()
-        sleep(self.DEFAULT_WAIT)
-        return True
 
     def search_day_trip_with_food_drinks(self, trip_name="FoodDrinks"):
         """
