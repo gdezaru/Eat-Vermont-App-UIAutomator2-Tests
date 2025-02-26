@@ -318,7 +318,6 @@ class ScrollToCustomDayTrips:
         Raises:
             AssertionError: If Day Trips section is not found after max attempts
         """
-        # Initialize screen swipe for coordinates
         screen_swipe = ScreenSwipe(self.device)
         start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
         target_y = self.general_scroll.get_target_position_in_first_quarter()
