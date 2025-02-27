@@ -1061,7 +1061,7 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         return True
 
-    def search_day_trip_with_events(self, trip_name="Events"):
+    def search_day_trip_with_events(self):
         """
         Search for a day trip containing "Events" and click on the search result.
 
@@ -1074,12 +1074,12 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         self.device.send_keys("Events")
         sleep(self.DEFAULT_WAIT * 2)
-        events_text = self.device.xpath('//android.widget.TextView[@text="Events"]')
-        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events text not found"
+        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_EVENTS)
+        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
         events_text.click()
         sleep(self.DEFAULT_WAIT)
 
-    def search_day_trip_with_food_drinks(self, trip_name="FoodDrinks"):
+    def search_day_trip_with_food_drinks(self):
         """
         Search for a day trip and click on the search result.
 
@@ -1093,18 +1093,17 @@ class NavCustomDayTrips:
             AssertionError: If search field or result is not found
         """
         search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
-        assert search_field.exists, "Day Trips search field not found"
+        assert search_field.wait(timeout=self.SEARCH_WAIT), "Day Trips search field not found"
         search_field.click()
         sleep(self.DEFAULT_WAIT)
-        self.device.send_keys(trip_name)
+        self.device.send_keys("FoodDrinks")
+        sleep(self.DEFAULT_WAIT * 2)
+        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_FOOD_DRINKS)
+        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
+        events_text.click()
         sleep(self.DEFAULT_WAIT)
-        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
-        assert search_result.exists, f"Search result for '{trip_name}' not found"
-        search_result.click()
-        sleep(self.DEFAULT_WAIT)
-        return True
 
-    def search_day_trip_with_outdoors(self, trip_name="Outdoors"):
+    def search_day_trip_with_outdoors(self):
         """
         Search for a day trip and click on the search result.
 
@@ -1118,18 +1117,17 @@ class NavCustomDayTrips:
             AssertionError: If search field or result is not found
         """
         search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
-        assert search_field.exists, "Day Trips search field not found"
+        assert search_field.wait(timeout=self.SEARCH_WAIT), "Day Trips search field not found"
         search_field.click()
         sleep(self.DEFAULT_WAIT)
-        self.device.send_keys(trip_name)
+        self.device.send_keys("Outdoors")
+        sleep(self.DEFAULT_WAIT * 2)
+        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_OUTDOORS)
+        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
+        events_text.click()
         sleep(self.DEFAULT_WAIT)
-        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
-        assert search_result.exists, f"Search result for '{trip_name}' not found"
-        search_result.click()
-        sleep(self.DEFAULT_WAIT)
-        return True
 
-    def search_day_trip_with_points_of_interest(self, trip_name="PtsInterest"):
+    def search_day_trip_with_points_of_interest(self):
         """
         Search for a day trip and click on the search result.
 
@@ -1143,16 +1141,15 @@ class NavCustomDayTrips:
             AssertionError: If search field or result is not found
         """
         search_field = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH)
-        assert search_field.exists, "Day Trips search field not found"
+        assert search_field.wait(timeout=self.SEARCH_WAIT), "Day Trips search field not found"
         search_field.click()
         sleep(self.DEFAULT_WAIT)
-        self.device.send_keys(trip_name)
+        self.device.send_keys("PtsInterest")
+        sleep(self.DEFAULT_WAIT * 2)
+        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_PTS_INTEREST)
+        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
+        events_text.click()
         sleep(self.DEFAULT_WAIT)
-        search_result = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT.format(trip_name))
-        assert search_result.exists, f"Search result for '{trip_name}' not found"
-        search_result.click()
-        sleep(self.DEFAULT_WAIT)
-        return True
 
     def click_three_dotted_menu(self):
         """
