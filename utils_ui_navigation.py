@@ -1187,7 +1187,6 @@ class NavCustomDayTrips:
         assert poi_card.wait(timeout=self.SEARCH_WAIT * 2), "Points of Interest day trip card not found"
         max_click_attempts = 3
         for attempt in range(max_click_attempts):
-            self.device.screenshot(f"before_click_poi_card_attempt_{attempt + 1}.png")
             poi_card.click()
             sleep(self.DEFAULT_WAIT * 2)
             details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
@@ -1208,15 +1207,23 @@ class NavCustomDayTrips:
     def click_three_dotted_menu(self):
         """
         Click the three-dotted menu button in day trip details.
+        Uses multiple click attempts with verification to ensure the click is successful.
 
         Raises:
-            AssertionError: If menu button is not found
+            AssertionError: If menu button is not found after all attempts
         """
-        menu_button = self.device.xpath(DayTrips.DAY_TRIPS_THREE_DOTTED_BUTTON)
-        assert menu_button.exists, "Three-dotted menu button not found"
-
-        menu_button.click()
-        sleep(self.DEFAULT_WAIT)
+        max_attempts = 3
+        for attempt in range(max_attempts):
+            menu_button = self.device.xpath(DayTrips.DAY_TRIPS_THREE_DOTTED_BUTTON)
+            if menu_button.exists:
+                menu_button.click()
+                sleep(self.DEFAULT_WAIT)
+                delete_button = self.device.xpath(DayTrips.DAY_TRIPS_DELETE_BUTTON)
+                if delete_button.exists:
+                    return
+            if attempt < max_attempts - 1:
+                sleep(self.DEFAULT_WAIT * 2)
+        assert False, "Three-dotted menu button not found after multiple attempts"
 
     def click_delete_trip(self):
         """
