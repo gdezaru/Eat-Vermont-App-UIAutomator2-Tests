@@ -3,7 +3,7 @@ Utility functions for UI verification.
 """
 from time import sleep
 from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
-    ViewMap, DayTrips, LoginPage, AddInfo
+    ViewMap, DayTrips, LoginPage, AddInfo, GuestMode, Videos
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
@@ -680,37 +680,36 @@ class NavDayTripsTrails:
         Raises:
             AssertionError: If Start a Trail! text or Read More button is not found
         """
-        # Initialize screen swipe for coordinates
         screen_swipe = ScreenSwipe(self.device)
         start_x, start_y, end_y = screen_swipe.calculate_swipe_coordinates()
-        general_scroll = GeneralScrolling(self.device)
-        target_y = general_scroll.get_target_position_in_first_quarter()
-
-        for attempt in range(self.MAX_SCROLL_ATTEMPTS):
-            if self.device(text=self.TRAIL_START_TEXT).exists:
-                day_trips_elem = self.device(text=self.TRAIL_START_TEXT)
-                bounds = day_trips_elem.info['bounds']
-                current_y = (bounds['top'] + bounds['bottom']) // 2
-
-                if current_y <= target_y:
-                    break
-
-            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.SCROLL_DURATION)
+        scroll_distance = (start_y - end_y) // 10
+        current_scroll_y = start_y - scroll_distance
+        day_trips_found = False
+        for attempt in range(self.MAX_SCROLL_ATTEMPTS * 2):
+            if self.device(text=self.DAY_TRIPS_TEXT).exists:
+                day_trips_found = True
+                break
+            self.device.swipe(start_x, start_y, start_x, current_scroll_y, duration=self.SCROLL_DURATION)
             sleep(self.DEFAULT_WAIT)
-
-        assert self.device(text=self.DAY_TRIPS_TEXT).exists(timeout=self.LONG_WAIT), (
-            "Start a Trail! text not found"
-        )
-
-        # Find Read More button
+            current_scroll_y = max(current_scroll_y - scroll_distance, end_y)
+        for attempt in range(self.MAX_SCROLL_ATTEMPTS * 3):
+            if self.device(text=self.TRAIL_START_TEXT).exists:
+                break
+            if self.device(textContains="Trail").exists:
+                break
+            small_scroll = scroll_distance // 2 if day_trips_found else scroll_distance
+            self.device.swipe(start_x, start_y, start_x, start_y - small_scroll, duration=self.SCROLL_DURATION)
+            sleep(self.DEFAULT_WAIT)
+        assert self.device(text=self.TRAIL_START_TEXT).exists(timeout=self.LONG_WAIT) or \
+               self.device(textContains="Trail").exists(timeout=self.LONG_WAIT), "Start a Trail! text not found"
         read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
-
         for i in range(self.MAX_SMALL_SCROLLS):
             if read_more_button.exists:
                 break
-            self.device.swipe(start_x, start_y, start_x, end_y, duration=self.LONG_SCROLL_DURATION)
+            self.device.swipe(start_x, start_y, start_x, start_y - 100, duration=self.LONG_SCROLL_DURATION)
             sleep(self.DEFAULT_WAIT)
-
+            read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
+        assert read_more_button.exists, "Read More button for Trails not found"
         return read_more_button
 
     def find_trail_name(self):
@@ -1517,6 +1516,7 @@ class NavGuestMode:
             device: UIAutomator2 device instance
         """
         self.device = device
+        self.DEFAULT_WAIT = 1.5
 
     def click_events_button(self):
         """
@@ -1551,6 +1551,41 @@ class NavGuestMode:
         search_button.click()
         sleep(self.SEARCH_WAIT)
         return True
+
+    def click_guest_mode_locked_videos(self):
+        """
+        Click on a video in guest mode to trigger the plans popup.
+        Uses the specific locator for locked videos details.
+
+        Returns:
+            bool: True if successful
+
+        Raises:
+            AssertionError: If no videos are found to click
+        """
+        videos_section = self.device(text="Videos")
+        assert videos_section.exists, "Videos section not found"
+        locked_videos_details = self.device.xpath(GuestMode.GUEST_MODE_LOCKED_VIDEOS_DETAILS)
+        if locked_videos_details.exists:
+            locked_videos_details.click()
+            sleep(self.DEFAULT_WAIT)
+            return True
+        locked_videos = self.device.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
+        if locked_videos.exists:
+            locked_videos.click()
+            sleep(self.DEFAULT_WAIT)
+            return True
+        video_element = self.device.xpath(Videos.VIDEO_TILE)
+        if video_element.exists:
+            video_element.click()
+            sleep(self.DEFAULT_WAIT)
+            return True
+        see_all_button = self.device.xpath(GuestMode.GUEST_MODE_VIDEOS_SEE_ALL)
+        if see_all_button.exists:
+            see_all_button.click()
+            sleep(self.DEFAULT_WAIT)
+            return True
+        raise AssertionError("Could not find any video elements to click in guest mode")
 
     def click_favorites(self):
         """

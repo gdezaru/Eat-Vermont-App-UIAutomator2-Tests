@@ -306,7 +306,6 @@ class VisitHistory:
 class GuestMode:
     """Locators for Guest Mode module"""
     CONTINUE_AS_GUEST_BUTTON = '//android.widget.TextView[@text="Try for Free – Guest Access"]'
-    #    GUEST_MODE_SIGN_IN_BUTTON = *need button id because other locators don't work*'
     EVENTS_LIMITED_RESULTS = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_HOME_SCREEN_PROMPT = '//android.widget.TextView[@text="Limited Results"]'
     GUEST_MODE_ADD_INFO = '//android.widget.TextView[@text="Add Info"]'
@@ -315,6 +314,12 @@ class GuestMode:
                                             '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                             '/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                                             '/android.view.ViewGroup[3]/android.view.ViewGroup[1]')
+    GUEST_MODE_LOCKED_VIDEOS_DETAILS = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                                        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                        '/android.widget.ScrollView[1]/android.view.ViewGroup[1]'
+                                        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                        '/android.widget.ScrollView[1]/android.view.ViewGroup[1]'
+                                        '/android.view.ViewGroup[1]')
 
 
 class PlansPopup:

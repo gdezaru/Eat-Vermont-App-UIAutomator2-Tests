@@ -19,7 +19,7 @@ def test_business_card_with_event(d, screenshots_dir):
     Steps:
     1. Sign in with test user credentials and prepare
     2. Handle events popup if it appears
-    3. Searches for business with menu (Big Fatty's BBQ)
+    3. Searches for business with menu (Higher Ground)
     4. Clicks on the search result to open the business card
     5. Verifies the contents of the About tab
     6. Switches to the FYI tab
@@ -41,7 +41,7 @@ def test_business_card_with_event(d, screenshots_dir):
 
     screenshots.take_screenshot("7_1_1_business_card_with_event_about_tab")
 
-    verify_businesses.verify_business_fyi_tab()
+    verify_businesses.verify_and_click_business_fyi_tab()
     verify_businesses.verify_business_fyi_tab_contents()
 
     screenshots.take_screenshot("7_1_2_business_card_with_event_fyi_tab")
