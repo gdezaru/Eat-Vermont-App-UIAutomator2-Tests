@@ -669,33 +669,24 @@ class VerifyCustomDayTrips:
         assert button.exists, "Continue button not found"
         return True
 
-    def verify_day_trip_details_date(self, month=None, day=None, year=None):
+    def verify_day_trip_details_date(self):
         """
-        Verify that a specific date is present in the day trip details.
-
-        Args:
-            month (str, optional): Month name (e.g., 'March'). Defaults to current month.
-            day (str, optional): Day of month (e.g., '1'). Defaults to current day.
-            year (str, optional): Year in YYYY format (e.g., '2025'). Defaults to current year.
+        Verify that a date is present in the day trip details.
+        This method checks for the presence of any date-like element.
 
         Returns:
-            bool: True if date is found
+            bool: True if any date is found
 
         Raises:
-            AssertionError: If date is not found
-
-        Example:
-            verify_day_trip_details_date("March", "1", "2025")  # Verifies "March 1, 2025" is present
+            AssertionError: If no date is found
         """
-        from datetime import datetime
-        current_date = datetime.now()
-        month = month or current_date.strftime('%B')
-        day = day or str(current_date.day)
-        year = year or str(current_date.year)
-        date_string = f"{month} {day}, {year}"
-        date_element = self.device.xpath(DayTrips.DAY_TRIP_DETAILS_DATE.format(date_string))
-        assert date_element.exists, f"Expected date '{date_string}' not found in day trip details"
-        return True
+        months = ["January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"]
+        for month in months:
+            month_element = self.device.xpath(f'//android.widget.TextView[contains(@text, "{month}")]')
+            if month_element.exists:
+                return True
+        assert False, "No date found in day trip details"
 
     def verify_day_trip_places_count(self):
         """

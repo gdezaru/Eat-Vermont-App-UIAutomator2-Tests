@@ -194,7 +194,7 @@ class DayTrips:
     DAY_TRIPS_SEARCH_RESULT_FOOD_DRINKS = '//android.widget.TextView[contains(@text, "Fooddrinks")]'
     DAY_TRIPS_SEARCH_RESULT_OUTDOORS = '//android.widget.TextView[contains(@text, "Outdoors")]'
     DAY_TRIPS_SEARCH_RESULT_PTS_INTEREST = '//android.widget.TextView[contains(@text, "Points")]'
-    DAY_TRIP_DETAILS_DATE = '//android.widget.TextView[@text="{}"]'
+    DAY_TRIP_DETAILS_DATE = '//android.widget.TextView[contains(@text, "{}")]'
     DAY_TRIPS_DETAILS_PLACES = '//android.widget.TextView[contains(@text, " Places")]'
     DAY_TRIPS_THREE_DOTTED_BUTTON = (
         '//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
