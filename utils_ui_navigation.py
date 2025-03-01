@@ -1061,9 +1061,13 @@ class NavCustomDayTrips:
         sleep(self.DEFAULT_WAIT)
         return True
 
-    def search_day_trip_with_events(self):
+    def search_day_trip_with_events(self, trip_name="Events"):
         """
         Search for a day trip containing "Events" and click on the search result.
+        Uses multiple click attempts with verification to ensure the click is successful.
+
+        Args:
+            trip_name (str, optional): Base name to search for. Defaults to "Events".
 
         Raises:
             AssertionError: If search field or result is not found
@@ -1072,22 +1076,33 @@ class NavCustomDayTrips:
         assert search_field.wait(timeout=self.SEARCH_WAIT), "Day Trips search field not found"
         search_field.click()
         sleep(self.DEFAULT_WAIT)
-        self.device.send_keys("Events")
+        self.device.send_keys(trip_name)
+        sleep(self.DEFAULT_WAIT * 3)
+        events_card = self.device.xpath(DayTrips.DAY_TRIPS_MY_TRIPS_CARD)
+        assert events_card.wait(timeout=self.SEARCH_WAIT * 2), "Events day trip card not found"
+        max_click_attempts = 3
+        for attempt in range(max_click_attempts):
+            events_card.click()
+            sleep(self.DEFAULT_WAIT * 2)
+            details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+            if details_element.exists:
+                break
+            if attempt < max_click_attempts - 1:
+                sleep(self.DEFAULT_WAIT)
+                events_card = self.device.xpath(DayTrips.DAY_TRIPS_MY_TRIPS_CARD)
+                if not events_card.exists:
+                    if details_element.exists:
+                        break
+                    assert False, f"Events card disappeared after click attempt {attempt + 1}"
+        details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+        assert details_element.wait(
+            timeout=self.SEARCH_WAIT), "Failed to navigate to day trip details after multiple click attempts"
         sleep(self.DEFAULT_WAIT * 2)
-        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_EVENTS)
-        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
-        events_text.click()
-        sleep(self.DEFAULT_WAIT)
 
     def search_day_trip_with_food_drinks(self):
         """
-        Search for a day trip and click on the search result.
-
-        Args:
-            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
-
-        Returns:
-            bool: True if search was successful
+        Search for a day trip with Food & Drinks and click on the search result.
+        Uses multiple click attempts with verification to ensure the click is successful.
 
         Raises:
             AssertionError: If search field or result is not found
@@ -1097,21 +1112,32 @@ class NavCustomDayTrips:
         search_field.click()
         sleep(self.DEFAULT_WAIT)
         self.device.send_keys("FoodDrinks")
+        sleep(self.DEFAULT_WAIT * 3)
+        food_drinks_card = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_FOOD_DRINKS)
+        assert food_drinks_card.wait(timeout=self.SEARCH_WAIT * 2), "Food & Drinks day trip card not found"
+        max_click_attempts = 3
+        for attempt in range(max_click_attempts):
+            food_drinks_card.click()
+            sleep(self.DEFAULT_WAIT * 2)
+            details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+            if details_element.exists:
+                break
+            if attempt < max_click_attempts - 1:
+                sleep(self.DEFAULT_WAIT)
+                food_drinks_card = self.device.xpath(DayTrips.DAY_TRIPS_MY_TRIPS_CARD)
+                if not food_drinks_card.exists:
+                    if details_element.exists:
+                        break
+                    assert False, f"Food & Drinks card disappeared after click attempt {attempt + 1}"
+        details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+        assert details_element.wait(
+            timeout=self.SEARCH_WAIT), "Failed to navigate to day trip details after multiple click attempts"
         sleep(self.DEFAULT_WAIT * 2)
-        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_FOOD_DRINKS)
-        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
-        events_text.click()
-        sleep(self.DEFAULT_WAIT)
 
     def search_day_trip_with_outdoors(self):
         """
-        Search for a day trip and click on the search result.
-
-        Args:
-            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
-
-        Returns:
-            bool: True if search was successful
+        Search for a day trip with Outdoors and click on the search result.
+        Uses multiple click attempts with verification to ensure the click is successful.
 
         Raises:
             AssertionError: If search field or result is not found
@@ -1121,21 +1147,32 @@ class NavCustomDayTrips:
         search_field.click()
         sleep(self.DEFAULT_WAIT)
         self.device.send_keys("Outdoors")
+        sleep(self.DEFAULT_WAIT * 3)
+        outdoors_card = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_OUTDOORS)
+        assert outdoors_card.wait(timeout=self.SEARCH_WAIT * 2), "Outdoors day trip card not found"
+        max_click_attempts = 3
+        for attempt in range(max_click_attempts):
+            outdoors_card.click()
+            sleep(self.DEFAULT_WAIT * 2)
+            details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+            if details_element.exists:
+                break
+            if attempt < max_click_attempts - 1:
+                sleep(self.DEFAULT_WAIT)
+                outdoors_card = self.device.xpath(DayTrips.DAY_TRIPS_MY_TRIPS_CARD)
+                if not outdoors_card.exists:
+                    if details_element.exists:
+                        break
+                    assert False, f"Outdoors card disappeared after click attempt {attempt + 1}"
+        details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+        assert details_element.wait(
+            timeout=self.SEARCH_WAIT), "Failed to navigate to day trip details after multiple click attempts"
         sleep(self.DEFAULT_WAIT * 2)
-        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_OUTDOORS)
-        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
-        events_text.click()
-        sleep(self.DEFAULT_WAIT)
 
     def search_day_trip_with_points_of_interest(self):
         """
-        Search for a day trip and click on the search result.
-
-        Args:
-            trip_name: Name of the trip to search for (default: AutoTestEventsTrip)
-
-        Returns:
-            bool: True if search was successful
+        Search for a day trip with Points of Interest and click on the search result.
+        Uses multiple click attempts with verification to ensure the click is successful.
 
         Raises:
             AssertionError: If search field or result is not found
@@ -1145,11 +1182,28 @@ class NavCustomDayTrips:
         search_field.click()
         sleep(self.DEFAULT_WAIT)
         self.device.send_keys("PtsInterest")
+        sleep(self.DEFAULT_WAIT * 3)
+        poi_card = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_PTS_INTEREST)
+        assert poi_card.wait(timeout=self.SEARCH_WAIT * 2), "Points of Interest day trip card not found"
+        max_click_attempts = 3
+        for attempt in range(max_click_attempts):
+            self.device.screenshot(f"before_click_poi_card_attempt_{attempt + 1}.png")
+            poi_card.click()
+            sleep(self.DEFAULT_WAIT * 2)
+            details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+            if details_element.exists:
+                break
+            if attempt < max_click_attempts - 1:
+                sleep(self.DEFAULT_WAIT)
+                poi_card = self.device.xpath(DayTrips.DAY_TRIPS_MY_TRIPS_CARD)
+                if not poi_card.exists:
+                    if details_element.exists:
+                        break
+                    assert False, f"Points of Interest card disappeared after click attempt {attempt + 1}"
+        details_element = self.device.xpath(DayTrips.DAY_TRIPS_DETAILS_PLACES)
+        assert details_element.wait(
+            timeout=self.SEARCH_WAIT), "Failed to navigate to day trip details after multiple click attempts"
         sleep(self.DEFAULT_WAIT * 2)
-        events_text = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_PTS_INTEREST)
-        assert events_text.wait(timeout=self.SEARCH_WAIT), "Events search result not found"
-        events_text.click()
-        sleep(self.DEFAULT_WAIT)
 
     def click_three_dotted_menu(self):
         """
