@@ -940,13 +940,13 @@ class NavCustomDayTrips:
     def enter_trip_with_events_name(self):
         """
         Click the trip name field and enter a unique name with format:
-        AutoTestEventsTrip[random_number]
+        Events[random_number]
 
         Returns:
             str: The generated trip name
 
         Example:
-            AutoTestEventsTrip42
+            Events1234
         """
         import random
         random_number = random.randint(1, 9999)
@@ -963,17 +963,17 @@ class NavCustomDayTrips:
     def enter_trip_with_food_drinks_name(self):
         """
         Click the trip name field and enter a unique name with format:
-        AutoTestEventsTrip[random_number]
+        FoodDrinks[random_number]
 
         Returns:
             str: The generated trip name
 
         Example:
-            AutoTestEventsTrip42
+            FoodDrinks1234
         """
         import random
         random_number = random.randint(1, 9999)
-        trip_name = f"FoodDrinks{random_number}"
+        trip_name = f"Fooddrinks{random_number}"
         trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
         assert trip_name_field.exists, "Trip name input field not found"
         trip_name_field.click()
@@ -986,13 +986,13 @@ class NavCustomDayTrips:
     def enter_trip_with_outdoors_name(self):
         """
         Click the trip name field and enter a unique name with format:
-        AutoTestEventsTrip[random_number]
+        Outdoors[random_number]
 
         Returns:
             str: The generated trip name
 
         Example:
-            AutoTestEventsTrip42
+            Outdoors42
         """
         import random
         random_number = random.randint(1, 9999)
@@ -1009,17 +1009,17 @@ class NavCustomDayTrips:
     def enter_trip_with_points_of_interest_name(self):
         """
         Click the trip name field and enter a unique name with format:
-        AutoTestEventsTrip[random_number]
+        Points[random_number]
 
         Returns:
             str: The generated trip name
 
         Example:
-            AutoTestEventsTrip42
+            Points1234
         """
         import random
         random_number = random.randint(1, 9999)
-        trip_name = f"PtsInterest{random_number}"
+        trip_name = f"Points{random_number}"
         trip_name_field = self.device.xpath(DayTrips.TRIP_NAME)
         assert trip_name_field.exists, "Trip name input field not found"
         trip_name_field.click()
@@ -1111,7 +1111,7 @@ class NavCustomDayTrips:
         assert search_field.wait(timeout=self.SEARCH_WAIT), "Day Trips search field not found"
         search_field.click()
         sleep(self.DEFAULT_WAIT)
-        self.device.send_keys("FoodDrinks")
+        self.device.send_keys("Fooddrinks")
         sleep(self.DEFAULT_WAIT * 3)
         food_drinks_card = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_FOOD_DRINKS)
         assert food_drinks_card.wait(timeout=self.SEARCH_WAIT * 2), "Food & Drinks day trip card not found"
@@ -1181,7 +1181,7 @@ class NavCustomDayTrips:
         assert search_field.wait(timeout=self.SEARCH_WAIT), "Day Trips search field not found"
         search_field.click()
         sleep(self.DEFAULT_WAIT)
-        self.device.send_keys("PtsInterest")
+        self.device.send_keys("Points")
         sleep(self.DEFAULT_WAIT * 3)
         poi_card = self.device.xpath(DayTrips.DAY_TRIPS_SEARCH_RESULT_PTS_INTEREST)
         assert poi_card.wait(timeout=self.SEARCH_WAIT * 2), "Points of Interest day trip card not found"
