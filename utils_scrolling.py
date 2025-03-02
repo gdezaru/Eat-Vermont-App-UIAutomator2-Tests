@@ -414,24 +414,3 @@ class ScrollVideos(GeneralScrolling):
                 return True
 
         raise AssertionError("Failed to find locked videos section after maximum scroll attempts")
-
-    def guest_mode_scroll_to_videos(self):
-        """
-        Scrolls to videos section in Guest Mode.
-
-        Returns:
-            bool: True if locked videos section was found, False if not found after max attempts
-        """
-        start_x, start_y, end_y = self.calculate_swipe_coordinates()
-        locked_videos = self.device.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
-
-        max_scroll_attempts = 9
-        for attempt in range(max_scroll_attempts):
-            if locked_videos.exists:
-                return True
-
-            self.device.swipe(start_x, start_y, start_x, end_y, duration=0.9)
-            sleep(1.5)
-
-        print("Failed to find locked videos section after maximum scroll attempts")
-        return False

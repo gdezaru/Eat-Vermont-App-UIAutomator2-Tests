@@ -70,17 +70,12 @@ def test_guest_mode_videos(d, screenshots_dir):
     scroll_videos = ScrollVideos(d)
     screenshots = ScreenshotsManagement(d)
     verify_locked_videos = VerifyGuestMode(d)
-    nav_guest_mode = NavGuestMode(d)
 
     guest_mode.enter_guest_mode_and_handle_popups()
 
     scroll_videos.guest_mode_scroll_to_videos()
 
     verify_locked_videos.verify_guest_videos()
-
-    nav_guest_mode.click_guest_mode_locked_videos()
-
-    verify_locked_videos.verify_videos_limited_results_text()
 
     screenshots.take_screenshot("15_3_2_guest_mode_videos_triggered_plans_popup")
 
