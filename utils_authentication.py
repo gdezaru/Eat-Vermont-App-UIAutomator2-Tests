@@ -29,48 +29,33 @@ class SignInPrepare:
         Sign in to the app using test user credentials.
         """
         from config import TEST_USER
-
         launch_app = LaunchApp(self.device)
         launch_app.handle_notification_permission()
-
-        # Wait for initial screen to load
         sleep(5)
-
-        # First check if we're already logged in by looking for bottom navigation elements
         if self.device(description="Search").exists(timeout=2) or self.device(text="Search").exists(timeout=2):
             return
-
-        # Find and click Get Started button
         get_started = None
         if self.device(description="Get Started").exists(timeout=5):
             get_started = self.device(description="Get Started")
         elif self.device(text="Get Started").exists(timeout=5):
             get_started = self.device(text="Get Started")
-
         assert get_started is not None, "Could not find Get Started button"
         get_started.click()
         sleep(2)
-
-        # Enter email
         email_field = self.device(text="Email")
         assert email_field.exists(timeout=5), "Email field not found"
         email_field.click()
         sleep(1)
         self.device.send_keys(TEST_USER['email'])
         sleep(1)
-
-        # Enter password
         password_field = self.device(text="Password")
         assert password_field.exists(timeout=5), "Password field not found"
         password_field.click()
         sleep(1)
         self.device.send_keys(TEST_USER['password'])
         sleep(1)
-
-        # Try login up to 2 times
         login_attempts = 2
         for attempt in range(login_attempts):
-            # Click Log In button
             log_in_button = None
             if self.device(description="Log in").exists(timeout=5):
                 log_in_button = self.device(description="Log in")
