@@ -88,7 +88,7 @@ def test_home_screen_videos(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    scroll_videos.scroll_to_bottom()
+    scroll_videos.scroll_to_videos()
 
     nav_videos.find_and_click_see_all_videos()
 

@@ -965,7 +965,7 @@ class VerifyGuestMode:
     def verify_guest_videos(self):
         """
         Verifies if the videos section is present in Guest Mode by looking for "Eat Vermont" text.
-        Includes additional scrolling to find the text if not immediately visible.
+        Uses horizontal and vertical scrolling to find the text if not immediately visible.
 
         Returns:
             bool: True if videos with "Eat Vermont" text exist
@@ -976,31 +976,34 @@ class VerifyGuestMode:
         videos_section = self.device(text="Videos")
         assert videos_section.exists, "Videos section not found"
         eat_vermont_text = self.device(textContains="Eat Vermont")
-        if not eat_vermont_text.exists:
-            start_x = self.device.info['displayWidth'] // 2
+        video_tiles = self.device.xpath(Videos.VIDEO_TILE)
+        if not (eat_vermont_text.exists or video_tiles.exists):
+            start_x = int(self.device.info['displayWidth'] * 0.8)
             start_y = int(self.device.info['displayHeight'] * 0.7)
-            end_y = int(self.device.info['displayHeight'] * 0.3)
+            end_x = int(self.device.info['displayWidth'] * 0.2)
             for i in range(3):
                 self.device.swipe(
-                    int(self.device.info['displayWidth'] * 0.8),
+                    start_x,
                     start_y,
-                    int(self.device.info['displayWidth'] * 0.2),
+                    end_x,
                     start_y,
                     duration=0.5
                 )
                 sleep(1)
-                if self.device(textContains="Eat Vermont").exists:
+                if self.device(textContains="Eat Vermont").exists or self.device.xpath(Videos.VIDEO_TILE).exists:
                     return True
+        if not (eat_vermont_text.exists or video_tiles.exists):
+            start_x = self.device.info['displayWidth'] // 2
+            start_y = int(self.device.info['displayHeight'] * 0.7)
+            end_y = int(self.device.info['displayHeight'] * 0.3)
             for i in range(3):
                 self.device.swipe(start_x, start_y, start_x, end_y, duration=0.5)
                 sleep(1)
-                if self.device(textContains="Eat Vermont").exists:
+                if self.device(textContains="Eat Vermont").exists or self.device.xpath(Videos.VIDEO_TILE).exists:
                     return True
-                if self.device.xpath(Videos.VIDEO_TILE).exists:
-                    return True
-        eat_vermont_found = eat_vermont_text.exists or self.device.xpath(Videos.VIDEO_TILE).exists
-        assert eat_vermont_found, "Videos with 'Eat Vermont' text not found after scrolling"
-
+        eat_vermont_found = self.device(textContains="Eat Vermont").exists or self.device.xpath(
+            Videos.VIDEO_TILE).exists
+        assert eat_vermont_found, "Videos with 'Eat Vermont' text or video tiles not found after scrolling"
         return True
 
     def verify_videos_limited_results_text(self):

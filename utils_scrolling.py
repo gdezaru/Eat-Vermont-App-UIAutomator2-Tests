@@ -358,11 +358,13 @@ class ScrollVideos(GeneralScrolling):
         """
         super().__init__(device)
 
-    def guest_mode_scroll_to_videos(self):
+    def guest_mode_scroll_to_videos(self, max_attempts=10, duration=0.5):
         """
         Scrolls to videos section in Guest Mode.
-        Uses multiple scroll strategies and improved positioning
-        similar to the regular scroll_to_videos method.
+
+        Args:
+            max_attempts: Maximum number of scroll attempts
+            duration: Duration of each swipe in seconds
 
         Returns:
             bool: True if locked videos section was found
@@ -370,47 +372,63 @@ class ScrollVideos(GeneralScrolling):
         Raises:
             AssertionError: If locked videos section is not found after max attempts
         """
-        start_x = self.width // 2
         locked_videos = self.device.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
+        videos_text = self.device(text="Videos")
+        if locked_videos.exists or videos_text.exists:
+            return True
         scrollable = self.device(scrollable=True)
         if scrollable.exists:
             scrollable.scroll.to(text="Videos")
             sleep(1.5)
-            if locked_videos.exists:
+            if locked_videos.exists or videos_text.exists:
                 return True
-        max_scroll_attempts = 15
-        for attempt in range(max_scroll_attempts):
-            if locked_videos.exists:
-                return True
-            if attempt < 5:
-                start_y_percent = 0.7
-                end_y_percent = 0.3
-            elif attempt < 10:
-                start_y_percent = 0.8
-                end_y_percent = 0.2
-            else:
-                start_y_percent = 0.9
-                end_y_percent = 0.1
+        start_x, start_y, end_y = self.calculate_swipe_coordinates()
+        for attempt in range(max_attempts):
             self.device.swipe(
                 start_x,
-                int(self.height * start_y_percent),
+                start_y,
                 start_x,
-                int(self.height * end_y_percent),
-                duration=0.9
-            )
-            sleep(1.5)
-            if attempt > 5 and self.device(text="Videos").exists:
-                return True
-        for i in range(3):
-            self.device.swipe(
-                start_x,
-                int(self.height * 0.9),
-                start_x,
-                int(self.height * 0.1),
-                duration=1.2
+                end_y,
+                duration=duration
             )
             sleep(2)
-            if locked_videos.exists or self.device(text="Videos").exists:
+            if locked_videos.exists or videos_text.exists:
                 return True
+        assert False, "Failed to find locked videos section after maximum scroll attempts"
 
-        raise AssertionError("Failed to find locked videos section after maximum scroll attempts")
+    def scroll_to_videos(self, max_attempts=5, duration=0.5):
+        """
+        Scrolls to the Videos section on the screen.
+
+        Args:
+            max_attempts: Maximum number of scroll attempts
+            duration: Duration of each swipe in seconds
+
+        Returns:
+            bool: True if Videos section was found
+
+        Raises:
+            AssertionError: If Videos section is not found after max attempts
+        """
+        videos_section = self.device(text="Videos")
+        if videos_section.exists:
+            return True
+        scrollable = self.device(scrollable=True)
+        if scrollable.exists:
+            scrollable.scroll.to(text="Videos")
+            sleep(1.5)
+            if self.device(text="Videos").exists:
+                return True
+        start_x, start_y, end_y = self.calculate_swipe_coordinates()
+        for attempt in range(max_attempts):
+            self.device.swipe(
+                start_x,
+                start_y,
+                start_x,
+                end_y,
+                duration=duration
+            )
+            sleep(1.5)
+            if self.device(text="Videos").exists:
+                return True
+        assert False, "Failed to find Videos section after maximum scroll attempts"
