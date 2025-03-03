@@ -20,19 +20,16 @@ class LaunchApp:
     def clear_app_state(self):
         """Clear app data and restart the app"""
         print("Clearing app state...")
-        self.device.app_stop(self.app_id)  # Close the app
-        self.device.app_clear(self.app_id)  # Clear app data
-        self.device.app_start(self.app_id)  # Start the app fresh
+        self.device.app_stop(self.app_id)
+        self.device.app_clear(self.app_id)
+        self.device.app_start(self.app_id)
         print("App state cleared and restarted")
 
     def handle_notification_permission(self):
         """Handle notification permission dialogs if they appear."""
-        # Handle first permission dialog
         if self.device(text="Allow").exists:
             self.device(text="Allow").click()
             sleep(1)
-
-            # Handle second permission dialog if it appears
             if self.device(text="Allow").exists:
                 self.device(text="Allow").click()
                 sleep(1)
@@ -61,7 +58,6 @@ class SearchSubmit:
         Args:
             search_term: The term to search for.
         """
-        # Find and click Search in bottom navigation
         search_button = None
         if self.device(description="Search").exists(timeout=5):
             search_button = self.device(description="Search")
@@ -69,23 +65,17 @@ class SearchSubmit:
             search_button = self.device(text="Search")
         elif self.device(resourceId="Search").exists(timeout=5):
             search_button = self.device(resourceId="Search")
-
         assert search_button is not None, "Could not find Search button"
         search_button.click()
         sleep(5)
-
-        # Find and click search field
         search_field = None
         for selector in self.search_selectors:
             if selector().exists(timeout=3):
                 search_field = selector()
                 break
-
         assert search_field is not None, "Could not find search field"
         search_field.click()
         sleep(1)
-
-        # Enter search term and submit
         self.device.send_keys(search_term)
         sleep(1)
         self.device.press("enter")
@@ -110,24 +100,18 @@ class ForgotPassword:
         Args:
             email: The email address to enter for password reset.
         """
-        # Find and click Get Started button
         get_started = None
         if self.device(description="Get Started").exists(timeout=5):
             get_started = self.device(description="Get Started")
         elif self.device(text="Get Started").exists(timeout=5):
             get_started = self.device(text="Get Started")
-
         assert get_started is not None, "Could not find Get Started button"
         get_started.click()
         time.sleep(2)
-
-        # Click Forgot Password
         forgot_password = self.device.xpath(LoginPage.FORGOT_PASSWORD)
         assert forgot_password.wait(timeout=5), "Forgot Password button not found"
         forgot_password.click()
         sleep(2)
-
-        # Enter email
         email_field = self.device.xpath(LoginPage.RESET_PASSWORD_EMAIL_FIELD)
         assert email_field.wait(timeout=5), "Email field not found"
         email_field.click()
@@ -184,7 +168,5 @@ class EditProfile:
         new_name = generate_random_name()
         self.device.send_keys(new_name)
         sleep(3)
-
-        # Verify the new name was successfully inputted
         assert edit_name.get_text() == new_name, f"Name was not updated correctly. Expected: {new_name}, Got: {edit_name.get_text()}"
         return new_name

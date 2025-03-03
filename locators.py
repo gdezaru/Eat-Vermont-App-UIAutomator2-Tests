@@ -49,7 +49,7 @@ class HomeScreen:
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
     TRAILS_BUTTON = '//android.view.ViewGroup[@content-desc="Trail"]'
-    CUSTOM_DAY_TRIP_BUTTON = '//android.widget.TextView[@text="Create a Custom trip"]'
+    CUSTOM_DAY_TRIP_BUTTON = '//android.widget.TextView[@text="Create a Custom Trip"]'
 
 
 class HomeScreenTiles:
@@ -203,7 +203,6 @@ class DayTrips:
         '/android.view.ViewGroup[5]/android.view.ViewGroup[1]')
     DAY_TRIPS_DELETE_BUTTON = '//android.widget.TextView[@text="Delete"]'
     # Locators for automatic custom Day Trips builder
-    CUSTOM_DAY_TRIPS_BUTTON = '//android.widget.TextView[@text="Create a Custom trip"]'
     CREATE_TRIP_HEADER = '//android.widget.TextView[@text="Where do you want to go?"]'
     ADD_A_LOCATION = '//android.widget.TextView[@text="Add A Location"]'
     CUSTOM_DAY_TRIP_SEARCH = '//android.widget.EditText[@text="Search here"]'

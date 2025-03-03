@@ -4,6 +4,7 @@ Utility functions for authentication
 from time import sleep
 from locators import Events, PlansPopup, LoginPage, GuestMode
 from utils_device_interaction import LaunchApp
+from utils_wait import WaitUtils
 
 
 class SignInPrepare:
@@ -31,7 +32,8 @@ class SignInPrepare:
         from config import TEST_USER
         launch_app = LaunchApp(self.device)
         launch_app.handle_notification_permission()
-        sleep(5)
+        waits = WaitUtils(self.device)
+        waits.wait_for_element(lambda d: d(description="Get Started") or d(text="Get Started"))
         if self.device(description="Search").exists(timeout=2) or self.device(text="Search").exists(timeout=2):
             return
         get_started = None
@@ -64,22 +66,16 @@ class SignInPrepare:
 
             assert log_in_button is not None, "Could not find Log in button"
             log_in_button.click()
-            sleep(5)  # Wait for login process
-
-            # Verify successful login by checking for common elements
+            sleep(5)
             success_indicators = ["Events", "Home", "Profile", "Search"]
             for indicator in success_indicators:
                 if self.device(text=indicator).exists(timeout=5):
-                    return  # Login successful
-
+                    return
             if attempt < login_attempts - 1:
-                # Try to go back if needed
                 if self.device(text="Back").exists():
                     self.device(text="Back").click()
                     sleep(1)
                 continue
-
-            # If we get here on the last attempt, login failed
             assert False, "Login failed - Could not verify successful login"
 
     def handle_events_popup(self):
