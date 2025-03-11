@@ -87,6 +87,20 @@ class SearchModule:
         return f'//android.view.ViewGroup[contains(@content-desc, "{text}")]'
 
 
+class AskAI:
+    """Locators for Ask AI module"""
+    ASKAI_ICON = '//android.widget.TextView[@text="Ask AI"]'
+    CHAT_INPUT = '//android.widget.TextView[@text="Ask Anything"]'
+    TEXT_AREA = '//android.widget.TextView[contains(@text, "What can I help you discover")]'
+    FIRST_SEARCH_RESULT = ('//*[contains(@content-desc, "Burlington")]/android.view.ViewGroup[3]'
+                           '/android.widget.TextView[2]')
+
+    @staticmethod
+    def search_result(text):
+        """Get XPath for a search result containing specific text"""
+        return f'//*[contains(@content-desc, "{text}")]/android.view.ViewGroup[3]/android.widget.TextView[2]'
+
+
 class EventsScreen:
     """Locators for Events Screen UI Elements"""
     DAY_OF_WEEK = (
