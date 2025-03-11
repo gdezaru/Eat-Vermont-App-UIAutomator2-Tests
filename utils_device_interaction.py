@@ -3,7 +3,7 @@ Utility functions for device interaction
 """
 from time import sleep
 import time
-from locators import LoginPage, SettingsScreen
+from locators import LoginPage, SettingsScreen, AskAI
 
 
 class LaunchApp:
@@ -80,6 +80,41 @@ class SearchSubmit:
         sleep(1)
         self.device.press("enter")
         sleep(5)
+
+
+class SearchAI:
+    def __init__(self, device):
+        """
+        Initialize SearchAI with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+        self.WAIT_TIME_AFTER_CLICK = 2
+        self.WAIT_TIME_AFTER_TYPING = 1
+        self.WAIT_TIME_FOR_AI_RESPONSE = 15
+
+    def search_and_submit_ai(self, search_term):
+        """
+        Finds the Ask AI button, clicks it, enters a search term, and submits it.
+
+        Args:
+            search_term: The term to search for.
+        """
+        ask_ai_button = self.device.xpath(AskAI.ASKAI_ICON)
+        assert ask_ai_button.exists(timeout=5), "Could not find Ask AI button"
+        ask_ai_button.click()
+        sleep(self.WAIT_TIME_AFTER_CLICK)
+        chat_input = self.device.xpath(AskAI.CHAT_INPUT)
+        assert chat_input.exists(timeout=5), "Could not find Ask Anything input field"
+        chat_input.click()
+        sleep(self.WAIT_TIME_AFTER_TYPING)
+        self.device.send_keys(search_term)
+        sleep(self.WAIT_TIME_AFTER_TYPING)
+        self.device.press("enter")
+        sleep(self.WAIT_TIME_FOR_AI_RESPONSE)
+        assert self.device.xpath(AskAI.TEXT_AREA).exists(timeout=5), "AI did not provide a response"
 
 
 class ForgotPassword:
