@@ -718,24 +718,6 @@ class NavDayTripsTrails:
         sleep(self.SHORT_WAIT)
         return trail_text
 
-    def click_trails_button(self):
-        """
-        Finds and clicks the Trails button on the home screen.
-
-        Returns:
-            bool: True if navigation was successful
-
-        Raises:
-            AssertionError: If Trails button is not found
-        """
-        trails_button = self.device.xpath(HomeScreen.TRAILS_BUTTON)
-        assert trails_button.wait(timeout=self.LONG_WAIT), "Trails button not found"
-
-        print("\nClicking Trails button")
-        trails_button.click()
-        sleep(self.DEFAULT_WAIT)
-        return True
-
     def click_trails_read_more(self):
         """
         Clicks the Read More button of a Trail.
@@ -748,7 +730,6 @@ class NavDayTripsTrails:
         """
         read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
         assert read_more_button.wait(timeout=self.LONG_WAIT), "Read More button not found"
-
         read_more_button.click()
         sleep(self.LONG_WAIT)
         return True
@@ -765,7 +746,6 @@ class NavDayTripsTrails:
         """
         favorite_icon = self.device.xpath(MyFavorites.FAVORITE_TRAILS_ADD_REMOVE)
         assert favorite_icon.exists, "Could not find favorite icon"
-
         favorite_icon.click()
         sleep(self.DEFAULT_WAIT)
         return True
@@ -782,10 +762,8 @@ class NavDayTripsTrails:
         """
         favorite_trail = self.device.xpath(MyFavorites.ADDED_FAVORITE_TRAIL)
         assert favorite_trail.exists, "Could not find favorited trail"
-
         favorite_trail.click()
         sleep(self.DEFAULT_WAIT)
-
         assert not favorite_trail.exists, "Trail is still present in favorites"
         sleep(self.LONG_WAIT)
         return True

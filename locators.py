@@ -28,14 +28,14 @@ class Permissions:
 
 class HomeScreen:
     """Locators for Home Screen UI Elements"""
-    EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Events Near You")]'
+    EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Out & About")]'
     EVENTS_SEE_ALL = '//android.widget.TextView[@text="See All"]'
-    VIDEOS_SEE_ALL = ('//android.widget.TextView[@text="Videos"]/following-sibling::*'
+    VIDEOS_SEE_ALL = ('//android.widget.TextView[@text="Food Vids"]/following-sibling::*'
                       '//android.widget.TextView[@text="See All"]')
-    VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Videos" and ./parent::android.view.ViewGroup]'
+    VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Food Vids" and ./parent::android.view.ViewGroup]'
     DAY_TRIPS_SEE_ALL = ('//android.widget.TextView[@text="Day Trips"]/following-sibling::*'
                          '//android.widget.TextView[@text="See All"]')
-    TRAILS_SEE_ALL = ('//android.widget.TextView[@text="Start a Trail!"]/following-sibling::*'
+    TRAILS_SEE_ALL = ('//android.widget.TextView[@text="Fun Food Trails"]/following-sibling::*'
                       '//android.widget.TextView[@text="See All"]')
     EVENTS_WITHIN_30_SEE_ALL = ('//*[contains(@text, "{}")]/following-sibling::'
                                 '*//android.widget.TextView[@text="See All"]')
@@ -48,7 +48,6 @@ class HomeScreen:
     VIEW_MAP = '//android.widget.TextView[@text="View Map"]'
     ADD_INFO_BUTTON = '//android.widget.TextView[@text="Add Info"]'
     SETTINGS_BUTTON = '//android.widget.TextView[@text="D" and @package="com.eatvermont"]'
-    TRAILS_BUTTON = '//android.view.ViewGroup[@content-desc="Trail"]'
     CUSTOM_DAY_TRIP_BUTTON = '//android.widget.TextView[@text="Create a Custom Trip"]'
 
 
