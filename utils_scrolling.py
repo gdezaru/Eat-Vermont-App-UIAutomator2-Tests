@@ -5,7 +5,7 @@ import os
 from time import sleep
 
 from conftest import screenshots_dir
-from locators import EventsScreen, Events, GuestMode, HomeScreen, DayTrips
+from locators import EventsScreen, Events, GuestMode
 
 
 class ScreenSwipe:
@@ -119,26 +119,21 @@ class EventsScrolling(GeneralScrolling):
         Raises:
             AssertionError: If neither events nor 'No Events' message is found
         """
-        # Verify that either there's an event or "No Events" message is shown
         first_event = self.device.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
         no_events_message = self.device.xpath(EventsScreen.EVENTS_SCREEN_NO_EVENTS)
 
         assert first_event.exists or no_events_message.exists, "Neither events nor 'No Events' message found"
 
-        # If no event was found initially, scroll to try to find one
         if not first_event.exists and not no_events_message.exists:
             max_scroll_attempts = 3
             found_event = False
 
             for scroll_attempt in range(max_scroll_attempts):
-                # Scroll down using parent class method
                 self.scroll_to_bottom(scroll_times=1, duration=0.5)
 
-                # Check if we can now see an event
                 first_event = self.device.xpath(EventsScreen.EVENTS_SCREEN_TILE_1)
                 if first_event.exists:
                     found_event = True
-                    # Take a screenshot after finding the event
                     if current_day:
                         screenshot_path = os.path.join(screenshots_dir,
                                                        f"3_1_3_home_screen_events_{current_day.lower()}_after_scroll.png")
@@ -149,16 +144,11 @@ class EventsScrolling(GeneralScrolling):
                 assert no_events_message.exists, "No events found and 'No Events' message is not displayed"
                 return False
 
-        # Click on the first event tile if it exists
         if first_event.exists:
-            # Get the event title before clicking
             event_title = first_event.get_text()
-
-            # Click the event title and wait for details to load
             first_event.click()
-            sleep(2)  # Wait for event details to load
+            sleep(2)
 
-            # Verify we're in the event details view by checking for the event title
             event_title_in_details = self.device.xpath(EventsScreen.EVENT_TITLE.format(event_title))
             assert event_title_in_details.exists, f"Failed to open event details for '{event_title}'"
             return True
@@ -177,7 +167,6 @@ class EventsScrolling(GeneralScrolling):
 
         self.device(scrollable=True).scroll.to(text="Events Within ~30min")
         if not self.device(text="Events Within ~30min").exists(timeout=5):
-            print("Warning: Events Within ~30min text not found")
             return False
 
         events_elem = self.device(text="Events Within ~30min")
@@ -211,7 +200,6 @@ class EventsScrolling(GeneralScrolling):
 
         self.device(scrollable=True).scroll.to(text="Events Further Than ~30min")
         if not self.device(text="Events Further Than ~30min").exists(timeout=5):
-            print("Warning: Events Further Than ~30min text not found")
             return False
 
         events_elem = self.device(text="Events Further Than ~30min")
@@ -284,12 +272,8 @@ class ScrollAddInfo(GeneralScrolling):
 
 class ScrollToCustomDayTrips:
     """Class for handling Custom Day Trips navigation."""
-
-    # Class constants
     DAY_TRIPS_TEXT = "Day Trips"
     CUSTOM_TRIP_TEXT = "Create a Custom trip"
-
-    # Scroll settings
     MAX_SCROLL_ATTEMPTS = 5
     SCROLL_DURATION = 0.3
     DEFAULT_WAIT = 2
