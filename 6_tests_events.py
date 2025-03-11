@@ -3,11 +3,11 @@ import pytest
 
 from conftest import screenshots_dir
 from utils_authentication import SignInPrepare
-from utils_device_interaction import SearchSubmit, SearchAI
+from utils_device_interaction import SearchAI
 from utils_ui_navigation import NavEvents
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import EventsScrolling
-from locators import SearchModule, AskAI
+from locators import AskAI
 
 
 @pytest.mark.smoke

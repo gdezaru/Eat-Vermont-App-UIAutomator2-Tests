@@ -136,20 +136,15 @@ class NavEvents:
         Raises:
             AssertionError: If no search result is found or if click fails
         """
-        # Wait for search results to load
         sleep(self.MEDIUM_WAIT)
-
         result = self.device.xpath(SearchModule.FIRST_SEARCH_RESULT)
         assert result.exists, "Could not find any event search results"
-
         for attempt in range(self.MAX_CLICK_RETRIES):
             if result.click_exists(timeout=self.CLICK_TIMEOUT):
                 sleep(self.LONG_WAIT)
                 return True
-
             if attempt < self.MAX_CLICK_RETRIES - 1:
                 sleep(self.RETRY_WAIT)
-
         raise AssertionError("Failed to click the event search result after multiple attempts")
 
     def click_out_of_events_details(self):
@@ -161,10 +156,8 @@ class NavEvents:
         """
         screen_swipe = ScreenSwipe(self.device)
         width, height = screen_swipe.get_dimensions()
-
         click_x = width // 4
         click_y = height // 4
-
         self.device.click(click_x, click_y)
         sleep(self.DEFAULT_WAIT)
         return True
@@ -270,7 +263,6 @@ class NavBusinesses:
         business_name = business_name or self.DEFAULT_EVENT_BUSINESS
         search_result = self.device.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(business_name))
         assert search_result.exists, f"{business_name} not found under Businesses section"
-
         search_result.click()
         sleep(self.LONG_WAIT)
         return True
@@ -292,7 +284,6 @@ class NavBusinesses:
         menu_business_name = menu_business_name or self.DEFAULT_MENU_BUSINESS
         search_result = self.device.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
         assert search_result.exists, f"{menu_business_name} not found under Businesses section"
-
         search_result.click()
         sleep(self.DEFAULT_WAIT)
         return True
@@ -328,7 +319,6 @@ class NavBusinesses:
         menu_business_name = menu_business_name or self.DEFAULT_MENU_BUSINESS
         search_result = self.device.xpath(Businesses.BUSINESS_UNDER_BUSINESSES.format(menu_business_name))
         assert search_result.exists, f"{menu_business_name} not found under Businesses section"
-
         search_result.click()
         sleep(self.DEFAULT_WAIT)
         return True
@@ -854,7 +844,6 @@ class NavCustomDayTrips:
         assert location_result.exists, f"Could not find location result for: {location_name}"
         location_result.click()
         sleep(self.SEARCH_WAIT)
-
         return True
 
     def click_quick_suggestions(self):

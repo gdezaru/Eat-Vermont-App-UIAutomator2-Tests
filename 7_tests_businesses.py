@@ -4,7 +4,7 @@ from utils_authentication import SignInPrepare
 from utils_ui_navigation import NavBusinesses
 from utils_ui_verification import VerifyBusinesses
 from utils_screenshots import ScreenshotsManagement
-from utils_device_interaction import SearchSubmit, SearchAI
+from utils_device_interaction import SearchAI
 
 # Initialize business names at module level
 business_name = "Higher Ground"

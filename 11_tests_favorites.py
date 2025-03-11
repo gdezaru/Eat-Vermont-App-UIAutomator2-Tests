@@ -2,7 +2,7 @@ import pytest
 
 from locators import MyFavorites
 from utils_authentication import SignInPrepare
-from utils_device_interaction import SearchSubmit, SearchAI
+from utils_device_interaction import SearchAI
 from utils_ui_navigation import NavBusinesses, NavDayTripsTrails, NavEvents, NavFavoritesVisitHistory
 from utils_screenshots import ScreenshotsManagement
 from utils_ui_verification import VerifyBusinesses
