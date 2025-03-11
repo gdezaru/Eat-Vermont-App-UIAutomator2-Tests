@@ -2,7 +2,7 @@ import pytest
 
 from locators import MyFavorites
 from utils_authentication import SignInPrepare
-from utils_device_interaction import SearchSubmit
+from utils_device_interaction import SearchSubmit, SearchAI
 from utils_ui_navigation import NavBusinesses, NavDayTripsTrails, NavEvents, NavFavoritesVisitHistory
 from utils_screenshots import ScreenshotsManagement
 from utils_ui_verification import VerifyBusinesses
@@ -25,14 +25,13 @@ def test_add_favorite_events(d, screenshots_dir):
     6. Take screenshot
     """
     sign_in = SignInPrepare(d)
-    search = SearchSubmit(d)
+    search_ai = SearchAI(d)
     nav_events = NavEvents(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
-    search_term = "Burlington"
-    search.search_and_submit(search_term)
+    search_ai.search_and_submit_ai("Burlington Event")
 
     nav_events.click_first_event_search_result()
     nav_events.add_favorite_event()
@@ -56,14 +55,14 @@ def test_add_favorite_businesses(d, screenshots_dir):
     9. Take screenshot of favorited business
     """
     sign_in = SignInPrepare(d)
-    search = SearchSubmit(d)
+    search_ai = SearchAI(d)
     nav_business = NavBusinesses(d)
     verify_business = VerifyBusinesses(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
-    search.search_and_submit(menu_business_name)
+    search_ai.search_and_submit_ai(menu_business_name)
 
     verify_business.verify_businesses_section_present()
 
@@ -116,13 +115,12 @@ def test_remove_favorite_events(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_favorites = NavFavoritesVisitHistory(d)
     nav_events = NavEvents(d)
-    search = SearchSubmit(d)
+    search_ai = SearchAI(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
-    search_term = "Burlington"
-    search.search_and_submit(search_term)
+    search_ai.search_and_submit_ai("Burlington")
 
     nav_events.click_first_event_search_result()
 
@@ -154,13 +152,13 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_favorites = NavFavoritesVisitHistory(d)
     nav_business = NavBusinesses(d)
-    search = SearchSubmit(d)
+    search_ai = SearchAI(d)
     verify_business = VerifyBusinesses(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
-    search.search_and_submit(menu_business_name)
+    search_ai.search_and_submit_ai(menu_business_name)
     verify_business.verify_businesses_section_present()
     nav_business.click_first_business_search_result(menu_business_name)
 

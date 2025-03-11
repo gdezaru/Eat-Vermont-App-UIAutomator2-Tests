@@ -4,7 +4,7 @@ from utils_authentication import SignInPrepare
 from utils_ui_navigation import NavBusinesses
 from utils_ui_verification import VerifyBusinesses
 from utils_screenshots import ScreenshotsManagement
-from utils_device_interaction import SearchSubmit
+from utils_device_interaction import SearchSubmit, SearchAI
 
 # Initialize business names at module level
 business_name = "Higher Ground"
@@ -29,11 +29,11 @@ def test_business_card_with_event(d, screenshots_dir):
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
     screenshots = ScreenshotsManagement(d)
-    search = SearchSubmit(d)
+    search_ai = SearchAI(d)
 
     sign_in.sign_in_and_prepare()
 
-    search.search_and_submit(business_name)
+    search_ai.search_and_submit_ai(business_name)
     verify_businesses.verify_businesses_section_present()
     nav_businesses.click_business_with_event_search_result(business_name)
 
@@ -65,11 +65,11 @@ def test_business_card_with_menu(d, screenshots_dir):
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
     screenshots = ScreenshotsManagement(d)
-    search = SearchSubmit(d)
+    search_ai = SearchAI(d)
 
     sign_in.sign_in_and_prepare()
 
-    search.search_and_submit(menu_business_name)
+    search_ai.search_and_submit_ai(menu_business_name)
     verify_businesses.verify_businesses_section_present()
     nav_businesses.click_business_with_menu_search_result(menu_business_name)
 

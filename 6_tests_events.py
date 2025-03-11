@@ -3,11 +3,11 @@ import pytest
 
 from conftest import screenshots_dir
 from utils_authentication import SignInPrepare
-from utils_device_interaction import SearchSubmit
+from utils_device_interaction import SearchSubmit, SearchAI
 from utils_ui_navigation import NavEvents
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import EventsScrolling
-from locators import SearchModule
+from locators import SearchModule, AskAI
 
 
 @pytest.mark.smoke
@@ -43,16 +43,15 @@ def test_events_card(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_events = NavEvents(d)
     screenshots = ScreenshotsManagement(d)
-    search = SearchSubmit(d)
+    search_ai = SearchAI(d)
     events_scroll = EventsScrolling(d)
 
     sign_in.sign_in_and_prepare()
 
-    search_term = "Burlington"
-    search.search_and_submit(search_term)
+    search_ai.search_and_submit_ai("Burlington Event")
 
-    search_results = d.xpath(SearchModule.search_result(search_term))
-    assert search_results.exists, f"No search results found for term: {search_term}"
+    search_results = d.xpath(AskAI.search_result("Burlington"))
+    assert search_results.exists, f"No search results found for term: {"Burlington"}"
 
     nav_events.click_first_event_search_result()
 
