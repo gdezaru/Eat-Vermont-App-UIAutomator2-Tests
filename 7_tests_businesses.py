@@ -34,7 +34,9 @@ def test_business_card_with_event(d, screenshots_dir):
     sign_in.sign_in_and_prepare()
 
     search_ai.search_and_submit_ai(business_name)
+
     verify_businesses.verify_businesses_section_present()
+
     nav_businesses.click_business_with_event_search_result(business_name)
 
     verify_businesses.verify_business_about_tab()
@@ -42,6 +44,7 @@ def test_business_card_with_event(d, screenshots_dir):
     screenshots.take_screenshot("7_1_1_business_card_with_event_about_tab")
 
     verify_businesses.verify_and_click_business_fyi_tab()
+
     verify_businesses.verify_business_fyi_tab_contents()
 
     screenshots.take_screenshot("7_1_2_business_card_with_event_fyi_tab")
@@ -70,7 +73,9 @@ def test_business_card_with_menu(d, screenshots_dir):
     sign_in.sign_in_and_prepare()
 
     search_ai.search_and_submit_ai(menu_business_name)
+
     verify_businesses.verify_businesses_section_present()
+
     nav_businesses.click_business_with_menu_search_result(menu_business_name)
 
     verify_businesses.verify_business_about_tab()
@@ -78,6 +83,7 @@ def test_business_card_with_menu(d, screenshots_dir):
     screenshots.take_screenshot("7_2_1_business_card_with_menu_about_tab")
 
     verify_businesses.verify_and_click_business_menu_tab()
+
     verify_businesses.verify_business_menu_tab_contents()
 
     screenshots.take_screenshot("7_2_2_business_card_with_menu_tab")

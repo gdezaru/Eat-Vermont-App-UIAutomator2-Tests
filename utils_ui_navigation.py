@@ -1408,8 +1408,8 @@ class NavFavoritesVisitHistory:
 class NavBottomNavBar:
     """Class for handling bottom navigation bar interactions."""
 
-    NAVIGATION_WAIT = 5  # Default wait time after navigation
-    EVENTS_TEXT = "Events"  # Text to verify on screens
+    NAVIGATION_WAIT = 5
+    EVENTS_TEXT = "Events"
 
     def __init__(self, device):
         """
@@ -1465,7 +1465,8 @@ class NavBottomNavBar:
         return True
 
 
-# UI navigation for Guest Mode
+class NavCheckIn:
+    """Class for handling navigation in the check-in process"""
 
 class NavGuestMode:
     """Class for handling guest mode navigation interactions."""

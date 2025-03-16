@@ -315,6 +315,26 @@ class VisitHistory:
     VISIT_HISTORY_TAB = '//android.widget.TextView[@text="Visit History"]'
 
 
+class CheckIn:
+    """Locators for Check-In module"""
+    BUSINESS_THREE_DOTTED = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                             '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                             '/android.widget.ScrollView[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                             '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                             '/android.view.ViewGroup[1]/android.view.ViewGroup[4]')
+    MENU_CHECK_IN = '//android.widget.TextView[@text="Check-In"]'
+    YOUR_THOUGHTS = '//android.widget.TextView[@text="Your feedback is private."]'
+    SAVE_CHECK_IN = '//android.widget.TextView[@text="Save"]'
+    CHEERS_BUTTON = '//android.widget.TextView[@text="Cheers"]'
+    VISIT_HISTORY_THREE_DOTTED = ('//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup[2]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
+                                  '/android.widget.ScrollView[1]/android.view.ViewGroup[1]/android.widget.ScrollView[1]'
+                                  '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]')
+    DELETE_CHECK_IN_BUTTON = '//android.widget.TextView[@text="Delete"]'
+    DELETE_YES = '//android.widget.TextView[@text="Yes"]'
+
+
 class GuestMode:
     """Locators for Guest Mode module"""
     CONTINUE_AS_GUEST_BUTTON = '//android.widget.TextView[@text="Try for Free – Guest Access"]'
