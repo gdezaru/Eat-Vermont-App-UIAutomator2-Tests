@@ -522,7 +522,7 @@ class NavViewMap:
 class NavDayTripsTrails:
     """Class for handling Trails section navigation and interactions."""
 
-    TRAIL_START_TEXT = "Start a Trail!"
+    TRAIL_START_TEXT = "Fun Food Trails"
     DAY_TRIPS_TEXT = "Day Trips"
 
     DEFAULT_WAIT = 2
@@ -685,13 +685,13 @@ class NavDayTripsTrails:
         for attempt in range(self.MAX_SCROLL_ATTEMPTS * 3):
             if self.device(text=self.TRAIL_START_TEXT).exists:
                 break
-            if self.device(textContains="Trail").exists:
+            if self.device(textContains="Trails").exists:
                 break
             small_scroll = scroll_distance // 2 if day_trips_found else scroll_distance
             self.device.swipe(start_x, start_y, start_x, start_y - small_scroll, duration=self.SCROLL_DURATION)
             sleep(self.DEFAULT_WAIT)
         assert self.device(text=self.TRAIL_START_TEXT).exists(timeout=self.LONG_WAIT) or \
-               self.device(textContains="Trail").exists(timeout=self.LONG_WAIT), "Start a Trail! text not found"
+               self.device(textContains="Trails").exists(timeout=self.LONG_WAIT), "Fun Food Trails text not found"
         read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
         for i in range(self.MAX_SMALL_SCROLLS):
             if read_more_button.exists:

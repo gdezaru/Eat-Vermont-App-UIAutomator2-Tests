@@ -382,26 +382,26 @@ class ScrollVideos(GeneralScrolling):
 
     def scroll_to_videos(self, max_attempts=5, duration=0.5):
         """
-        Scrolls to the Videos section on the screen.
+        Scrolls to the Food Vids section on the screen.
 
         Args:
             max_attempts: Maximum number of scroll attempts
             duration: Duration of each swipe in seconds
 
         Returns:
-            bool: True if Videos section was found
+            bool: True if Food Vids section was found
 
         Raises:
             AssertionError: If Videos section is not found after max attempts
         """
-        videos_section = self.device(text="Videos")
+        videos_section = self.device(text="Food Vids")
         if videos_section.exists:
             return True
         scrollable = self.device(scrollable=True)
         if scrollable.exists:
-            scrollable.scroll.to(text="Videos")
+            scrollable.scroll.to(text="Food Vids")
             sleep(1.5)
-            if self.device(text="Videos").exists:
+            if self.device(text="Food Vids").exists:
                 return True
         start_x, start_y, end_y = self.calculate_swipe_coordinates()
         for attempt in range(max_attempts):
@@ -413,6 +413,6 @@ class ScrollVideos(GeneralScrolling):
                 duration=duration
             )
             sleep(1.5)
-            if self.device(text="Videos").exists:
+            if self.device(text="Food Vids").exists:
                 return True
-        assert False, "Failed to find Videos section after maximum scroll attempts"
+        assert False, "Failed to find Food Vids section after maximum scroll attempts"

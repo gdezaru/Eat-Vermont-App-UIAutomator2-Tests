@@ -845,21 +845,6 @@ class VerifyVideos:
         assert search_successful, "Search failed - Could not verify video search results"
         return True
 
-    def verify_video_playback(self):
-        """
-        Verify that a video is playing by checking app state and UI elements.
-
-        Returns:
-            bool: True if video is playing, False otherwise
-        """
-        # Check if we're still in the app
-        if not self.device(packageName=self.APP_PACKAGE).exists:
-            return False
-
-        # Take screenshot of the video playing
-        self.screenshots.take_screenshot("video_playing")
-        return True
-
 
 class VerifySettings:
     """Class for verifying settings-related UI elements and interactions."""
