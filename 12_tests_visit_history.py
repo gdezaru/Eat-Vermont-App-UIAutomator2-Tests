@@ -24,6 +24,7 @@ def test_visit_history_screen(d, screenshots_dir):
     sign_in.sign_in_and_prepare()
 
     nav_favorites.click_favorites_button()
+
     nav_favorites.click_visit_history()
 
     screenshots.take_screenshot("12_1_1_visit_history_screen")

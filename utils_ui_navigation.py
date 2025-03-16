@@ -685,13 +685,13 @@ class NavDayTripsTrails:
         for attempt in range(self.MAX_SCROLL_ATTEMPTS * 3):
             if self.device(text=self.TRAIL_START_TEXT).exists:
                 break
-            if self.device(textContains="Trails").exists:
+            if self.device(textContains="Fun Food Trails").exists:
                 break
             small_scroll = scroll_distance // 2 if day_trips_found else scroll_distance
             self.device.swipe(start_x, start_y, start_x, start_y - small_scroll, duration=self.SCROLL_DURATION)
             sleep(self.DEFAULT_WAIT)
         assert self.device(text=self.TRAIL_START_TEXT).exists(timeout=self.LONG_WAIT) or \
-               self.device(textContains="Trails").exists(timeout=self.LONG_WAIT), "Fun Food Trails text not found"
+               self.device(textContains="Fun Food Trails").exists(timeout=self.LONG_WAIT), "Fun Food Trails text not found"
         read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
         for i in range(self.MAX_SMALL_SCROLLS):
             if read_more_button.exists:

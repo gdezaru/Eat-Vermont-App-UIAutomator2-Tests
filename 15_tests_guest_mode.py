@@ -140,11 +140,9 @@ def test_guest_mode_prompt_end_screen(d, screenshots_dir):
     guest_mode = GuestModeAuth(d)
     verify_prompt = VerifyGuestMode(d)
     screenshots = ScreenshotsManagement(d)
-    screen_swipe = ScreenSwipe(d)
 
     guest_mode.enter_guest_mode_and_handle_popups()
 
     verify_prompt.verify_home_screen_prompt()
 
-    # Take a confirmation screenshot
     screenshots.take_screenshot("15_6_1_guest_mode_prompt_end_screen")

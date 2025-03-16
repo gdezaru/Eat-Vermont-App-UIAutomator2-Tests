@@ -159,7 +159,9 @@ def test_remove_favorite_businesses(d, screenshots_dir):
     sign_in.sign_in_and_prepare()
 
     search_ai.search_and_submit_ai(menu_business_name)
+
     verify_business.verify_businesses_section_present()
+
     nav_business.click_first_business_search_result(menu_business_name)
 
     nav_business.add_favorite_business()
