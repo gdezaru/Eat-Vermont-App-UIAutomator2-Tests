@@ -88,7 +88,7 @@ def test_ai_search_day_trips(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai("Day Trip in Burlington")
+    search_ai.search_and_submit_ai("Day Trip in Vermont")
 
     verify_day_trips.verify_day_trips_search_result()
 
