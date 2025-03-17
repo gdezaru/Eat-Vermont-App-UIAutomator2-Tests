@@ -58,7 +58,7 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
     delete.click_visit_history_delete()
 
     yes.click_yes()
-    
+
 
 @pytest.mark.smoke
 def test_check_in_with_feedback_from_business(d, screenshots_dir):
