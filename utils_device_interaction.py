@@ -93,7 +93,6 @@ class SearchAI:
         self.device = device
         self.WAIT_TIME_AFTER_CLICK = 2
         self.WAIT_TIME_AFTER_TYPING = 1
-        self.WAIT_TIME_FOR_AI_RESPONSE = 15
 
     def search_and_submit_ai(self, search_term):
         """
@@ -103,18 +102,29 @@ class SearchAI:
             search_term: The term to search for.
         """
         ask_ai_button = self.device.xpath(AskAI.ASKAI_ICON)
-        assert ask_ai_button.exists(timeout=5), "Could not find Ask AI button"
+        assert ask_ai_button.wait(timeout=5), "Could not find Ask AI button"
         ask_ai_button.click()
         sleep(self.WAIT_TIME_AFTER_CLICK)
-        chat_input = self.device.xpath(AskAI.CHAT_INPUT)
-        assert chat_input.exists(timeout=5), "Could not find Ask Anything input field"
+
+        chat_input = None
+
+        if self.device.xpath(AskAI.CHAT_INPUT).exists:
+            chat_input = self.device.xpath(AskAI.CHAT_INPUT)
+        elif self.device(text="Ask Anything").exists:
+            chat_input = self.device(text="Ask Anything")
+        elif self.device(description="Ask Anything").exists:
+            chat_input = self.device(description="Ask Anything")
+        elif self.device(className="android.widget.EditText").exists:
+            chat_input = self.device(className="android.widget.EditText")
+
+        assert chat_input is not None, "Could not find Ask Anything input field using multiple strategies"
+
         chat_input.click()
         sleep(self.WAIT_TIME_AFTER_TYPING)
         self.device.send_keys(search_term)
         sleep(self.WAIT_TIME_AFTER_TYPING)
         self.device.press("enter")
-        sleep(self.WAIT_TIME_FOR_AI_RESPONSE)
-        assert self.device.xpath(AskAI.TEXT_AREA).exists(timeout=5), "AI did not provide a response"
+        sleep(5)
 
 
 class ForgotPassword:

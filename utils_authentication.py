@@ -74,7 +74,7 @@ class SignInPrepare:
             log_in_button.click()
             sleep(5)
 
-            success_indicators = ["Events", "Home", "Profile", "Search"]
+            success_indicators = ["Events", "Home", "Profile", "Ask AI"]
             for indicator in success_indicators:
                 if self.device(text=indicator).exists(timeout=5):
                     return

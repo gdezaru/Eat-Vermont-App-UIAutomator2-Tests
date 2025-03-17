@@ -1,3 +1,5 @@
+from unittest import result
+
 import pytest
 
 from utils_authentication import SignInPrepare
@@ -21,6 +23,7 @@ def test_ai_search_events(d, screenshots_dir):
     8. Verify search results are displayed
     9. Verify results contain events
     """
+
     sign_in = SignInPrepare(d)
     search_ai = SearchAI(d)
     verify_events = VerifyEvents(d)
@@ -28,7 +31,7 @@ def test_ai_search_events(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai("Burlington Event")
+    search_ai.search_and_submit_ai("Burlington Events")
 
     verify_events.verify_events_search_result()
 
@@ -47,8 +50,7 @@ def test_ai_search_businesses(d, screenshots_dir):
     5. Click search field
     6. Enter search term 'Big Fatty BBQ'
     7. Submit search
-    8. Verify search results are displayed
-    9. Verify results contain businesses
+    8. Verify result contains business
     """
     sign_in = SignInPrepare(d)
     search_ai = SearchAI(d)

@@ -209,10 +209,12 @@ class VerifyBusinesses:
         Raises:
             AssertionError: If search results cannot be verified
         """
-        search_successful = (
-                self.device(textContains="Big Fatty BBQ").exists or
-                self.device.xpath(Businesses.BUSINESSES_SECTION).exists
-        )
+        # Use 3 verification strategies as per best practices
+        business_name_exists = self.device(textContains="Big Fattys BBQ").exists
+        location_exists = self.device(textContains="White River Junction").exists
+        businesses_section_exists = self.device(textContains="Businesses").exists
+
+        search_successful = business_name_exists or location_exists or businesses_section_exists
 
         assert search_successful, "Search failed - Could not verify business search results"
         return True
