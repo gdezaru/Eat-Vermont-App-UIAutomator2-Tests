@@ -3,7 +3,7 @@ import pytest
 from utils_authentication import SignInPrepare
 from utils_device_interaction import SearchAI
 from utils_screenshots import ScreenshotsManagement
-from utils_ui_navigation import NavFavoritesVisitHistory, NavBusinesses
+from utils_ui_navigation import NavFavoritesVisitHistory, NavBusinesses, NavCheckIn
 from utils_ui_verification import VerifyBusinesses
 
 # Initialize check in business name at module level
@@ -28,6 +28,8 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
+    click_business_menu, select_check_in, select_check_in, save = NavCheckIn(d)
+    input_your_thoughts = NavCheckIn
     screenshots = ScreenshotsManagement(d)
     search_ai = SearchAI(d)
 
@@ -39,9 +41,16 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
 
     nav_businesses.click_business_with_event_search_result(check_in_business_name)
 
-    #taps three dotted button
+    click_business_menu.click_business_three_dotted()
 
     screenshots.take_screenshot("12_1_1_check_in_option_visible")
+
+    select_check_in.click_check_in()
+
+    input_your_thoughts.input_your_thoughts()
+
+    save.save_check_in()
+
 
 @pytest.mark.smoke
 def test_check_in_with_feedback_from_business(d, screenshots_dir):
@@ -62,6 +71,7 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
+    click_business_menu, select_check_in, input_your_thoughts, save = NavCheckIn(d)
     screenshots = ScreenshotsManagement(d)
     search_ai = SearchAI(d)
 
@@ -73,19 +83,17 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
 
     nav_businesses.click_business_with_event_search_result(check_in_business_name)
 
-    #tap three dotted button
+    click_business_menu.click_business_three_dotted()
 
     screenshots.take_screenshot("12_1_1_check_in_option_visible")
 
-    #tap Check-in
-
-    #assert Business name  and "Your Experience" text are present
+    select_check_in.click_check_in()
 
     screenshots.take_screenshot("12_2_1_check_in_screen_contents")
 
-    #inputs text in the Your Thoughts box
+    input_your_thoughts.input_your_thoughts()
 
-    #tapSave
+    save.save_check_in()
 
     #asserts "I'd go if I'm in town" text present
 

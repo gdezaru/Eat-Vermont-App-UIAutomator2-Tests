@@ -323,6 +323,7 @@ class CheckIn:
                              '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[1]'
                              '/android.view.ViewGroup[1]/android.view.ViewGroup[4]')
     MENU_CHECK_IN = '//android.widget.TextView[@text="Check-In"]'
+    DEFAULT_RATING = '//android.widget.TextView[@text="I’d go if I’m in town"]'
     YOUR_THOUGHTS = '//android.widget.TextView[@text="Your feedback is private."]'
     SAVE_CHECK_IN = '//android.widget.TextView[@text="Save"]'
     CHEERS_BUTTON = '//android.widget.TextView[@text="Cheers"]'

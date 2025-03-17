@@ -3,7 +3,7 @@ Utility functions for UI verification.
 """
 from time import sleep
 from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
-    ViewMap, DayTrips, LoginPage, AddInfo, GuestMode, Videos
+    ViewMap, DayTrips, LoginPage, AddInfo, GuestMode, Videos, CheckIn
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
@@ -1467,6 +1467,96 @@ class NavBottomNavBar:
 
 class NavCheckIn:
     """Class for handling navigation in the check-in process"""
+
+    def __init__(self, device):
+        """
+        Initialize NavCheckIn with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def click_business_three_dotted(self, wait_time=3):
+        """
+        Taps the three-dotted menu icon on a business card and verifies the Check-In option is available.
+
+        Args:
+            wait_time (int, optional): Time to wait for the Check-In option to appear. Defaults to 3 seconds.
+
+        Returns:
+            bool: True if menu was tapped and Check-In option is present
+
+        Raises:
+            AssertionError: If three-dotted menu isn't found or Check-In option doesn't appear
+        """
+        self.device.xpath(CheckIn.BUSINESS_THREE_DOTTED).click()
+        sleep(wait_time)
+        check_in_option = self.device.xpath(CheckIn.MENU_CHECK_IN).exists
+        assert check_in_option, "Check-In option not found in the three-dotted menu"
+        return True
+
+    def click_check_in(self, wait_time=2):
+        """
+        Taps the Check-In option.
+
+        Args:
+            wait_time (int, optional): Time to wait for the Check-In screen to appear.
+
+        Returns:
+            bool: True if the button was tapped and the check-in screen is present.
+
+        Raises:
+            AssertionError: If check-in menu doesn't appear.
+        """
+        self.device.xpath(CheckIn.MENU_CHECK_IN).click()
+        sleep(wait_time)
+        check_in_screen = self.device.xpath(CheckIn.DEFAULT_RATING).exists
+        assert check_in_screen, "Check-In screen not found"
+        return True
+
+    def input_your_thoughts(self, text = "Text Check-In", wait_time=2):
+        """
+        Inputs text in the 'Your feedback is private' field and presses enter.
+
+        Args:
+            text (str, optional): Text to input in the feedback field. Defaults to "Test Check-In".
+            wait_time (int, optional): Time to wait after actions. Defaults to 2 seconds.
+
+        Returns:
+            bool: True if text was input successfully
+
+        Raises:
+            AssertionError: If feedback field is not found
+        """
+        your_thoughts_field = self.device.xpath(CheckIn.YOUR_THOUGHTS)
+        assert your_thoughts_field.exists, "Feedback field not found"
+        your_thoughts_field.click()
+        sleep(wait_time)
+        self.device.send_keys(text)
+        sleep(1)
+        self.device.press("enter")
+        sleep(wait_time)
+        return True
+
+    def save_check_in(self, wait_time=3):
+        """
+        Taps Save in the Check-In screen.
+
+        Args:
+            wait_time (int, optional): Time to wait after actions. Defaults to 3 seconds.
+
+        Returns:
+            bool: True if save successful
+
+        Raises:
+            AssertionError: If Cheers button not present
+        """
+        self.device.xpath(CheckIn.SAVE_CHECK_IN).click()
+        sleep(wait_time)
+        cheers_button = self.device.xpath(CheckIn.CHEERS_BUTTON).exists
+        assert cheers_button,"Cheers button not found"
+
 
 class NavGuestMode:
     """Class for handling guest mode navigation interactions."""
