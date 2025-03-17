@@ -124,7 +124,7 @@ class SearchAI:
         self.device.send_keys(search_term)
         sleep(self.WAIT_TIME_AFTER_TYPING)
         self.device.press("enter")
-        sleep(5)
+        sleep(10)
 
 
 class ForgotPassword:
