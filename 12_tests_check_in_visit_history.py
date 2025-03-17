@@ -47,8 +47,6 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
 
     select_check_in.click_check_in()
 
-    input_your_thoughts.input_your_thoughts()
-
     save.save_check_in()
 
     verify_rating.verify_rating_text()
