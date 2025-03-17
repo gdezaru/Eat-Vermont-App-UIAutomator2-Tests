@@ -1555,7 +1555,63 @@ class NavCheckIn:
         self.device.xpath(CheckIn.SAVE_CHECK_IN).click()
         sleep(wait_time)
         cheers_button = self.device.xpath(CheckIn.CHEERS_BUTTON).exists
-        assert cheers_button,"Cheers button not found"
+        assert cheers_button, "Cheers button not found"
+
+    def click_visit_history_three_dotted(self, wait_time=1):
+        """
+        Taps the three-dotted menu icon on the Visit History after saving the check-in and verifies if Delete option
+        is available.
+
+        Args:
+            wait_time (int, optional): Time to wait for the Check-In option to appear. Defaults to 3 seconds.
+
+        Returns:
+            bool: True if Delete button visible
+
+        Raises:
+            AssertionError: If Delete button isn't found or Check-In option doesn't appear
+        """
+        self.device.xpath(CheckIn.VISIT_HISTORY_THREE_DOTTED).click()
+        sleep(wait_time)
+        delete_button = self.device.xpath(CheckIn.DELETE_CHECK_IN_BUTTON)
+        assert delete_button, "Delete button not found"
+
+    def click_visit_history_delete(self, wait_time=2):
+        """
+        Taps the Delete button on the Visit History's three dotted menu and verifies if Yes option is available.
+
+        Args:
+            wait_time (int, optional): Time to wait for the Check-In option to appear. Defaults to 3 seconds.
+
+        Returns:
+            bool: True if Yes option is available
+
+        Raises:
+            AssertionError: If Yes button isn't found or Check-In option doesn't appear
+        """
+        self.device.xpath(CheckIn.DELETE_CHECK_IN_BUTTON).click()
+        sleep(wait_time)
+        yes = self.device.xpath(CheckIn.DELETE_YES)
+        assert yes, "Yes button not found"
+
+    def click_yes(self, wait_time=2):
+        """
+        Taps the Yes button on the Visit History's three dotted menu, then verifies that the text:
+        "I'd go if I'm in town" has disappeared.
+
+        Args:
+            wait_time (int, optional): Time to wait for the Check-In option to appear. Defaults to 3 seconds.
+
+        Returns:
+            bool: True if the text has disappeared
+
+        Raises:
+            AssertionError: If text still present
+        """
+        self.device.xpath(CheckIn.DELETE_YES).click()
+        sleep(wait_time)
+        default_rating_text = self.device(text="I'd go if I'm in town").exists
+        assert not default_rating_text, "Check In not deleted"
 
 
 class NavGuestMode:

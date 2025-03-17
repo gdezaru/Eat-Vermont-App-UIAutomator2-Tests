@@ -4,7 +4,7 @@ from utils_authentication import SignInPrepare
 from utils_device_interaction import SearchAI
 from utils_screenshots import ScreenshotsManagement
 from utils_ui_navigation import NavFavoritesVisitHistory, NavBusinesses, NavCheckIn
-from utils_ui_verification import VerifyBusinesses
+from utils_ui_verification import VerifyBusinesses, VerifyCheckIn
 
 # Initialize check in business name at module level
 check_in_business_name = "Higher Ground"
@@ -28,8 +28,8 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
-    click_business_menu, select_check_in, select_check_in, save = NavCheckIn(d)
-    input_your_thoughts = NavCheckIn
+    click_business_menu, select_check_in, input_your_thoughts, save, tap_visit_menu, delete, yes = NavCheckIn(d)
+    verify_rating = VerifyCheckIn(d)
     screenshots = ScreenshotsManagement(d)
     search_ai = SearchAI(d)
 
@@ -51,6 +51,14 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
 
     save.save_check_in()
 
+    verify_rating.verify_rating_text()
+
+    tap_visit_menu.click_visit_history_three_dotted()
+
+    delete.click_visit_history_delete()
+
+    yes.click_yes()
+    
 
 @pytest.mark.smoke
 def test_check_in_with_feedback_from_business(d, screenshots_dir):
@@ -71,7 +79,8 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
-    click_business_menu, select_check_in, input_your_thoughts, save = NavCheckIn(d)
+    tap_business_menu, select_check_in, input_your_thoughts, save, tap_visit_menu, delete, yes = NavCheckIn(d)
+    verify_rating = VerifyCheckIn(d)
     screenshots = ScreenshotsManagement(d)
     search_ai = SearchAI(d)
 
@@ -83,7 +92,7 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
 
     nav_businesses.click_business_with_event_search_result(check_in_business_name)
 
-    click_business_menu.click_business_three_dotted()
+    tap_business_menu.click_business_three_dotted()
 
     screenshots.take_screenshot("12_1_1_check_in_option_visible")
 
@@ -95,25 +104,19 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
 
     save.save_check_in()
 
-    #asserts "I'd go if I'm in town" text present
+    verify_rating.verify_rating_text()
 
     screenshots.take_screenshot("12_3_1_check_in_history_contents")
 
-    #taps three dotted button
-
-    #asserts Delete and Edit texts are visible
+    tap_visit_menu.click_visit_history_three_dotted()
 
     screenshots.take_screenshot("12_4_1_check_in_screen_contents")
 
-    #taps Delete button
-
-    #asserts Do you want to delete your Visit? visible
+    delete.click_visit_history_delete()
 
     screenshots.take_screenshot("12_5_1_check_in_deletion_popup")
 
-    #taps Yes
-
-    #asserts "I'd go if I'm in town" not present
+    yes.click_yes()
 
 
 @pytest.mark.smoke
