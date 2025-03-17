@@ -30,32 +30,38 @@ class SignInPrepare:
         Sign in to the app using test user credentials.
         """
         from config import TEST_USER
+
         launch_app = LaunchApp(self.device)
         launch_app.handle_notification_permission()
-        waits = WaitUtils(self.device)
-        waits.wait_for_element(lambda d: d(description="Get Started") or d(text="Get Started"))
+        sleep(3)
+
         if self.device(description="Search").exists(timeout=2) or self.device(text="Search").exists(timeout=2):
             return
+
         get_started = None
         if self.device(description="Get Started").exists(timeout=5):
             get_started = self.device(description="Get Started")
         elif self.device(text="Get Started").exists(timeout=5):
             get_started = self.device(text="Get Started")
+
         assert get_started is not None, "Could not find Get Started button"
         get_started.click()
         sleep(2)
+
         email_field = self.device(text="Email")
         assert email_field.exists(timeout=5), "Email field not found"
         email_field.click()
         sleep(1)
         self.device.send_keys(TEST_USER['email'])
         sleep(1)
+
         password_field = self.device(text="Password")
         assert password_field.exists(timeout=5), "Password field not found"
         password_field.click()
         sleep(1)
         self.device.send_keys(TEST_USER['password'])
         sleep(1)
+
         login_attempts = 2
         for attempt in range(login_attempts):
             log_in_button = None
@@ -67,15 +73,18 @@ class SignInPrepare:
             assert log_in_button is not None, "Could not find Log in button"
             log_in_button.click()
             sleep(5)
+
             success_indicators = ["Events", "Home", "Profile", "Search"]
             for indicator in success_indicators:
                 if self.device(text=indicator).exists(timeout=5):
                     return
+
             if attempt < login_attempts - 1:
                 if self.device(text="Back").exists():
                     self.device(text="Back").click()
                     sleep(1)
                 continue
+
             assert False, "Login failed - Could not verify successful login"
 
     def handle_events_popup(self):
