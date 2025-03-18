@@ -31,7 +31,7 @@ def test_add_favorite_events(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai("Burlington Event")
+    search_ai.search_and_submit_ai("Burlington Events")
 
     nav_events.click_first_event_search_result()
     nav_events.add_favorite_event()
@@ -120,7 +120,7 @@ def test_remove_favorite_events(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai("Burlington")
+    search_ai.search_and_submit_ai("Burlington Events")
 
     nav_events.click_first_event_search_result()
 

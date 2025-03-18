@@ -4,10 +4,10 @@ from utils_authentication import SignInPrepare
 from utils_device_interaction import SearchAI
 from utils_screenshots import ScreenshotsManagement
 from utils_ui_navigation import NavFavoritesVisitHistory, NavBusinesses, NavCheckIn
-from utils_ui_verification import VerifyBusinesses, VerifyCheckIn
+from utils_ui_verification import VerifyBusinesses
 
 # Initialize check in business name at module level
-check_in_business_name = "Higher Ground"
+check_in_business_name = "Big Fattys BBQ"
 
 
 @pytest.mark.smoke
@@ -28,8 +28,7 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
-    click_business_menu, select_check_in, input_your_thoughts, save, tap_visit_menu, delete, yes = NavCheckIn(d)
-    verify_rating = VerifyCheckIn(d)
+    nav_check_in = NavCheckIn(d)
     screenshots = ScreenshotsManagement(d)
     search_ai = SearchAI(d)
 
@@ -41,21 +40,21 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
 
     nav_businesses.click_business_with_event_search_result(check_in_business_name)
 
-    click_business_menu.click_business_three_dotted()
+    nav_check_in.click_business_three_dotted()
 
     screenshots.take_screenshot("12_1_1_check_in_option_visible")
 
-    select_check_in.click_check_in()
+    nav_check_in.click_check_in()
 
-    save.save_check_in()
+    nav_check_in.save_check_in()
 
-    verify_rating.verify_rating_text()
+    nav_check_in.click_cheers_button()
 
-    tap_visit_menu.click_visit_history_three_dotted()
+    nav_check_in.click_visit_history_three_dotted()
 
-    delete.click_visit_history_delete()
+    nav_check_in.click_visit_history_delete()
 
-    yes.click_yes()
+    nav_check_in.click_yes()
 
 
 @pytest.mark.smoke
@@ -77,8 +76,7 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
     sign_in = SignInPrepare(d)
     nav_businesses = NavBusinesses(d)
     verify_businesses = VerifyBusinesses(d)
-    tap_business_menu, select_check_in, input_your_thoughts, save, tap_visit_menu, delete, yes = NavCheckIn(d)
-    verify_rating = VerifyCheckIn(d)
+    nav_check_in = NavCheckIn(d)
     screenshots = ScreenshotsManagement(d)
     search_ai = SearchAI(d)
 
@@ -90,31 +88,31 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
 
     nav_businesses.click_business_with_event_search_result(check_in_business_name)
 
-    tap_business_menu.click_business_three_dotted()
+    nav_check_in.click_business_three_dotted()
 
     screenshots.take_screenshot("12_1_1_check_in_option_visible")
 
-    select_check_in.click_check_in()
+    nav_check_in.click_check_in()
 
     screenshots.take_screenshot("12_2_1_check_in_screen_contents")
 
-    input_your_thoughts.input_your_thoughts()
+    nav_check_in.input_your_thoughts()
 
-    save.save_check_in()
+    nav_check_in.save_check_in()
 
-    verify_rating.verify_rating_text()
+    nav_check_in.click_cheers_button()
 
     screenshots.take_screenshot("12_3_1_check_in_history_contents")
 
-    tap_visit_menu.click_visit_history_three_dotted()
+    nav_check_in.click_visit_history_three_dotted()
 
     screenshots.take_screenshot("12_4_1_check_in_screen_contents")
 
-    delete.click_visit_history_delete()
+    nav_check_in.click_visit_history_delete()
 
     screenshots.take_screenshot("12_5_1_check_in_deletion_popup")
 
-    yes.click_yes()
+    nav_check_in.click_yes()
 
 
 @pytest.mark.smoke

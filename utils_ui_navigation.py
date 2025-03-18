@@ -1562,6 +1562,24 @@ class NavCheckIn:
         cheers_button = self.device.xpath(CheckIn.CHEERS_BUTTON).exists
         assert cheers_button, "Cheers button not found"
 
+    def click_cheers_button(self, wait_time=2):
+        """
+        Clicks the Cheers button that appears after saving a check-in.
+
+        Args:
+            wait_time (int, optional): Time to wait after clicking. Defaults to 2 seconds.
+
+        Returns:
+            bool: True if button was clicked successfully
+
+        Raises:
+            AssertionError: If Cheers button not found
+        """
+        cheers_button = self.device.xpath(CheckIn.CHEERS_BUTTON)
+        cheers_button.click()
+        sleep(wait_time)
+        return True
+
     def click_visit_history_three_dotted(self, wait_time=1):
         """
         Taps the three-dotted menu icon on the Visit History after saving the check-in and verifies if Delete option

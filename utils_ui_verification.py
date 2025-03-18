@@ -918,37 +918,6 @@ class VerifySettings:
         return True
 
 
-class VerifyCheckIn:
-    """Class for verifying check-in related items"""
-
-    def __init__(self, device):
-        """
-        Initialize VerifyCheckIn with a device instance.
-
-        Args:
-            device: UIAutomator2 device instance
-        """
-        self.device = device
-
-    def verify_rating_text(self, wait_time=1):
-        """
-        Verifies that the default rating text "I'd go if I'm in town" is visible on the screen.
-
-        Args:
-            wait_time (int, optional): Maximum time to wait for the text to appear. Defaults to 3 seconds.
-
-        Returns:
-            bool: True if the default rating text is found
-
-        Raises:
-            AssertionError: If default rating text is not found on screen
-        """
-        sleep(wait_time)
-        default_rating_text = self.device(text="I'd go if I'm in town").exists
-        assert default_rating_text, "Default rating text 'I'd go if I'm in town' not found on screen"
-        return True
-
-
 class VerifyGuestMode:
     """Class for verifying Guest Mode-related UI elements and interactions."""
 
