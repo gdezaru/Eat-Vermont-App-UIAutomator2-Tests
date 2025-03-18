@@ -34,8 +34,8 @@ class VerifyEvents:
             AssertionError: If search results cannot be verified
         """
         search_successful = (
-                self.device(textContains="Burlington").exists or
-                self.device(textContains="Event").exists
+                self.device(textContains="Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday").exists or
+                self.device(textContains="Events").exists
         )
 
         assert search_successful, "Search failed - Could not verify search results"

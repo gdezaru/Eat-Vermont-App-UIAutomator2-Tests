@@ -137,7 +137,12 @@ class NavEvents:
             AssertionError: If no search result is found or if click fails
         """
         sleep(self.MEDIUM_WAIT)
-        result = self.device.xpath(SearchModule.FIRST_SEARCH_RESULT)
+
+        days_of_the_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+        day_conditions = " or ".join([f"contains(@content-desc, '{day}')" for day in days_of_the_week])
+        dynamic_locator = f'//*[{day_conditions}]/android.view.ViewGroup[3]'
+        result = self.device.xpath(dynamic_locator)
         assert result.exists, "Could not find any event search results"
         for attempt in range(self.MAX_CLICK_RETRIES):
             if result.click_exists(timeout=self.CLICK_TIMEOUT):

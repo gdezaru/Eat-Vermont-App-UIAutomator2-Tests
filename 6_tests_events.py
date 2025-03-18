@@ -8,6 +8,7 @@ from utils_ui_navigation import NavEvents
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import EventsScrolling
 from locators import AskAI
+from utils_ui_verification import VerifyEvents
 
 
 @pytest.mark.smoke
@@ -44,14 +45,14 @@ def test_events_card(d, screenshots_dir):
     nav_events = NavEvents(d)
     screenshots = ScreenshotsManagement(d)
     search_ai = SearchAI(d)
+    search_result = VerifyEvents(d)
     events_scroll = EventsScrolling(d)
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai("Burlington Event")
+    search_ai.search_and_submit_ai("Vermont Events")
 
-    search_results = d.xpath(AskAI.search_result("Burlington"))
-    assert search_results.exists, f"No search results found for term: {"Burlington"}"
+    search_result.verify_events_search_result()
 
     nav_events.click_first_event_search_result()
 
