@@ -2,22 +2,20 @@
 Utility functions for UI verification.
 """
 from time import sleep
-from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
-    ViewMap, DayTrips, LoginPage, AddInfo, GuestMode, Videos, CheckIn, AskAI
+from locators import HomeScreen, Events, Businesses, MyFavorites, Trails, BottomNavBar, VisitHistory, \
+    ViewMap, DayTrips, LoginPage, AddInfo, GuestMode, Videos, CheckIn, AskAI, EventsFilters
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
 class NavEvents:
     """Class for handling events navigation and interactions."""
 
-    # Wait times
     LONG_WAIT = 10
     MEDIUM_WAIT = 7
     DEFAULT_WAIT = 2
     SWIPE_DURATION = 0.4
     RETRY_WAIT = 1.5
 
-    # Retry settings
     MAX_CLICK_RETRIES = 3
     CLICK_TIMEOUT = 3.0
 
@@ -91,10 +89,8 @@ class NavEvents:
         Raises:
             AssertionError: If carousel item is not found
         """
-        print("\nLocating Events carousel item...")
         sleep(5)
 
-        # Do one scroll first using ScreenSwipe
         screen_swipe = ScreenSwipe(self.device)
         screen_swipe.calculate_swipe_coordinates()
         sleep(self.RETRY_WAIT)
@@ -105,7 +101,6 @@ class NavEvents:
             if content_desc:
                 carousel_item = self.device.xpath(Events.CAROUSEL_ITEM.format(content_desc))
                 assert carousel_item.exists, "Could not find Events carousel item"
-                print("Events carousel item found, clicking...")
                 carousel_item.click()
                 sleep(self.MEDIUM_WAIT)
                 return True
@@ -228,6 +223,173 @@ class NavEvents:
 
         assert not favorite_event.exists, "Event is still present in favorites"
         return True
+
+
+class NavEventsFilters:
+    """Class for handling navigation in Events Filters"""
+
+    DEFAULT_WAIT = 2
+
+    def __init__(self, device):
+        """
+        Initialize NavEventsFilters with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+        self.days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
+    def click_event_filter_button(self):
+        """
+        Clicks the Filter button on the Events screen.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Filter button is not found
+        """
+        filter_button = self.device.xpath(HomeScreen.EVENTS_FILTERS)
+        assert filter_button.exists, "Could not find Filter button on Events screen"
+
+        filter_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def click_next_month_filter(self):
+        """
+        Clicks the Next Month button in the Events Filters screen.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Next Month button is not found
+        """
+        next_month_button = self.device.xpath(EventsFilters.NEXT_MONTH_FILTER)
+        assert next_month_button.exists, "Could not find Next Month button in Events Filters screen"
+
+        next_month_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def toggle_drive_time(self, direction):
+        """
+        Clicks the Drive Time toggle button to move it in a specific direction.
+
+        Args:
+            direction: String - "left" or "right" to indicate the desired toggle direction
+
+        Returns:
+            bool: True if toggle was clicked successfully
+
+        Raises:
+            AssertionError: If Drive Time toggle is not found
+            ValueError: If direction is not 'left' or 'right'
+        """
+        if direction not in ['left', 'right']:
+            raise ValueError("Direction must be 'left' or 'right'")
+
+        drive_time_toggle = self.device.xpath(EventsFilters.DRIVE_TIME_TOGGLE)
+        assert drive_time_toggle.exists, "Could not find Drive Time toggle in Events Filters screen"
+
+        toggle_info = drive_time_toggle.info
+        toggle_bounds = toggle_info.get('bounds', {})
+
+        toggle_width = toggle_bounds.get('right', 0) - toggle_bounds.get('left', 0)
+        toggle_height = toggle_bounds.get('bottom', 0) - toggle_bounds.get('top', 0)
+
+        if direction == 'left':
+            x_coord = toggle_bounds.get('left', 0) + (toggle_width // 4)
+        else:
+            x_coord = toggle_bounds.get('right', 0) - (toggle_width // 4)
+
+        y_coord = toggle_bounds.get('top', 0) + (toggle_height // 2)
+        self.device.click(x_coord, y_coord)
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def click_apply_filters(self):
+        """
+        Clicks the Apply Filters button on the Events Filters screen.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Apply Filters button is not found
+        """
+        apply_filters_button = self.device.xpath(EventsFilters.APPLY_FILTERS)
+        assert apply_filters_button.exists, "Could not find Apply Filters button on Events Filters screen"
+
+        apply_filters_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def click_reset_filters(self):
+        """
+        Clicks the Reset button on the Events Filters screen.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Reset button is not found
+        """
+        reset_button = self.device.xpath(EventsFilters.RESET_FILTERS)
+        assert reset_button.exists, "Could not find Reset button on Events Filters screen"
+
+        reset_button.click()
+        sleep(self.DEFAULT_WAIT)
+        return True
+
+    def get_next_day(self, current_day):
+        """
+        Returns the next day of the week given the current day.
+
+        Args:
+            current_day (str): Current day in three-letter format (e.g., 'MON', 'TUE')
+
+        Returns:
+            str: Next day in three-letter format
+        """
+        current_index = self.days.index(current_day)
+        next_index = (current_index + 1) % 7
+        return self.days[next_index]
+
+    def select_next_day(self, current_day):
+        """
+        Attempts to select the next day in the Events Filters screen.
+
+        This method tries to find and click on the day element directly after
+        the provided current day. It uses explicit assertions and error messaging
+        rather than try-except blocks.
+
+        Args:
+            current_day (str): The current day in three-letter format (e.g., 'MON', 'TUE')
+
+        Returns:
+            str: The newly selected day in three-letter format
+
+        Raises:
+            AssertionError: If the next day element is not found or cannot be clicked
+        """
+        next_day = self.get_next_day(current_day)
+
+        next_day_element = self.device.xpath(f'//android.widget.TextView[@text="{next_day}"]')
+
+        assert next_day_element.exists, f"Next day element '{next_day}' not found in Events Filters screen"
+
+        next_day_element.click()
+        sleep(2)
+
+        selected_day_indicator = self.device.xpath(
+            f'//android.widget.TextView[@text="{next_day}" and @selected="true"]')
+        assert selected_day_indicator.exists or next_day_element.info.get('selected', False), \
+            f"Failed to verify '{next_day}' was selected after clicking"
+
+        return next_day
 
 
 class NavBusinesses:

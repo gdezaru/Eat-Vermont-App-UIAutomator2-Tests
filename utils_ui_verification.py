@@ -1,11 +1,10 @@
 """"
 Utilities functions for UI verification
 """
-import os
 import time
 from time import sleep
 from locators import (Businesses, EventsScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
-                      PlansPopup, ViewMap, LoginPage, DayTrips, Videos, Events, HomeScreen)
+                      PlansPopup, ViewMap, LoginPage, DayTrips, Videos, HomeScreen, EventsFilters)
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
@@ -56,7 +55,6 @@ class VerifyEvents:
             day_element = self.device.xpath(EventsScreen.DAY_OF_WEEK.format(day, day))
             if day_element.exists:
                 current_day = day
-                print(f"\nFound current day: {day}")
                 day_element.click()
                 sleep(2)
                 break
@@ -140,6 +138,33 @@ class VerifyEvents:
         return True
 
 
+class VerifyEventsFilters:
+    """Class for verifying events filters"""
+
+    def __init__(self, device):
+        """
+        Initialize VerifyEventsFilters with a device instance.
+
+        Args:
+            device: UIAutomator2 device instance
+        """
+        self.device = device
+
+    def verify_events_filters_default_drive_time(self):
+        """
+        Verifies that the default drive time (30 min) option is present on the Events Filters screen.
+
+        Returns:
+            bool: True if the default drive time option exists
+
+        Raises:
+            AssertionError: If the default drive time option is not found
+        """
+        default_drive_time = self.device.xpath(EventsFilters.DEFAULT_DRIVE_TIME)
+        assert default_drive_time.exists, "Default drive time (30 min) option not found on Events Filters screen"
+        return True
+
+
 class VerifyBusinesses:
     """Class for verifying business-related UI elements and interactions."""
 
@@ -180,7 +205,7 @@ class VerifyBusinesses:
         """
         current_try_day = current_day
         days_tried = 0
-        max_days_to_try = 7  # Try all days of the week at most
+        max_days_to_try = 7
 
         while days_tried < max_days_to_try:
             next_day = self.get_next_day(current_try_day)
@@ -188,8 +213,8 @@ class VerifyBusinesses:
             max_attempts = 3
             click_success = False
 
-            for try_count in range(max_attempts):  # Changed 'attempt' to 'try_count'
-                self.current_attempt = try_count + 1  # Update class-level attempt counter
+            for try_count in range(max_attempts):
+                self.current_attempt = try_count + 1
                 next_day_element = self.device.xpath(EventsScreen.DAY_OF_WEEK.format(next_day, next_day))
 
                 if not next_day_element.exists:

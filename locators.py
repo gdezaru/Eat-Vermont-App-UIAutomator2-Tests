@@ -123,6 +123,8 @@ class EventsFilters:
         '/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup[1]'
         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[3]'
         '/android.view.ViewGroup[1]/android.view.ViewGroup[2]')
+    APPLY_FILTERS = '//android.widget.TextView[@text="Apply Filters"]'
+    RESET_FILTERS = '//android.widget.TextView[@text="Reset"]'
 
 
 class ViewMap:

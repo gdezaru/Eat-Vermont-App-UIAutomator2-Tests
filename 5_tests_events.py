@@ -4,11 +4,11 @@ import pytest
 from conftest import screenshots_dir
 from utils_authentication import SignInPrepare
 from utils_device_interaction import SearchAI
-from utils_ui_navigation import NavEvents
+from utils_ui_navigation import NavEvents, NavEventsFilters
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import EventsScrolling
 from locators import AskAI
-from utils_ui_verification import VerifyEvents
+from utils_ui_verification import VerifyEvents, VerifyEventsFilters, VerifyBusinesses
 
 
 @pytest.mark.smoke
@@ -85,11 +85,25 @@ def test_events_filters_date(d, screenshots_dir):
     """
     sign_in = SignInPrepare(d)
     nav_home_screen = VerifyEvents(d)
+    nav_filters = NavEventsFilters(d)
+    nav_dates = VerifyEvents(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
     nav_home_screen.verify_events_home_screen()
+
+    nav_filters.click_event_filter_button()
+
+    screenshots.take_screenshot("6_3_1_filters_screen_contents")
+
+    nav_filters.click_next_month_filter()
+
+    screenshots.take_screenshot("6_3_2_filters_next_month_screen_contents")
+
+    nav_dates.find_and_click_current_day()
+
+    nav_dates.
 
 
 def test_events_filters_drive_time(d, screenshots_dir):
@@ -107,8 +121,30 @@ def test_events_filters_drive_time(d, screenshots_dir):
     """
     sign_in = SignInPrepare(d)
     nav_home_screen = VerifyEvents(d)
+    nav_filters = NavEventsFilters(d)
+    verify_filters = VerifyEventsFilters(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
     nav_home_screen.verify_events_home_screen()
+
+    nav_filters.click_event_filter_button()
+
+    screenshots.take_screenshot("6_4_1_filters_screen_contents")
+
+    nav_filters.toggle_drive_time(direction="right")
+
+    screenshots.take_screenshot("6_4_2_drive_time_changed")
+
+    nav_filters.click_apply_filters()
+
+    nav_filters.click_event_filter_button()
+
+    nav_filters.click_reset_filters()
+
+    verify_filters.verify_events_filters_default_drive_time()
+
+    screenshots.take_screenshot("6_4_3_drive_time_set_back_to_default")
+
+
