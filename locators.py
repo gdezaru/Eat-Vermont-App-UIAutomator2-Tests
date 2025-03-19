@@ -244,15 +244,17 @@ class DayTrips:
 class Trails:
     """Locators for Trails"""
     READ_MORE_TRAILS = ('//android.widget.TextView[@text="Read More"]'
-                        '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains(@text, "Trail")]]]'
-                        '[1]')
+                        '[ancestor::android.view.ViewGroup[.//android.widget.TextView[contains'
+                        '(@text, "Fun Food Trails") or contains(@text, "Trail")]]][1]')
+    READ_MORE_TRAILS_DYNAMIC = ('//android.widget.TextView[contains(@text, "Trail")]/'
+                                'following::android.widget.TextView[@text="Read More"]')
     TRAIL_NAME = '//android.widget.TextView[@text="{}"]'
     TRAILS_SEARCH = '//android.widget.EditText[@text="Search"]'
     TRAILS_STATUS = '//android.widget.TextView[@text="Not Started" or @text="In Progress" or @text="Complete"]'
     PERCENTAGE_PROGRESS = '//android.widget.TextView[contains(@text, "%")]'
     VISITS_COMPLETED_TEXT = ('//android.widget.TextView[contains(translate(@text, "ABCDEFGHIJKLMNOPQRSTUVWXYZ",'
                              ' "abcdefghijklmnopqrstuvwxyz"), "visits completed")]')
-    VISITS_COMPLETED_NUMBER = '//android.widget.TextView[contains(@text, "/") and string-length(@text) <= 5]'
+    VISITS_COMPLETED_NUMBER = '//android.widget.TextView[contains(@text, " / ")]'
     TRAILS_SECTION = '//android.view.ViewGroup[.//android.widget.TextView[@package="com.eatvermont"]]'
     TRAILS_SECTION_TEXT = '//android.widget.TextView[@text="{}"]'
 

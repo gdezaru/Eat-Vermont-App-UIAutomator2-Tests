@@ -437,8 +437,7 @@ class NavViewMap:
 
     def navigate_to_view_map(self):
         """
-        Navigate to View Map section by scrolling and clicking.
-        Uses multiple scroll attempts and better error handling.
+        Navigate to View Map section by scrolling until the button is centered on screen.
 
         Returns:
             bool: True if navigation was successful
@@ -446,17 +445,30 @@ class NavViewMap:
         Raises:
             AssertionError: If View Map button is not found after all attempts
         """
-        max_scroll_attempts = 3
-        for attempt in range(max_scroll_attempts):
+        general_scroll = GeneralScrolling(self.device)
+        width, height = general_scroll.get_dimensions()
+        center_y = height // 2
+        for _ in range(3):
             view_map = self.device.xpath(HomeScreen.VIEW_MAP)
             if view_map.exists:
-                return self.click_view_map()
+                bounds = view_map.info['bounds']
+                button_y = (bounds['top'] + bounds['bottom']) // 2
 
-            self.device.swipe(0.5, 0.8, 0.5, 0.2, 0.5)
+                if abs(button_y - center_y) < height * 0.1:
+                    return self.click_view_map()
+
+                offset = button_y - center_y
+                self.device.swipe(width // 2, height // 2 + offset // 2,
+                                  width // 2, height // 2 - offset // 2, 0.3)
+                sleep(1)
+                break
+
+            start_x, start_y, end_y = general_scroll.calculate_swipe_coordinates()
+            self.device.swipe(start_x, start_y, start_x, end_y, 0.3)
             sleep(1.5)
 
         view_map = self.device.xpath(HomeScreen.VIEW_MAP)
-        assert view_map.exists, f"Could not find View Map button after {max_scroll_attempts} scroll attempts"
+        assert view_map.exists, "Could not find View Map button after multiple attempts"
         return self.click_view_map()
 
     def click_events_filter(self):
@@ -731,11 +743,23 @@ class NavDayTripsTrails:
             bool: True if navigation was successful
 
         Raises:
-            AssertionError: If Read More button is not found
+            AssertionError: If Read More button is not found or click doesn't navigate to details screen
         """
-        read_more_button = self.device.xpath(Trails.READ_MORE_TRAILS)
-        assert read_more_button.wait(timeout=self.LONG_WAIT), "Read More button not found"
+        read_more_button = self.find_trails_text()
         read_more_button.click()
+        sleep(self.DEFAULT_WAIT)
+
+        if not self.device.xpath(Trails.PERCENTAGE_PROGRESS).exists:
+            alt_button = self.device.xpath(Trails.READ_MORE_TRAILS_DYNAMIC)
+            if alt_button.exists:
+                alt_button.click()
+                sleep(self.DEFAULT_WAIT)
+
+            if not self.device.xpath(Trails.PERCENTAGE_PROGRESS).exists:
+                read_more_texts = self.device(text="Read More")
+                if read_more_texts.exists:
+                    read_more_texts[read_more_texts.count - 1].click()
+                    sleep(self.DEFAULT_WAIT)
         sleep(self.LONG_WAIT)
         return True
 
