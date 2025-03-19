@@ -344,7 +344,7 @@ class ScrollVideos(GeneralScrolling):
 
     def guest_mode_scroll_to_videos(self, max_attempts=10, duration=0.5):
         """
-        Scrolls to videos section in Guest Mode.
+        Scrolls to Food Vids section in Guest Mode.
 
         Args:
             max_attempts: Maximum number of scroll attempts
@@ -354,15 +354,15 @@ class ScrollVideos(GeneralScrolling):
             bool: True if locked videos section was found
 
         Raises:
-            AssertionError: If locked videos section is not found after max attempts
+            AssertionError: If locked Food Vids section is not found after max attempts
         """
         locked_videos = self.device.xpath(GuestMode.GUEST_MODE_HOME_SCREEN_LOCKED_VIDEOS)
-        videos_text = self.device(text="Videos")
+        videos_text = self.device(text="Food Vids")
         if locked_videos.exists or videos_text.exists:
             return True
         scrollable = self.device(scrollable=True)
         if scrollable.exists:
-            scrollable.scroll.to(text="Videos")
+            scrollable.scroll.to(text="Food Vids")
             sleep(1.5)
             if locked_videos.exists or videos_text.exists:
                 return True
@@ -378,7 +378,7 @@ class ScrollVideos(GeneralScrolling):
             sleep(2)
             if locked_videos.exists or videos_text.exists:
                 return True
-        assert False, "Failed to find locked videos section after maximum scroll attempts"
+        assert False, "Failed to find locked Food Vids section after maximum scroll attempts"
 
     def scroll_to_videos(self, max_attempts=5, duration=0.5):
         """

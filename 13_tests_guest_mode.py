@@ -1,9 +1,8 @@
 import pytest
 
-
 from utils_authentication import GuestModeAuth
 from utils_screenshots import ScreenshotsManagement
-from utils_scrolling import ScrollVideos, ScreenSwipe
+from utils_scrolling import ScrollVideos
 from utils_ui_navigation import NavGuestMode
 from utils_ui_verification import VerifyGuestMode
 
@@ -81,24 +80,24 @@ def test_guest_mode_videos(d, screenshots_dir):
 
 
 @pytest.mark.smoke
-def test_guest_mode_search(d, screenshots_dir):
+def test_guest_mode_ask_ai(d, screenshots_dir):
     """
     Test the Guest Mode search screen
     Steps:
     1. Launch app
     2. Continue as Guest
-    3. Navigate to Search
+    3. Navigate to Ask AI
     4. Check Guest Mode popup
     """
     guest_mode = GuestModeAuth(d)
-    nav_search = NavGuestMode(d)
+    nav_ask_ai = NavGuestMode(d)
     screenshots = ScreenshotsManagement(d)
 
     guest_mode.enter_guest_mode_and_handle_popups()
 
-    nav_search.click_search()
+    nav_ask_ai.click_ask_ai()
 
-    screenshots.take_screenshot("15_4_1_guest_mode_search_triggered_plans_popup")
+    screenshots.take_screenshot("15_4_1_guest_mode_ask_ai_triggered_plans_popup")
 
 
 @pytest.mark.smoke
@@ -124,25 +123,3 @@ def test_guest_mode_favorites(d, screenshots_dir):
     verify_plans_popup.verify_plans_popup()
 
     screenshots.take_screenshot("15_5_1_guest_mode_search_triggered_plans_popup")
-
-
-@pytest.mark.smoke
-def test_guest_mode_prompt_end_screen(d, screenshots_dir):
-    """
-    Test the Guest Mode prompt from the bottom of the screen
-    Steps:
-    1. Launch app
-    2. Continue as Guest
-    3. Scroll to the end of the screen
-    4. Check Guest Mode home screen prompt
-    """
-
-    guest_mode = GuestModeAuth(d)
-    verify_prompt = VerifyGuestMode(d)
-    screenshots = ScreenshotsManagement(d)
-
-    guest_mode.enter_guest_mode_and_handle_popups()
-
-    verify_prompt.verify_home_screen_prompt()
-
-    screenshots.take_screenshot("15_6_1_guest_mode_prompt_end_screen")

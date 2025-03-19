@@ -2,8 +2,8 @@ import pytest
 
 from utils_authentication import SignInPrepare
 from utils_screenshots import ScreenshotsManagement
-from utils_scrolling import EventsScrolling, ScrollAddInfo, ScrollVideos
-from utils_ui_navigation import NavEvents, NavViewMap, NavVideos, NavAddInfo, NavDayTripsTrails, NavBottomNavBar, \
+from utils_scrolling import EventsScrolling, ScrollVideos
+from utils_ui_navigation import NavEvents, NavViewMap, NavVideos, NavDayTripsTrails, NavBottomNavBar, \
     NavFavoritesVisitHistory
 from utils_ui_verification import VerifyEvents, VerifyBusinesses, VerifyViewMap
 
@@ -66,7 +66,7 @@ def test_home_screen_view_map(d, screenshots_dir):
 
     verify_map.verify_all_filters_visible()
 
-    screenshots.take_screenshot("3_1_1_home_screen_view_map_opened")
+    screenshots.take_screenshot("3_2_1_home_screen_view_map_opened")
 
 
 @pytest.mark.smoke
@@ -96,32 +96,6 @@ def test_home_screen_videos(d, screenshots_dir):
 
 
 @pytest.mark.smoke
-def test_home_screen_add_info(d, screenshots_dir):
-    """
-    Test home screen add info module functionality
-    Steps:
-    1. Sign in with valid credentials and prepare
-    2. Find and click Add Info tile
-    3. Verify add info form is displayed
-    4. Check all form fields are accessible
-    5. Test form validation
-    6. Verify submission process
-    """
-    sign_in = SignInPrepare(d)
-    nav_add_info = NavAddInfo(d)
-    scroll_add_info = ScrollAddInfo(d)
-    screenshots = ScreenshotsManagement(d)
-
-    sign_in.sign_in_and_prepare()
-
-    scroll_add_info.scroll_to_add_info()
-
-    nav_add_info.click_add_info_button()
-
-    screenshots.take_screenshot("3_4_1_home_screen_add_info_opened")
-
-
-@pytest.mark.smoke
 def test_home_screen_day_trips(d, screenshots_dir):
     """
     Test home screen day trips module functionality
@@ -141,69 +115,7 @@ def test_home_screen_day_trips(d, screenshots_dir):
 
     nav_trips.click_day_trips_see_all()
 
-    screenshots.take_screenshot("3_5_1_home_screen_day_trips_opened")
-
-
-@pytest.mark.smoke
-def test_home_screen_events_within(d, screenshots_dir):
-    """
-    Test home screen events within 30 minutes functionality
-    Steps:
-    1. Sign in with valid credentials and prepare
-    2. Find events within 30 minutes section
-    3. Verify nearby events are displayed
-    4. Check event details are accessible
-    5. Verify distance information
-    6. Test event sorting options
-    """
-    sign_in = SignInPrepare(d)
-    nav_events = NavEvents(d)
-    verify_events = VerifyEvents(d)
-    events_scrolling = EventsScrolling(d)
-    screenshots = ScreenshotsManagement(d)
-
-    sign_in.sign_in_and_prepare()
-
-    events_scrolling.scroll_to_events_within_30()
-
-    verify_events.find_event_within_30()
-
-    screenshots.take_screenshot("3_6_1_home_screen_events_within")
-
-    nav_events.click_see_all_events_within_30()
-
-    screenshots.take_screenshot("3_6_2_home_screen_events_within_list")
-
-
-@pytest.mark.smoke
-def test_home_screen_events_further_than(d, screenshots_dir):
-    """
-    Test home screen events further than 30 minutes functionality
-    Steps:
-    1. Sign in with valid credentials and prepare
-    2. Find events further than 30 minutes section
-    3. Verify distant events are displayed
-    4. Check event details are accessible
-    5. Verify distance information
-    6. Test event sorting options
-    """
-    sign_in = SignInPrepare(d)
-    nav_events = NavEvents(d)
-    verify_events = VerifyEvents(d)
-    events_scrolling = EventsScrolling(d)
-    screenshots = ScreenshotsManagement(d)
-
-    sign_in.sign_in_and_prepare()
-
-    events_scrolling.scroll_to_events_further_than_30()
-
-    verify_events.find_event_further_than_30()
-
-    screenshots.take_screenshot("3_7_1_home_screen_events_further_than")
-
-    nav_events.click_see_all_events_further_than_30()
-
-    screenshots.take_screenshot("3_7_2_home_screen_events_further_than_list")
+    screenshots.take_screenshot("3_4_1_home_screen_day_trips_opened")
 
 
 @pytest.mark.smoke
@@ -227,12 +139,12 @@ def test_home_screen_bottom_nav_bar(d, screenshots_dir):
     sign_in.sign_in_and_prepare()
 
     nav_favorites.click_favorites_button()
-    screenshots.take_screenshot("3_8_1_bottom_nav_favorites_screen")
+    screenshots.take_screenshot("3_5_1_bottom_nav_favorites_screen")
 
     nav_bar.click_events_button()
 
-    screenshots.take_screenshot("3_8_2_bottom_nav_events_screen")
+    screenshots.take_screenshot("3_5_2_bottom_nav_events_screen")
 
     nav_bar.click_home_button()
 
-    screenshots.take_screenshot("3_8_3_bottom_nav_home_screen")
+    screenshots.take_screenshot("3_5_3_bottom_nav_home_screen")

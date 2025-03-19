@@ -3,7 +3,7 @@ Utility functions for UI verification.
 """
 from time import sleep
 from locators import HomeScreen, Events, Businesses, MyFavorites, SearchModule, Trails, BottomNavBar, VisitHistory, \
-    ViewMap, DayTrips, LoginPage, AddInfo, GuestMode, Videos, CheckIn
+    ViewMap, DayTrips, LoginPage, AddInfo, GuestMode, Videos, CheckIn, AskAI
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
 
@@ -1686,6 +1686,23 @@ class NavGuestMode:
         assert search_button.exists, "Search button not found"
 
         search_button.click()
+        sleep(self.SEARCH_WAIT)
+        return True
+
+    def click_ask_ai(self):
+        """
+        Clicks the Search button in Guest Mode.
+
+        Returns:
+            bool: True if click was successful
+
+        Raises:
+            AssertionError: If Ask AI button is not found
+        """
+        ask_ai_button = self.device.xpath(AskAI.ASKAI_ICON)
+        assert ask_ai_button.exists, "Search button not found"
+
+        ask_ai_button.click()
         sleep(self.SEARCH_WAIT)
         return True
 
