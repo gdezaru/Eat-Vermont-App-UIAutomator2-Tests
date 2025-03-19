@@ -5,7 +5,7 @@ import os
 import time
 from time import sleep
 from locators import (Businesses, EventsScreen, HomeScreenTiles, SettingsScreen, Trails, GuestMode,
-                      PlansPopup, ViewMap, LoginPage, DayTrips, Videos)
+                      PlansPopup, ViewMap, LoginPage, DayTrips, Videos, Events, HomeScreen)
 from utils_screenshots import ScreenshotsManagement
 from utils_scrolling import ScreenSwipe, GeneralScrolling
 
@@ -64,6 +64,25 @@ class VerifyEvents:
         assert current_day is not None, "Could not find any day of week element"
         return current_day
 
+    def verify_events_home_screen(self):
+        """
+        Verify that required elements on Events home screen are visible.
+        Specifically checks for the existence of Events text and Filter button.
+
+        Returns:
+            bool: True if all elements are verified
+
+        Raises:
+            AssertionError: If any required element is not found
+        """
+        events_text = self.device.xpath(HomeScreen.EVENTS_TEXT)
+        assert events_text.exists, "Events text not found on the home screen"
+
+        filter_button = self.device.xpath(HomeScreen.EVENTS_FILTERS)
+        assert filter_button.exists, "Filter button not found on the events screen"
+
+        return True
+
     def find_event_within_30(self):
         """
         Find an event tile within 30 minutes.
@@ -99,7 +118,6 @@ class VerifyEvents:
         max_scroll_attempts = 3
 
         for attempt in range(max_scroll_attempts):
-            print(f"\nScroll attempt {attempt + 1}/{max_scroll_attempts}")
 
             for day in self.days_of_week:
                 events_tile = self.device.xpath(HomeScreenTiles.EVENTS_MORE_THAN_30_TILE.format(day))
@@ -111,7 +129,6 @@ class VerifyEvents:
             if event_found:
                 break
 
-            # If no event found, scroll down and try again
             self.device.swipe(0.5, 0.8, 0.5, 0.2, 0.5)
             sleep(2)
 
@@ -960,7 +977,7 @@ class VerifyGuestMode:
         Raises:
             AssertionError: If videos with "Eat Vermont" text are not found
         """
-        videos_section = self.device(text="Videos")
+        videos_section = self.device(text="Food Vids")
         assert videos_section.exists, "Videos section not found"
         eat_vermont_text = self.device(textContains="Eat Vermont")
         video_tiles = self.device.xpath(Videos.VIDEO_TILE)

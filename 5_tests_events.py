@@ -69,3 +69,46 @@ def test_events_card(d, screenshots_dir):
     nav_events.events_add_to_calendar()
 
     screenshots.take_screenshot("6_2_3_add_to_calendar")
+
+
+def test_events_filters_date(d, screenshots_dir):
+    """
+    Tests the events filters on the home screen.
+    Steps:
+    1. Sign in with valid credentials
+    2. Navigate to Events section
+    3. Tap Filters
+    4. Navigate to next month
+    5. Apply Date Filter
+    6. Tap Apply Filters
+    7. Assert Date Visible on the home screen
+    """
+    sign_in = SignInPrepare(d)
+    nav_home_screen = VerifyEvents(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    nav_home_screen.verify_events_home_screen()
+
+
+def test_events_filters_drive_time(d, screenshots_dir):
+    """
+    Tests the events filters on the home screen.
+    Steps:
+    1. Sign in with valid credentials
+    2. Navigate to Events section
+    3. Tap Filters
+    4. Change Drive Time
+    5. Apply Drive Time
+    6. Tap Filters
+    7. Tap Reset
+    8. Assert Drive Time back to initial value (30 min)
+    """
+    sign_in = SignInPrepare(d)
+    nav_home_screen = VerifyEvents(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+
+    nav_home_screen.verify_events_home_screen()

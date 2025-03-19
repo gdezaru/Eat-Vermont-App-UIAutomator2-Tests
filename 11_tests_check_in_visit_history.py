@@ -7,7 +7,8 @@ from utils_ui_navigation import NavFavoritesVisitHistory, NavBusinesses, NavChec
 from utils_ui_verification import VerifyBusinesses
 
 # Initialize check in business name at module level
-check_in_business_name = "Big Fattys BBQ"
+check_in_business_name_no_feedback = "Big Fattys BBQ"
+check_in_business_name_feedback = "Einstein's Top House"
 
 
 @pytest.mark.smoke
@@ -34,11 +35,11 @@ def test_check_in_without_feedback_from_business(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai(check_in_business_name)
+    search_ai.search_and_submit_ai(check_in_business_name_no_feedback)
 
     verify_businesses.verify_businesses_section_present()
 
-    nav_businesses.click_business_with_event_search_result(check_in_business_name)
+    nav_businesses.click_business_with_event_search_result(check_in_business_name_feedback)
 
     nav_check_in.click_business_three_dotted()
 
@@ -82,11 +83,11 @@ def test_check_in_with_feedback_from_business(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai(check_in_business_name)
+    search_ai.search_and_submit_ai(check_in_business_name_feedback)
 
     verify_businesses.verify_businesses_section_present()
 
-    nav_businesses.click_business_with_event_search_result(check_in_business_name)
+    nav_businesses.click_business_with_event_search_result(check_in_business_name_feedback)
 
     nav_check_in.click_business_three_dotted()
 

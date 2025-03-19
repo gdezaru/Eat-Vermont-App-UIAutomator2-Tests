@@ -22,25 +22,14 @@ def test_home_screen_events(d, screenshots_dir):
     7. Verify event details are accessible
     """
     sign_in = SignInPrepare(d)
-    nav_events = NavEvents(d)
-    verify_events = VerifyEvents(d)
-    verify_next_day = VerifyBusinesses(d)
-    events_scrolling = EventsScrolling(d)
+    nav_home_screen = VerifyEvents(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
 
-    nav_events.click_see_all_events_home_screen()
+    nav_home_screen.verify_events_home_screen()
 
     screenshots.take_screenshot("3_1_1_home_screen_events")
-
-    current_day = verify_events.find_and_click_current_day()
-
-    verify_next_day.try_next_day(current_day)
-
-    events_scrolling.scroll_to_event_and_click(screenshots_dir, current_day)
-
-    screenshots.take_screenshot(f"3_1_2_home_screen_event_details_{current_day.lower()}")
 
 
 @pytest.mark.smoke

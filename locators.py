@@ -30,6 +30,7 @@ class HomeScreen:
     """Locators for Home Screen UI Elements"""
     EVENTS_TEXT = '//android.widget.TextView[contains(@text, "Out & About")]'
     EVENTS_SEE_ALL = '//android.widget.TextView[@text="See All"]'
+    EVENTS_FILTERS = '//android.widget.TextView[@text="Filter"]'
     VIDEOS_SEE_ALL = ('//android.widget.TextView[@text="Food Vids"]/following-sibling::*'
                       '//android.widget.TextView[@text="See All"]')
     VIDEOS_TEXT_HOME_SCREEN = '//android.widget.TextView[@text="Food Vids" and ./parent::android.view.ViewGroup]'
@@ -100,13 +101,28 @@ class AskAI:
 
 
 class EventsScreen:
-    """Locators for Events Screen UI Elements"""
+    """Locators for Events Screen"""
     DAY_OF_WEEK = (
         '//android.view.ViewGroup[@clickable="true" and .//android.widget.TextView[@text="{}"]]'
         '//android.widget.TextView[@text="{}"]')  # The day text itself
     EVENTS_SCREEN_TILE_1 = '//android.widget.TextView[@text and @index="2"]'
     EVENTS_SCREEN_NO_EVENTS = '//android.widget.TextView[@text="No Events"]'
     EVENT_TITLE = '//android.widget.TextView[contains(@text, "{}")]'
+
+
+class EventsFilters:
+    """Locators for Events Filters Screen"""
+    NEXT_MONTH_FILTER = (
+        '//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[5]'
+        '/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
+    DEFAULT_DRIVE_TIME = '//android.widget.TextView[@text="30 min"]'
+    DRIVE_TIME_TOGGLE = (
+        '//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup[1]'
+        '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[3]'
+        '/android.view.ViewGroup[1]/android.view.ViewGroup[2]')
 
 
 class ViewMap:
