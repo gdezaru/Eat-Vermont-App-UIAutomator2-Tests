@@ -31,7 +31,7 @@ def test_ai_search_events(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai("Vermont Events")
+    search_ai.search_and_submit_ai("Burlington Events")
 
     verify_events.verify_events_search_result()
 
