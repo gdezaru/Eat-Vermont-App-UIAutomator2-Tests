@@ -149,6 +149,8 @@ class VerifyEventsFilters:
             device: UIAutomator2 device instance
         """
         self.device = device
+        self.days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+        self.days_full = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
     def verify_events_filters_default_drive_time(self):
         """
@@ -162,6 +164,32 @@ class VerifyEventsFilters:
         """
         default_drive_time = self.device.xpath(EventsFilters.DEFAULT_DRIVE_TIME)
         assert default_drive_time.exists, "Default drive time (30 min) option not found on Events Filters screen"
+        return True
+
+    def verify_selected_day_displayed(self, selected_day_short):
+        """
+        Verifies that the full day name corresponding to the selected short day code
+        is displayed on the screen after applying filters.
+
+        Args:
+            selected_day_short (str): The selected day in three-letter format (e.g., 'MON', 'TUE')
+
+        Returns:
+            bool: True if the full day name is displayed on the screen
+
+        Raises:
+            AssertionError: If the full day name is not found on the screen
+            ValueError: If the selected_day_short is not a valid day code
+        """
+        if selected_day_short not in self.days:
+            raise ValueError(f"Invalid day code: {selected_day_short}. Must be one of {self.days}")
+
+        day_index = self.days.index(selected_day_short)
+        day_full = self.days_full[day_index]
+
+        day_displayed = self.device(textContains=day_full).exists
+
+        assert day_displayed, f"Selected day '{day_full}' not displayed on screen after applying filters"
         return True
 
 

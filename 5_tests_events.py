@@ -87,6 +87,7 @@ def test_events_filters_date(d, screenshots_dir):
     nav_home_screen = VerifyEvents(d)
     nav_filters = NavEventsFilters(d)
     nav_dates = VerifyEvents(d)
+    verify_filters = VerifyEventsFilters(d)
     screenshots = ScreenshotsManagement(d)
 
     sign_in.sign_in_and_prepare()
@@ -101,9 +102,15 @@ def test_events_filters_date(d, screenshots_dir):
 
     screenshots.take_screenshot("6_3_2_filters_next_month_screen_contents")
 
-    nav_dates.find_and_click_current_day()
+    current_day = nav_dates.find_and_click_current_day()
 
-    nav_dates.
+    nav_filters.get_next_day(current_day)
+
+    nav_filters.click_apply_filters()
+
+    verify_filters.verify_selected_day_displayed()
+
+    screenshots.take_screenshot("6_3_3_filters_date_applied")
 
 
 def test_events_filters_drive_time(d, screenshots_dir):
