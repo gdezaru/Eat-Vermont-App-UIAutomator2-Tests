@@ -163,6 +163,9 @@ class SettingsScreen:
     SHARE_MY_LOCATION = '//android.widget.TextView[@text="Share My Location" and @package="com.eatvermont"]'
     LOCATION_TOGGLE = '//com.horcrux.svg.CircleView[@package="com.eatvermont" and @index="1"]'
     LOCATION_ALLOW = '//android.widget.TextView[@text="Allow" and @package="com.eatvermont"]'
+    DIETARY_PREFERENCES = '//android.widget.TextView[@text="Dietary Preferences" and @package="com.eatvermont"]'
+    DIETARY_PREFERENCES_INPUT_BOX = '//android.widget.EditText[@package="com.eatvermont"]'
+    DIETARY_PREFERENCES_SAVE_BUTTON = '//android.widget.TextView[@text="Save" and @package="com.eatvermont"]'
     LOG_OUT = '//android.view.ViewGroup[@content-desc="Log out" and @package="com.eatvermont"]'
 
 

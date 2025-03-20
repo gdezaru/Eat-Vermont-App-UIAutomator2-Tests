@@ -143,3 +143,51 @@ class Settings:
             sleep(1)
             return True
         return False
+
+    def click_dietary_preferences(self):
+        """
+        Clicks the Dietary Preferences option in Settings.
+
+        Returns:
+            bool: True if dietary preferences was clicked successfully
+        """
+        dietary_preferences = self.device.xpath(SettingsScreen.DIETARY_PREFERENCES)
+        assert dietary_preferences.exists, "Could not find Dietary Preferences option"
+        dietary_preferences.click()
+        sleep(2)
+        return True
+
+    def set_dietary_preferences(self, preferences):
+        """
+        Enters text in the dietary preferences input box.
+
+        Args:
+            preferences: Text to enter the dietary preferences field
+
+        Returns:
+            bool: True if text was entered successfully
+        """
+        input_box = self.device.xpath(SettingsScreen.DIETARY_PREFERENCES_INPUT_BOX)
+        assert input_box.exists, "Could not find Dietary Preferences input box"
+        input_box.click()
+        sleep(1)
+
+        self.device.clear_text()
+        sleep(1)
+
+        self.device.send_keys(preferences)
+        sleep(1)
+        return True
+
+    def save_dietary_preferences(self):
+        """
+        Clicks the Save button for dietary preferences.
+
+        Returns:
+            bool: True if save button was clicked successfully
+        """
+        save_button = self.device.xpath(SettingsScreen.DIETARY_PREFERENCES_SAVE_BUTTON)
+        assert save_button.exists, "Could not find Save button for dietary preferences"
+        save_button.click()
+        sleep(2)
+        return True

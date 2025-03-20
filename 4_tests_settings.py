@@ -1,5 +1,6 @@
 import pytest
 
+from locators import SettingsScreen
 from utils_authentication import SignInPrepare
 from utils_settings import Settings, EditSaveProfile
 from utils_device_interaction import EditProfile
@@ -121,3 +122,41 @@ def test_settings_screen_edit_profile(d, screenshots_dir):
     verify_settings.verify_settings_changed_name(new_name)
 
     screenshots.take_screenshot("5_3_3_settings_screen_after_save")
+
+
+def test_settings_dietary_preferences(d, screenshots_dir):
+    """
+    Test edits the Dietary Preferences within the Settings screen.
+    Steps:
+    1. Sign in with valid credentials
+    2. Handle events popup
+    3. Navigate to Settings
+    4. Change Dietary Preferences text box
+    5. Save
+    """
+    sign_in = SignInPrepare(d)
+    settings = Settings(d)
+    screenshots = ScreenshotsManagement(d)
+
+    sign_in.sign_in_and_prepare()
+    settings.click_settings_button()
+
+    settings.click_dietary_preferences()
+
+    screenshots.take_screenshot("5_4_1_dietary_preferences_before_edit")
+
+    new_preferences = "vegan, no gluten, low carb"
+
+    settings.set_dietary_preferences(new_preferences)
+
+    screenshots.take_screenshot("5_4_2_dietary_preferences_after_edit")
+
+    settings.save_dietary_preferences()
+
+    screenshots.take_screenshot("5_4_3_settings_screen_after_save_preferences")
+
+    settings.click_settings_back_button()
+
+    assert d.xpath(SettingsScreen.LOG_OUT).exists, ("Failed to return to main settings screen after "
+                                                    "saving dietary preferences")
+
