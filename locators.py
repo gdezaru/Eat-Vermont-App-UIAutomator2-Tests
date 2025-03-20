@@ -117,7 +117,7 @@ class EventsFilters:
         '/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup[1]'
         '/android.view.ViewGroup[1]/android.view.ViewGroup[1]/android.view.ViewGroup[5]'
         '/com.horcrux.svg.SvgView[1]/com.horcrux.svg.GroupView[1]')
-    DEFAULT_DRIVE_TIME = '//android.widget.TextView[@text="30 min"]'
+    DEFAULT_DRIVE_TIME = '//android.widget.TextView[contains(@text, "30 min")]'
     DRIVE_TIME_TOGGLE = (
         '//*[@resource-id="android:id/content"]/android.widget.FrameLayout[1]/android.view.ViewGroup[1]'
         '/android.view.ViewGroup[2]/android.view.ViewGroup[2]/android.view.ViewGroup[1]'

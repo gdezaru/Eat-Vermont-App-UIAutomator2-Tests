@@ -104,11 +104,11 @@ def test_events_filters_date(d, screenshots_dir):
 
     current_day = nav_dates.find_and_click_current_day()
 
-    nav_filters.get_next_day(current_day)
+    selected_day = nav_filters.get_next_day(current_day)
 
     nav_filters.click_apply_filters()
 
-    verify_filters.verify_selected_day_displayed()
+    verify_filters.verify_selected_day_displayed(selected_day)
 
     screenshots.take_screenshot("6_3_3_filters_date_applied")
 
@@ -149,6 +149,8 @@ def test_events_filters_drive_time(d, screenshots_dir):
     nav_filters.click_event_filter_button()
 
     nav_filters.click_reset_filters()
+
+    nav_filters.click_event_filter_button()
 
     verify_filters.verify_events_filters_default_drive_time()
 
