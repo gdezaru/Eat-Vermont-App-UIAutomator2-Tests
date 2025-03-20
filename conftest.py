@@ -195,37 +195,24 @@ def pytest_runtest_makereport(item, call):
 
     test_fn = item.function.__name__
 
-    # Take screenshot on failure using UI Automator 2
-    if report.when == "call" and report.failed:
-        try:
-            device = item.funcargs['d']  # Get the device fixture
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
-            os.makedirs(screenshot_dir, exist_ok=True)
+    if report.when == "call" and report.failed and 'd' in item.funcargs:
+        device = item.funcargs['d']
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
+        os.makedirs(screenshot_dir, exist_ok=True)
 
-            screenshot_path = os.path.join(
-                screenshot_dir,
-                f"fail_{test_fn}_{timestamp}.png"
-            )
+        screenshot_path = os.path.join(
+            screenshot_dir,
+            f"fail_{test_fn}_{timestamp}.png"
+        )
 
-            # Take screenshot using UIAutomator2
-            device.screenshot(screenshot_path)
-
-            # Add screenshot to the report
-            reporter.add_screenshot(item.nodeid, screenshot_path)
-
-        except Exception as e:
-            print(f"Failed to capture screenshot: {e}")
-
-    # Collect steps to reproduce
+        device.screenshot(screenshot_path)
     if report.when == "call":
-        # Get docstring as steps if available
         if item.function.__doc__:
             steps = [step.strip() for step in item.function.__doc__.split('\n') if step.strip()]
             for step in steps:
                 reporter.add_step(item.nodeid, step)
 
-        # Add test result to reporter
         reporter.pytest_runtest_logreport(report)
 
 

@@ -313,3 +313,6 @@ class ExcelReporter:
             
             # Fit to page when printing
             worksheet.fit_to_pages(1, 0)
+
+
+
