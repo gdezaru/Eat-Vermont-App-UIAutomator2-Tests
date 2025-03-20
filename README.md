@@ -54,13 +54,20 @@ adb devices
 EatVermontAppAutomatedTests/
 ├── conftest.py                # Test fixtures and configuration
 ├── config.py                  # Test configuration and constants
-├── locators.py               # UI element locators
-├── utils_ui_navigation.py    # UI navigation utilities
-├── utils_ui_verification.py  # UI verification utilities
-├── utils_scrolling.py        # Scrolling utilities
+├── locators.py                # UI element locators
+├── utils_ui_navigation.py     # UI navigation utilities
+├── utils_ui_verification.py   # UI verification utilities
+├── utils_scrolling.py         # Scrolling utilities
 ├── utils_device_interaction.py # Device interaction utilities
 ├── utils_authentication.py    # Authentication utilities
-└── tests/                    # Test modules
+├── utils_cache_management.py  # Cache cleanup utilities
+├── utils_screenshots.py       # Screenshot utilities
+├── utils_settings.py          # Settings management utilities
+├── utils_wait.py              # Wait utilities
+├── 1_tests_sign_in_user_password.py # Test modules (numbered for execution order)
+├── 2_tests_ask_ai.py
+├── ...
+└── EatVermontAutomatedTestsSpares/ # Archived tests for future reference
 ```
 
 ### Test Modules
@@ -70,64 +77,68 @@ EatVermontAppAutomatedTests/
    - Password reset functionality
    - Error handling
 
-2. **Search Module (2_tests_search_module.py)**
-   - Search for events
-   - Search for businesses
-   - Search for day trips
-   - Search for videos
+2. **Ask AI (2_tests_ask_ai.py)**
+   - AI search functionality
+   - Result verification
 
 3. **Home Screen (3_tests_home_screen.py)**
    - Video section navigation
    - Content scrolling
    - UI element verification
 
-4. **Location Management (4_tests_location_management.py)**
-   - Location services
-   - Permission handling
-
-5. **Settings (5_tests_settings.py)**
+4. **Settings (4_tests_settings.py)**
    - User preferences
    - Profile management
+   - Dietary preferences
 
-6. **Content Features**
-   - Events (6_tests_events.py)
-   - Businesses (7_tests_businesses.py)
-   - Day Trips (8_tests_day_trips.py)
-   - Trails (9_tests_trails.py)
-   - Videos (10_tests_videos.py)
+5. **Content Features**
+   - Events (5_tests_events.py)
+   - Businesses (6_tests_businesses.py)
+   - Day Trips (7_tests_day_trips.py)
+   - Trails (8_tests_trails.py)
 
-7. **User Features**
-   - Favorites (11_tests_favorites.py)
-   - Visit History (12_tests_visit_history.py)
-   - Map View (13_tests_view_map.py)
-   - Guest Mode (14_tests_guest_mode.py)
+6. **User Features**
+   - Favorites (10_tests_favorites.py)
+   - Visit History (11_tests_check_in_visit_history.py)
+   - Map View (12_tests_view_map.py)
+   - Guest Mode (13_tests_guest_mode.py)
 
 ## Utility Classes
 
 ### Navigation (utils_ui_navigation.py)
-- **NavForgotPassword**: Password reset navigation
-- **NavVideos**: Video section navigation
-- **NavSignIn**: Sign-in flow navigation
+- **NavEvents**: Event section navigation
+- **NavBusinesses**: Business section navigation
+- **NavDayTripsTrails**: Day trips and trails navigation
+- **NavFavoritesVisitHistory**: Favorites and visit history navigation
+- **NavViewMap**: Map view navigation
 
 ### Verification (utils_ui_verification.py)
 - **VerifyEvents**: Event search result verification
 - **VerifyBusinesses**: Business search result verification
-- **VerifyDayTrips**: Day trip search result verification
-- **VerifyPasswordReset**: Password reset verification
-- **VerifyVideos**: Video playback verification
+- **VerifyEventsFilters**: Event filter verification
 
 ### Scrolling (utils_scrolling.py)
 - **GeneralScrolling**: Generic scrolling functionality
-- **ScrollVideos**: Video section scrolling
+- **EventsScrolling**: Events section scrolling
 
 ### Device Interaction (utils_device_interaction.py)
 - **LaunchApp**: App launch and permissions
 - **SearchSubmit**: Search functionality
+- **SearchAI**: AI search functionality
 - **ForgotPassword**: Password reset flow
 - **EditProfile**: Profile management
 
 ### Authentication (utils_authentication.py)
 - **SignInPrepare**: Authentication preparation and handling
+- **GuestModeAuth**: Guest mode authentication
+
+### Cache Management (utils_cache_management.py)
+- **clear_python_cache**: Removes Python bytecode cache folders
+- **clear_screenshot_cache**: Cleans up old screenshots
+- **clear_old_reports**: Removes old test reports
+
+### Screenshots (utils_screenshots.py)
+- **ScreenshotsManagement**: Screenshot capture and organization
 
 ## Running Tests
 
@@ -194,92 +205,114 @@ pytest -v -k "test_forgot_password" 1_tests_sign_in_user_password.py
 
 ### Test Reports
 
-### Structure
+#### Structure
 ```
 reports/
-└── test_run_YYYYMMDD_HHMMSS/
-    ├── test_report.html
+└── Eat_Vermont_Test_Run_YYYYMMDD_HHMMSS/
+    ├── test_run_summary.txt
+    ├── test_report.xlsx
     └── screenshots/
-        ├── <test_number>_<step>_<description>.png
+        ├── fail_test_name_timestamp.png
         └── ...
 ```
 
-### Features
-- Automatic HTML report generation
-- Screenshot capture at key points
-- Failure screenshots
+#### Report Contents
+- Test execution timestamps
+- Test status (pass/fail)
+- Test steps from docstrings
+- Screenshots of failures
 - Test execution statistics
 - Detailed error messages
+
+## Recent Framework Changes
+
+The framework has undergone several important improvements:
+
+1. **Cache Management**: Added automatic cleanup of unnecessary cache including:
+   - Python bytecode cache (__pycache__ directories)
+   - Old screenshots (configurable retention period)
+   - Old test reports (configurable retention period)
+
+2. **Improved Error Handling**: Removed try-except blocks from test code for better error visibility and debugging.
+
+3. **Test Structure Reorganization**: 
+   - Current active tests are maintained in the main directory
+   - Legacy tests have been archived in the EatVermontAutomatedTestsSpares folder for future reference
+
+4. **Optimized Screenshot Handling**:
+   - Improved screenshot capture during test failures
+   - Better organization of screenshots in test reports
+
+5. **Enhanced Logging**:
+   - More detailed logs for test execution
+   - Clear error messages for test failures
+
+## Legacy Tests
+
+Tests for features that are currently not active in the app have been moved to the EatVermontAutomatedTestsSpares folder. These tests are preserved for reference and can be reactivated if the corresponding features are restored in the app.
+
+To use a test from the spares folder:
+1. Copy the test file to the main directory
+2. Ensure all required utilities and dependencies are available
+3. Update the test if necessary to match the current framework structure
+4. Run the test using the standard test commands
 
 ## Best Practices
 
 ### Element Location
-- Use flexible XPath selectors
-- Prefer text-based location
-- Include appropriate timeouts
-- Handle dynamic elements
+- Use unique identifiers wherever possible (resourceId, contentDesc)
+- Fall back to XPath selectors when necessary
+- Define all selectors in locators.py for maintainability
 
-### UI Interaction
-- Use utility classes for common operations
-- Implement smart scrolling
-- Handle permissions and popups
-- Verify element state before interaction
+### Test Structure
+- Keep tests independent
+- Clean state before each test
+- Follow Arrange-Act-Assert pattern
+- Document test steps in docstrings
+- Include detailed assertions with clear error messages
 
-### Test Organization
-- Group related tests together
-- Use descriptive test names
-- Add proper documentation
-- Implement smoke tests for critical paths
+### Error Handling
+- Do not use try-except blocks in test code
+- Let test failures surface with clear error messages
+- Use proper waits and verification steps
+- Add descriptive assertions that clearly indicate what failed
 
-### Verification
-- Use non-assertive methods when appropriate
-- Include clear error messages
-- Take screenshots for verification
-- Handle timeouts properly
-
-## Maintenance
-
-### Regular Tasks
-- Update locators for UI changes
-- Review and update screenshots
-- Check test stability
-- Update documentation
-
-### Code Standards
-- Follow Python PEP 8
-- Use clear naming conventions
-- Add proper docstrings
-- Keep methods focused and simple
+### Screenshots
+- Take screenshots at key verification points
+- Name screenshots descriptively
+- Include timestamp in filename
+- Always take screenshots on test failures
 
 ## Contributing
 
-1. Follow existing code structure
-2. Add proper documentation
-3. Include test cases
-4. Update README for new features
+1. Follow the existing code structure and patterns
+2. Update documentation when adding new features
+3. Add appropriate docstrings for new functions
+4. Ensure tests run independently
+5. Add smoke tests for critical functionality
 
 ## Troubleshooting
 
 ### Common Issues
-1. Device Connection
-   - Check ADB connection
-   - Verify USB debugging
-   - Restart ADB server if needed
 
-2. Test Failures
-   - Check app state
-   - Verify locators
-   - Review screenshots
-   - Check error messages
+1. **ADB Connection Issues**
+   - Ensure USB debugging is enabled
+   - Check USB cable connection
+   - Restart ADB server: `adb kill-server && adb start-server`
+   - Accept USB debugging prompt on device
 
-3. Performance
-   - Monitor device resources
-   - Review wait times
-   - Check for memory leaks
+2. **Element Not Found Errors**
+   - Check if the app UI has changed
+   - Update selectors in locators.py
+   - Add appropriate wait conditions
+   - Verify screen state with screenshots
 
-## Support
+3. **Test Timeouts**
+   - Check for slow network conditions
+   - Increase wait timeouts if necessary
+   - Verify app is responding properly
 
-For issues and questions:
-1. Check documentation
-2. Review existing issues
-3. Contact development team
+4. **App State Issues**
+   - Ensure app is properly cleared between tests
+   - Check app permissions are granted
+   - Verify notification handling
