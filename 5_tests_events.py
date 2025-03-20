@@ -50,7 +50,7 @@ def test_events_card(d, screenshots_dir):
 
     sign_in.sign_in_and_prepare()
 
-    search_ai.search_and_submit_ai("Vermont Events")
+    search_ai.search_and_submit_ai("Burlington Events")
 
     search_result.verify_events_search_result()
 
