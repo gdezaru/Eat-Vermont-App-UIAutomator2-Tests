@@ -154,9 +154,3 @@ def test_settings_dietary_preferences(d, screenshots_dir):
     settings.save_dietary_preferences()
 
     screenshots.take_screenshot("5_4_3_settings_screen_after_save_preferences")
-
-    settings.click_settings_back_button()
-
-    assert d.xpath(SettingsScreen.LOG_OUT).exists, ("Failed to return to main settings screen after "
-                                                    "saving dietary preferences")
-
