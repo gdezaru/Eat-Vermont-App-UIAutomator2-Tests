@@ -6,6 +6,7 @@ from time import sleep
 import uiautomator2 as u2
 from datetime import datetime
 from test_reporter import ExcelReporter
+from utils_cache_management import clear_python_cache, clear_screenshot_cache, clear_old_reports
 
 # Initialize test items list
 pytest.test_items = []
@@ -16,15 +17,17 @@ def pytest_collection_modifyitems(items):
     pytest.test_items = items
 
     """Order test files numerically based on their filename prefix."""
+
     def get_test_order(item):
         # Extract the number from the test file name (e.g., '1' from '1_tests_sign_in_user_password.py')
         try:
             return int(item.module.__file__.split('\\')[-1].split('_')[0])
         except (ValueError, IndexError):
             return float('inf')  # Put non-numbered files at the end
-    
+
     # Sort the test items based on their numerical prefix
     items.sort(key=get_test_order)
+
 
 # Create a single instance of the reporter
 reporter = ExcelReporter()
@@ -34,14 +37,17 @@ def pytest_configure(config):
     """Configure pytest and register the Excel reporter."""
     # Register the reporter as a plugin
     config.pluginmanager.register(reporter)
+    clear_python_cache()
+    clear_screenshot_cache(days_old=1)
+    clear_old_reports(days_old=1)
 
 
 def pytest_addoption(parser):
     """Add command line options."""
     parser.addoption("--device-id", action="store", default=None,
-                    help="Android device ID to run tests on")
+                     help="Android device ID to run tests on")
     parser.addoption("--app-package", action="store", default="com.eatvermont",
-                    help="Application package name to test")
+                     help="Application package name to test")
 
 
 @pytest.fixture
@@ -49,7 +55,7 @@ def d(request):
     """Initialize UI Automator 2 device connection and setup"""
     device_id = request.config.getoption("--device-id")
     app_package = request.config.getoption("--app-package")
-    
+
     # First, kill any existing ADB server
     print("\nRestarting ADB server...")
     run_adb_command("kill-server")
@@ -64,8 +70,8 @@ def d(request):
 
     if not device_id:
         # If no device ID provided, try to use the first connected device
-        devices = [line.split('\t')[0] for line in devices_output.splitlines() 
-                  if line and 'device' in line and not line.startswith('List')]
+        devices = [line.split('\t')[0] for line in devices_output.splitlines()
+                   if line and 'device' in line and not line.startswith('List')]
         if devices:
             device_id = devices[0]
             print(f"No device ID provided. Using first available device: {device_id}")
@@ -89,7 +95,7 @@ def d(request):
 
     # Connect to the device using direct USB connection
     device = u2.connect_usb(device_id)
-    
+
     # Restart UI Automator service
     print("\nRestarting UI Automator service...")
     run_adb_command(f"-s {device_id} shell am force-stop com.github.uiautomator")
@@ -99,7 +105,7 @@ def d(request):
     sleep(2)
     device.start_uiautomator()
     sleep(3)  # Wait for service to fully start
-    
+
     # Clean up the app state before starting
     print("\nCleaning up app state...")
     force_stop_output = run_adb_command(f"-s {device_id} shell am force-stop {app_package}")
@@ -107,7 +113,7 @@ def d(request):
     print(f"Force stop output: {force_stop_output}")
     print(f"Clear output: {clear_output}")
     sleep(1)  # Wait for cleanup
-    
+
     # Grant necessary permissions before starting
     permissions = [
         'android.permission.ACCESS_FINE_LOCATION',
@@ -119,7 +125,7 @@ def d(request):
         'android.permission.READ_CALENDAR',
         'android.permission.WRITE_CALENDAR'
     ]
-    
+
     print("\nGranting app permissions...")
     for permission in permissions:
         run_adb_command(f"-s {device_id} shell pm grant {app_package} {permission}")
@@ -128,17 +134,17 @@ def d(request):
     print("\nSetting FastInputIME as default...")
     run_adb_command(f"-s {device_id} shell ime set com.github.uiautomator/.FastInputIME")
     sleep(2)
-    
+
     # Start the app using UI Automator 2's app_start
     print("\nStarting app...")
     device.app_start(app_package, ".MainActivity")
     sleep(3)  # Wait for app to load
-    
+
     # Handle any remaining permission dialogs
     if device(text="Allow").exists:
         device(text="Allow").click()
         sleep(1)
-    
+
     # Verify app is running
     current_app = device.app_current()
     print(f"Current app: {current_app}")
@@ -169,7 +175,7 @@ def run_adb_command(command):
             print(f"ADB not found at {adb_path}")
             # Try alternative path
             adb_path = "adb"  # Use adb from PATH
-            
+
         result = subprocess.run(f"{adb_path} {command}", shell=True, capture_output=True, text=True)
         if result.stderr:
             print(f"ADB command warning/error: {result.stderr}")
@@ -186,9 +192,9 @@ def pytest_runtest_makereport(item, call):
     """
     outcome = yield
     report = outcome.get_result()
-    
+
     test_fn = item.function.__name__
-    
+
     # Take screenshot on failure using UI Automator 2
     if report.when == "call" and report.failed:
         try:
@@ -196,21 +202,21 @@ def pytest_runtest_makereport(item, call):
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
             os.makedirs(screenshot_dir, exist_ok=True)
-            
+
             screenshot_path = os.path.join(
                 screenshot_dir,
                 f"fail_{test_fn}_{timestamp}.png"
             )
-            
+
             # Take screenshot using UIAutomator2
             device.screenshot(screenshot_path)
-            
+
             # Add screenshot to the report
             reporter.add_screenshot(item.nodeid, screenshot_path)
-            
+
         except Exception as e:
             print(f"Failed to capture screenshot: {e}")
-    
+
     # Collect steps to reproduce
     if report.when == "call":
         # Get docstring as steps if available
@@ -218,6 +224,9 @@ def pytest_runtest_makereport(item, call):
             steps = [step.strip() for step in item.function.__doc__.split('\n') if step.strip()]
             for step in steps:
                 reporter.add_step(item.nodeid, step)
-        
+
         # Add test result to reporter
         reporter.pytest_runtest_logreport(report)
+
+
+
